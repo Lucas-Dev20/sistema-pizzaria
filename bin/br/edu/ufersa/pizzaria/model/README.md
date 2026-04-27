@@ -1,1 +1,0 @@
-Aqui ficará as classes que representam as entidades do sistema (armazenam dados e representam objetos).
