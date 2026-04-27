@@ -16,8 +16,8 @@ public class Estoque {
     }
 
     //diminui estoque
-    public void retirarDoEstoque(String nome, int qtd){
-        for (Adicional a : adicionais){
+    public void diminuirDoEstoque(String nome, int qtd){
+        for (Adicional a : adicionais){               //isso diz basicamente para cada objeto do tipo Adicional dentro da lista adicionais, atribua esse objeto à variável 'a' e execute
             if (a.getNome().equalsIgnoreCase(nome)){  //esse .equalsIgnoreCase vai pegar todas as palavras que forem igual ao nome mesmo estando maisculo ou minusculo
                 if (a.getQtd() >= qtd){
                     a.setQtd(a.getQtd() - qtd);
@@ -35,10 +35,22 @@ public class Estoque {
         for (Adicional a : adicionais){
             if (a.getNome().equalsIgnoreCase(nome)){
                 a.setQtd(a.getQtd() + qtd);
-                return;
             }
+            return;
         }
         System.out.println("Adicional não encontrado");
+    }
+
+    //total gasto no estoque
+    public double getGastoTotal() {
+    double total = 0;
+
+    //percorre todos os adicionais do estoque
+    for (Adicional a : adicionais) {
+        total += a.getTotal(); //chama o metodo da class adicional
+    }
+
+    return total;
     }
 
     //mostrar estoque

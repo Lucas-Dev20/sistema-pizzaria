@@ -13,21 +13,31 @@ public class Adicional {
         this.quantidade = quantidade;
     }
 
-    //retorna o nome do adicional
+    //retorna o nome
     public String getNome(){
         return nome;
     }
 
-    //retorna o valor do adicional
+    //retorna o valor
     public double getValor(){
         return valor;
     }
 
+    //retorna a quantidade
     public int getQtd(){
         return quantidade;
     }
 
+    //adicionar quantidade se o valor não for negativo
     public void setQtd(int quantidade){
+        if (quantidade <= 0) {
+            System.out.println("Quantidade deve ser positiva");
+        } 
         this.quantidade = quantidade;
+    }
+
+    //ira calcular o valor do adicional (preço * quantidade)
+    public double getTotal() {
+        return valor * quantidade;
     }
 }
