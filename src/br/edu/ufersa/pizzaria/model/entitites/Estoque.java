@@ -1,4 +1,4 @@
-package br.edu.ufersa.pizzaria.model;
+package br.edu.ufersa.pizzaria.model.entitites;
 import java.util.ArrayList;
 import java.util.List;
 

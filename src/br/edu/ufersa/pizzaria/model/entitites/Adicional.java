@@ -1,4 +1,4 @@
-package br.edu.ufersa.pizzaria.model;
+package br.edu.ufersa.pizzaria.model.entitites;
 
 //representa um adicional para a pizza (ex: queijo, borda...)
 public class Adicional {
