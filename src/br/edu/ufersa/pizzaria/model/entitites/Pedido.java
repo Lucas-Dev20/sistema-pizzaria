@@ -1,8 +1,7 @@
-package br.edu.ufersa.pizzaria.model;
+package br.edu.ufersa.pizzaria.model.entitites;
 
 import java.time.LocalDate;
 import java.util.List;
-import br.edu.ufersa.pizzaria.service.*;
 
 
 public class Pedido {
