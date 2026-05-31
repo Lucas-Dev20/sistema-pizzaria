@@ -1,4 +1,4 @@
-package br.edu.ufersa.pizzaria.model.entitites;
+package br.edu.ufersa.poo.pizzaria.model.entities;
 
 import java.time.LocalDate;
 import java.util.List;

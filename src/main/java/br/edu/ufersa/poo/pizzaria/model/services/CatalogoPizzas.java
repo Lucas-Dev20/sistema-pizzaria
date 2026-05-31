@@ -1,4 +1,7 @@
-package br.edu.ufersa.pizzaria.model;
+package br.edu.ufersa.poo.pizzaria.model.services;
+import br.edu.ufersa.poo.pizzaria.model.entities.Pizza;
+import br.edu.ufersa.poo.pizzaria.model.entities.Adicional;
+import br.edu.ufersa.poo.pizzaria.model.entities.Usuario;
 
 public class CatalogoPizzas
  {

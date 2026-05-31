@@ -1,4 +1,4 @@
-package br.edu.ufersa.pizzaria.service;
+package br.edu.ufersa.poo.pizzaria.model.services;
 
 import java.util.ArrayList;
 import java.util.List;
