@@ -13,7 +13,7 @@ public class ConnectionFactory {
             "root";
 
     private static final String PASS =
-            "12345";
+            "Rian333nc!";
 
     public static Connection getConnection()
             throws SQLException {
