@@ -10,11 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 // crud de cliente...
 public class ClienteDAO {
-
     //metodo salva clientes no banco após devida inserção
-
     public void salvar(Cliente cliente) {
-        String sql = "INSERT INTO clientes (nome, endereco, cpf, telefone, bairro) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO cliente (nome, endereco, cpf, telefone, bairro) VALUES (?, ?, ?, ?, ?)";
 
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -33,10 +31,9 @@ public class ClienteDAO {
             e.printStackTrace();
         }
     }
-
     // seleciona todos os clientes *
     public List<Cliente> listarTodos() {
-        String sql = "SELECT * FROM clientes";
+        String sql = "SELECT * FROM cliente";
         List<Cliente> lista = new ArrayList<>();
 // inicia a conexão, prepara o comando e armazena o resultado da consulta no ResultSet
         try (Connection conn = ConnectionFactory.getConnection();
