@@ -2,7 +2,7 @@ package br.edu.ufersa.poo.pizzaria.model.services;
 
 import java.util.ArrayList;
 import java.util.List;
-import br.edu.ufersa.pizzaria.model.*;
+import br.edu.ufersa.poo.pizzaria.model.entities.*;
 
 
 public class ServicoPedidos {
