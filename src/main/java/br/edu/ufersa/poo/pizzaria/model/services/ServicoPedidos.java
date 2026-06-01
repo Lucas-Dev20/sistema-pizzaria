@@ -95,7 +95,7 @@ public class ServicoPedidos {
                     for (Estoque e : estoques) {
 
 
-                        e.retirarDoEstoque(a.getNome(), 1);
+                        e.diminuirDoEstoque(a.getNome(), 1);
 
 
                     }

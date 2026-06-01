@@ -1,7 +1,7 @@
 package br.edu.ufersa.poo.pizzaria.model.services;
 import br.edu.ufersa.poo.pizzaria.model.entities.*;
 import java.util.ArrayList;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 public class Relatorio {
@@ -19,18 +19,14 @@ public class Relatorio {
     }
 
     //gera pedidos entre duas datas (inicio e fim)
-    public List<Pedido> gerarPorPeriodo(Date inicio, Date fim) {    
+    public List<Pedido> gerarPorPeriodo(LocalDate inicio, LocalDate fim) {
         List<Pedido> resultado = new ArrayList<>();
 
-        //percorre todos os pedidos
         for (Pedido p : pedidos) {
 
-            //verifica se a data do pedido está dentro do intervalo
-            if (!p.getData().before(inicio) && !p.getData().after(fim)) { //os metodos before() e after() são da própria classe Date do java
-                resultado.add(p);
-            }
+            if (!p.getData().isBefore(inicio) && !p.getData().isAfter(fim)) {
+                resultado.add(p);}
         }
-
         return resultado;
     }
 
@@ -41,7 +37,7 @@ public class Relatorio {
         for (Pedido p : pedidos) {
 
             //compara o cliente do pedido com o cliente informado
-            if (p.getCliente().equals(cliente)) { 
+            if (p.getCliente().equals(cliente)) {
                 resultado.add(p);
             }
         }
@@ -56,7 +52,7 @@ public class Relatorio {
         for (Pedido p : pedidos) {
 
             //filtra por tipo de pizza (ex: calabresa, nordestina)
-            if (p.getTipo().equals(pizza)) {
+            if (p.getPizza().getTipo().equalsIgnoreCase(pizza.getTipo())) {
                 resultado.add(p);
             }
         }
