@@ -6,7 +6,7 @@ import java.util.List;
 
 public class Pedido {
 
-
+    private int idPedido;
     private Cliente cliente;
     private Pizza pizza;
     private List<Adicional> adicionais;
@@ -15,6 +15,21 @@ public class Pedido {
     private LocalDate data;
     private double valorTotal;
 
+
+    // Construtor completo ( para ler do banco)
+    public Pedido(int idPedido, Cliente cliente, Pizza pizza, List<Adicional> adicionais,
+                  String tamanho, String estado, LocalDate data) {
+
+        setIdPedido(idPedido);
+        setCliente(cliente);
+        setPizza(pizza);
+        setAdicionais(adicionais);
+        setTamanho(tamanho);
+        setEstado(estado);
+        setData(data);
+
+        calcularTotal();
+    }
 
     // Construtor
     public Pedido(Cliente cliente, Pizza pizza, List<Adicional> adicionais,
@@ -34,6 +49,9 @@ public class Pedido {
 
 
     // Getters
+
+
+    public int getIdPedido() {return idPedido;}
 
 
     public Cliente getCliente() {
@@ -73,6 +91,12 @@ public class Pedido {
 
     // Setters
 
+    public void setIdPedido(int idPedido) {
+
+        if (idPedido > 0) {
+            this.idPedido = idPedido;
+        }
+    }
 
     public void setCliente(Cliente cliente) {
         if (cliente != null) {
@@ -124,15 +148,12 @@ public class Pedido {
 
     public void calcularTotal() {
 
-
         double total = 0;
-
 
         // valor da pizza
         if (pizza != null) {
             total += pizza.getValor();
         }
-
 
         // adicionais
         if (adicionais != null) {
@@ -143,7 +164,6 @@ public class Pedido {
             }
         }
 
-
         // ajuste por tamanho
         if (tamanho != null) {
             if (tamanho.equalsIgnoreCase("M")) {
@@ -152,7 +172,6 @@ public class Pedido {
                 total += 10;
             }
         }
-
 
         this.valorTotal = total;
     }
