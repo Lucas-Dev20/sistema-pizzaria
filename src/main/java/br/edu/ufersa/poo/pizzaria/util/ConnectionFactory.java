@@ -10,6 +10,7 @@ public class ConnectionFactory {
             "jdbc:mysql://localhost:3306/pizzaria";
 
     private static final String USER =
+<<<<<<< HEAD
             "root";
 
     private static final String PASS =
@@ -23,5 +24,32 @@ public class ConnectionFactory {
                 USER,
                 PASS
         );
+=======
+            "Lucas";
+
+    private static final String PASS =
+            "Lukah23@1";
+    private static Connection con = null;
+
+    public static Connection getConnection() {
+        if (con == null) {
+            try {
+                con = DriverManager.getConnection(URL, USER, PASS);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return con;
+    }
+
+    public static void closeConnection() {
+        if (con != null) {
+            try {
+                con.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+>>>>>>> master
     }
 }

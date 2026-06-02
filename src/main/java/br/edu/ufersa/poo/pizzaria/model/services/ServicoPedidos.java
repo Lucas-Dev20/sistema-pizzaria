@@ -80,7 +80,11 @@ public class ServicoPedidos {
     }
 
 
+<<<<<<< HEAD
     // Finalizae um pedido e atualizar o estoque
+=======
+    // Finaliza um pedido e atualizar o estoque
+>>>>>>> master
     public void finalizarPedido(Pedido pedido) {
         if (pedido != null) {
             pedido.setEstado("Finalizado");
@@ -96,8 +100,11 @@ public class ServicoPedidos {
 
 
                         e.diminuirDoEstoque(a.getNome(), 1);
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> master
                     }
                 }
             }
