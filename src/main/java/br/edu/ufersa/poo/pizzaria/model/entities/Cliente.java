@@ -2,11 +2,22 @@ package br.edu.ufersa.poo.pizzaria.model.entities;
 
 public class Cliente 
 {
+    private int id; // NOVO ATRIBUTO
     private String nome;
     private String endereco;
     private String cpf;
     private String telefone;
     private String bairro;
+
+    // CONSTRUTOR NOVO que inclui o id
+    public Cliente(int id, String nome, String endereco, String cpf, String telefone, String bairro) {
+        this.id = id;
+        this.nome = nome;
+        this.endereco = endereco;
+        this.cpf = cpf;
+        this.telephone = telefone;
+        this.bairro = bairro;
+    }
 
     public Cliente(String nome, String endereco, String cpf, String telefone, String bairro)
     {
@@ -18,6 +29,8 @@ public class Cliente
     }
 
     // gets e sets para restrições
+
+    public int getId() { return id; }
 
     public String getNome()
     {

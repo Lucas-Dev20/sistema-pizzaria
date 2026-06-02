@@ -2,9 +2,18 @@ package br.edu.ufersa.poo.pizzaria.model.entities;
 
 //representa um adicional para a pizza (ex: queijo, borda...)
 public class Adicional {
+    private int id; // NOVO ATRIBUTO
     private String nome;    //nome do adicional
     private double valor;   //valor do adicional
     private int quantidade; //quantidade do adicional
+
+    // CONSTRUTOR NOVO que inclui o ID
+    public Adicional(int id, String nome, double valor, int quantidade) {
+        this.id = id;
+        this.nome = nome;
+        this.valor = valor;
+        this.quantidade = quantidade;
+    }
 
     //construtor
     public Adicional(String nome, double valor, int quantidade){
@@ -13,6 +22,8 @@ public class Adicional {
         this.quantidade = quantidade;
     }
 
+    public int getId() { return id; }
+    
     //retorna o nome
     public String getNome(){
         return nome;

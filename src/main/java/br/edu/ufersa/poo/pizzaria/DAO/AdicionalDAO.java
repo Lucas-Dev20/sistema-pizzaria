@@ -42,12 +42,12 @@ public class AdicionalDAO {
              ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
+                int id = rs.getInt("id_adicional");
                 String nome = rs.getString("nome");
                 double valor = rs.getDouble("valor");
                 int quantidade = rs.getInt("quantidade");
 
-                // instancia o objeto com dados da linha atual e depois add a lista
-                Adicional a = new Adicional(nome, valor, quantidade);
+                Adicional a = new Adicional(id, nome, valor, quantidade); // instancia o objeto com dados da linha atual e depois add a lista
                 lista.add(a);
             }
         } catch (SQLException e) {
@@ -71,7 +71,7 @@ public class AdicionalDAO {
 
             int linhasAfetadas = stmt.executeUpdate();
             if (linhasAfetadas > 0) {
-                System.out.println("Adicional atualizado com sucesso!");
+                System.out.println("Adicional updated com sucesso!");
             } else {
                 System.out.println("Nenhum adicional encontrado com o nome informado.");
             }
@@ -102,5 +102,31 @@ public class AdicionalDAO {
             System.out.println("Erro no DELETE de Adicional:");
             e.printStackTrace();
         }
+    }
+
+// busca o adicional por id
+    public Adicional buscarPorId(int idBusca) {
+        String sql = "SELECT * FROM adicional WHERE id_adicional = ?";
+        Adicional adicionalEncontrado = null;
+
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, idBusca);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    String nome = rs.getString("nome");
+                    double valor = rs.getDouble("valor");
+                    int quantidade = rs.getInt("quantidade");
+
+                    adicionalEncontrado = new Adicional(idBusca, nome, valor, quantidade);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Erro ao buscar adicional por ID:");
+            e.printStackTrace();
+        }
+        return adicionalEncontrado;
     }
 }
