@@ -1,4 +1,4 @@
-package br.edu.ufersa.poo.pizzaria.model.services;
+package br.edu.ufersa.poo.pizzaria.services;
 import br.edu.ufersa.poo.pizzaria.model.entities.Pizza;
 import br.edu.ufersa.poo.pizzaria.model.entities.Adicional;
 import br.edu.ufersa.poo.pizzaria.model.entities.Usuario;

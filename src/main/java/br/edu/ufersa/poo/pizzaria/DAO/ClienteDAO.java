@@ -91,7 +91,7 @@ public class ClienteDAO {
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setString(1, telephone);
+            stmt.setString(1, telefone);
 
             int linhasAfetadas = stmt.executeUpdate();
             if (linhasAfetadas > 0) {

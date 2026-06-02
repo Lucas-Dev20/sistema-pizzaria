@@ -175,5 +175,19 @@ public class Pedido {
 
         this.valorTotal = total;
     }
+
+    @Override
+    public String toString() {
+        return "Pedido{" +
+                "idPedido=" + idPedido +
+                ", cliente=" + (cliente != null ? cliente.getNome() : "null") +
+                ", pizza=" + (pizza != null ? pizza.getTipo() : "null") +
+                ", adicionais=" + (adicionais != null ? adicionais.size() : 0) +
+                ", tamanho='" + tamanho + '\'' +
+                ", estado='" + estado + '\'' +
+                ", data=" + data +
+                ", valorTotal=" + valorTotal +
+                '}';
+    }
 }
 

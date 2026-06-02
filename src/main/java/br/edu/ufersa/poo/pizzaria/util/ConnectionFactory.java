@@ -10,46 +10,32 @@ public class ConnectionFactory {
             "jdbc:mysql://localhost:3306/pizzaria";
 
     private static final String USER =
-<<<<<<< HEAD
             "root";
 
     private static final String PASS =
-            "Rian333nc!";
-
-    public static Connection getConnection()
-            throws SQLException {
-
-        return DriverManager.getConnection(
-                URL,
-                USER,
-                PASS
-        );
-=======
-            "Lucas";
-
-    private static final String PASS =
-            "Lukah23@1";
-    private static Connection con = null;
+            "12345";
 
     public static Connection getConnection() {
-        if (con == null) {
-            try {
-                con = DriverManager.getConnection(URL, USER, PASS);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+
+        try {
+
+            return DriverManager.getConnection(URL, USER, PASS);
+
+        } catch (SQLException e) {
+
+            throw new RuntimeException("Erro ao conectar ao banco de dados", e);
         }
-        return con;
     }
 
-    public static void closeConnection() {
-        if (con != null) {
-            try {
-                con.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
+    public static void closeConnection(Connection conn) {
+
+        try {
+            if (conn != null) {
+                conn.close();
             }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
->>>>>>> master
     }
 }
