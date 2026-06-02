@@ -1,0 +1,106 @@
+package br.edu.ufersa.poo.pizzaria.model.DAO;
+
+import br.edu.ufersa.poo.pizzaria.model.entities.Adicional;
+import br.edu.ufersa.poo.pizzaria.util.ConnectionFactory;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+// crud de adicional...
+public class AdicionalDAO {
+
+    //METODO SALVA OS ADICIONAIS APÓS INSERÇÃO DE DADOS
+    public void salvar(Adicional adicional) {
+        String sql = "INSERT INTO adicional (nome, valor, quantidade) VALUES (?, ?, ?)";
+
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, adicional.getNome());
+            stmt.setDouble(2, adicional.getValor());
+            stmt.setInt(3, adicional.getQtd());
+
+            stmt.executeUpdate();
+            System.out.println("Adicional salvo com sucesso!");
+
+        } catch (SQLException e) {
+            System.out.println("Erro no INSERT de Adicional:");
+            e.printStackTrace();
+        }
+    }
+
+    // seleciona todos os adicionais para listar (*)
+    public List<Adicional> listarTodos() {
+        String sql = "SELECT * FROM adicional";
+        List<Adicional> lista = new ArrayList<>();
+
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                String nome = rs.getString("nome");
+                double valor = rs.getDouble("valor");
+                int quantidade = rs.getInt("quantidade");
+
+                // instancia o objeto com dados da linha atual e depois add a lista
+                Adicional a = new Adicional(nome, valor, quantidade);
+                lista.add(a);
+            }
+        } catch (SQLException e) {
+            System.out.println("Erro ao listar adicionais:");
+            e.printStackTrace();
+        }
+        return lista;
+    }
+
+    //atualiza os dados de um adicional ja existente
+    public void atualizar(Adicional adicional, String nomeAntigo) {
+        String sql = "UPDATE adicional SET nome = ?, valor = ?, quantidade = ? WHERE nome = ?";
+// recebe o nome antigo para o sql achar a devida linha do adicional
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, adicional.getNome());
+            stmt.setDouble(2, adicional.getValor());
+            stmt.setInt(3, adicional.getQtd());
+            stmt.setString(4, nomeAntigo); // identifica o registro pelo nome original antes da mudança
+
+            int linhasAfetadas = stmt.executeUpdate();
+            if (linhasAfetadas > 0) {
+                System.out.println("Adicional atualizado com sucesso!");
+            } else {
+                System.out.println("Nenhum adicional encontrado com o nome informado.");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Erro no UPDATE de Adicional:");
+            e.printStackTrace();
+        }
+    }
+
+    //metodo para remover um adicional do bd a partir do nome
+    public void remover(String nomeAdicional) {
+        String sql = "DELETE FROM adicional WHERE nome = ?";
+
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, nomeAdicional);
+
+            int linhasAfetadas = stmt.executeUpdate();
+            if (linhasAfetadas > 0) {
+                System.out.println("Adicional '" + nomeAdicional + "' removido com sucesso!");
+            } else {
+                System.out.println("Nenhum adicional encontrado com o nome informado.");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Erro no DELETE de Adicional:");
+            e.printStackTrace();
+        }
+    }
+}
