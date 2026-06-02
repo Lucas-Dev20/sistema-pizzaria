@@ -1,4 +1,4 @@
-package br.edu.ufersa.poo.pizzaria.model.DAO;
+package br.edu.ufersa.poo.pizzaria.DAO;
 
 import br.edu.ufersa.poo.pizzaria.model.entities.Adicional;
 import br.edu.ufersa.poo.pizzaria.util.ConnectionFactory;
