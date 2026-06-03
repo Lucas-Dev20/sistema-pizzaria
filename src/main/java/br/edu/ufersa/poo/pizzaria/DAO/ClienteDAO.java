@@ -59,7 +59,7 @@ public class ClienteDAO {
         return lista;
     }
     //att o cliente já existente a partir do que for ser alterado
-    public void atualizar(Cliente cliente, int idCliente) {
+    public void atualizar(Cliente cliente) {
         String sql = "UPDATE cliente SET nome = ?, endereco = ?, cpf = ?, telefone = ?, bairro = ? WHERE id_cliente = ?";
 
         try (Connection conn = ConnectionFactory.getConnection();
@@ -70,7 +70,7 @@ public class ClienteDAO {
             stmt.setString(3, cliente.getCpf());
             stmt.setString(4, cliente.getTelefone());
             stmt.setString(5, cliente.getBairro());
-            stmt.setInt(6, idCliente); // define qual cliente será atualizado
+            stmt.setInt(6, cliente.getIdCliente()); // Puxa o ID diretamente do objeto cliente
 
             int linesAffected = stmt.executeUpdate();
             if (linesAffected > 0) {
