@@ -24,8 +24,8 @@ public class Estoque {
                 } else {
                     System.out.println("Estoque insuficiente");
                 }
+                return;
             }
-            return;
         }
         System.out.println("Adicional não encontrado");
     }
@@ -35,8 +35,9 @@ public class Estoque {
         for (Adicional a : adicionais){
             if (a.getNome().equalsIgnoreCase(nome)){
                 a.setQtd(a.getQtd() + qtd);
+
+                return;
             }
-            return;
         }
         System.out.println("Adicional não encontrado");
     }
