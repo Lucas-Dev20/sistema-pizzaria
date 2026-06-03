@@ -22,6 +22,7 @@ public class AdicionalDAO {
             stmt.setString(1, adicional.getNome());
             stmt.setDouble(2, adicional.getValor());
             stmt.setInt(3, adicional.getQtd());
+            // substituição das '?' do comando sql
 
             stmt.executeUpdate();
             System.out.println("Adicional salvo com sucesso!");
@@ -68,16 +69,17 @@ public class AdicionalDAO {
             stmt.setDouble(2, adicional.getValor());
             stmt.setInt(3, adicional.getQtd());
             stmt.setString(4, nomeAntigo); // identifica o registro pelo nome original antes da mudança
+// substituição das '?' do comando sql
 
             int linhasAfetadas = stmt.executeUpdate();
             if (linhasAfetadas > 0) {
-                System.out.println("Adicional updated com sucesso!");
+                System.out.println("Adicional atualizado com sucesso!");
             } else {
                 System.out.println("Nenhum adicional encontrado com o nome informado.");
             }
 
         } catch (SQLException e) {
-            System.out.println("Erro no UPDATE de Adicional:");
+            System.out.println("Erro no UPDATE desse Adicional:");
             e.printStackTrace();
         }
     }
@@ -89,7 +91,7 @@ public class AdicionalDAO {
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setString(1, nomeAdicional);
+            stmt.setString(1, nomeAdicional); // substituição das '?' do comando sql
 
             int linhasAfetadas = stmt.executeUpdate();
             if (linhasAfetadas > 0) {
@@ -112,7 +114,7 @@ public class AdicionalDAO {
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setInt(1, idBusca);
+            stmt.setInt(1, idBusca); // substituição das '?' do comando sql
 
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
@@ -128,5 +130,51 @@ public class AdicionalDAO {
             e.printStackTrace();
         }
         return adicionalEncontrado;
+    }
+
+    // metodo para baixar o estoque do adicional direto no bd
+    public void baixarEstoque(int idAdicional, int quantidade) {
+        String sql = "UPDATE adicional SET quantidade = quantidade - ? WHERE id_adicional = ?";
+
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, quantidade);
+            stmt.setInt(2, idAdicional); // substituição das '?' do comando sql
+
+            int linhasAfetadas = stmt.executeUpdate();
+            if (linhasAfetadas > 0) {
+                System.out.println("Estoque do adicional (ID: " + idAdicional + ") reduzido em " + quantidade);
+            } else {
+                System.out.println("Nenhum adicional encontrado com o ID: " + idAdicional);
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Erro ao baixar estoque do adicional:");
+            e.printStackTrace();
+        }
+    }
+
+    // metodo para repor o estoque do adicional direto no bd
+    public void reporEstoque(int idAdicional, int quantidade) {
+        String sql = "UPDATE adicional SET quantidade = quantidade + ? WHERE id_adicional = ?";
+
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, quantidade);
+            stmt.setInt(2, idAdicional); // substituição das '?' do comando sql
+
+            int linhasAfetadas = stmt.executeUpdate();
+            if (linhasAfetadas > 0) {
+                System.out.println("Estoque do adicional (ID: " + idAdicional + ") reposto em " + quantidade);
+            } else {
+                System.out.println("Nenhum adicional encontrado com o ID: " + idAdicional);
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Erro ao repor estoque do adicional:");
+            e.printStackTrace();
+        }
     }
 }
