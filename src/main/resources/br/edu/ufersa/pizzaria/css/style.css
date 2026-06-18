@@ -1,0 +1,83 @@
+.background {
+    -fx-background-color: #B03A2A;
+}
+
+.login-card {
+    -fx-background-color: #F2F0EB;
+    -fx-background-radius: 18px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.30), 24, 0, 0, 6);
+    -fx-min-height: 650px;
+    -fx-pref-height: 650px;
+}
+
+.titulo {
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1A1A1A;
+}
+
+.campo {
+    -fx-background-color: #E4E1DB;
+    -fx-background-radius: 8px;
+    -fx-border-color: transparent;
+    -fx-pref-height: 42px;
+    -fx-font-size: 13px;
+    -fx-pref-width: 440px;
+}
+
+.campo:focused {
+    -fx-background-color: #DAD7D0;
+    -fx-border-color: #B03A2A;
+    -fx-border-width: 1.5px;
+    -fx-border-radius: 8px;
+}
+
+.botao {
+    -fx-background-color: #FFFFFF;
+    -fx-text-fill: #1A1A1A;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-background-radius: 30px;
+    -fx-border-radius: 30px;
+    -fx-border-color: #CCCCCC;
+    -fx-border-width: 1px;
+    -fx-pref-width: 160px;
+    -fx-pref-height: 44px;
+    -fx-cursor: hand;
+}
+
+.botao:hover {
+    -fx-background-color: #B03A2A;
+    -fx-text-fill: #FFFFFF;
+    -fx-border-color: #B03A2A;
+}
+
+.link {
+    -fx-text-fill: #B03A2A;
+    -fx-font-size: 13px;
+    -fx-border-color: transparent;
+}
+
+.link:hover {
+    -fx-text-fill: #8B2D1F;
+    -fx-underline: true;
+}
+
+.botao-primary {
+    -fx-background-color: #B03A2A;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-background-radius: 30px;
+    -fx-border-radius: 30px;
+    -fx-border-color: #B03A2A;
+    -fx-border-width: 1px;
+    -fx-pref-width: 160px;
+    -fx-pref-height: 44px;
+    -fx-cursor: hand;
+}
+
+.botao-primary:hover {
+    -fx-background-color: #8B2D1F;
+    -fx-border-color: #8B2D1F;
+}
