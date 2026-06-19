@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
+   <left>
+      <VBox prefHeight="400.0" prefWidth="116.0" style="-fx-background-color: #C92F18;" BorderPane.alignment="CENTER">
+         <children>
+            <ImageView fitHeight="102.0" fitWidth="155.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/logo.png" />
+               </image>
+               <VBox.margin>
+                  <Insets left="10.0" />
+               </VBox.margin>
+            </ImageView>
+            <Pane prefHeight="2.0" prefWidth="2.0" style="-fx-background-color: #FFFFFF;" />
+            <Button alignment="CENTER" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="26.0" prefWidth="121.0" style="-fx-background-color: transparent;" text="📋 Pedidos" textAlignment="RIGHT" textFill="WHITE" />
+            <Button alignment="CENTER" mnemonicParsing="false" prefHeight="26.0" prefWidth="121.0" style="-fx-background-color: transparent;" text="👥 Clientes" textFill="WHITE" />
+            <Button alignment="CENTER" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="26.0" prefWidth="121.0" style="-fx-background-color: transparent;" text="🍕 Tipos de Pizza" textFill="WHITE">
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </Button>
+            <Button alignment="CENTER" mnemonicParsing="false" prefHeight="26.0" prefWidth="121.0" style="-fx-background-color: transparent;" text="➕ Adicionais" textFill="WHITE" />
+            <Button alignment="CENTER" mnemonicParsing="false" prefHeight="26.0" prefWidth="121.0" style="-fx-background-color: transparent;" text="📦 Estoque" textFill="WHITE" />
+            <Button alignment="CENTER" mnemonicParsing="false" prefHeight="26.0" prefWidth="121.0" style="-fx-background-color: transparent;" text="📊 Relatórios" textFill="WHITE" />
+            <Pane prefHeight="2.0" prefWidth="2.0" style="-fx-background-color: #FFFFFF;">
+               <VBox.margin>
+                  <Insets top="110.0" />
+               </VBox.margin>
+            </Pane>
+            <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="121.0" style="-fx-background-color: transparent;" text="[➜ Sair" textFill="WHITE" VBox.vgrow="NEVER">
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin></Button>
+         </children>
+      </VBox>
+   </left>
+   <center>
+      <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #FFFFFF;" BorderPane.alignment="CENTER">
+         <children>
+            <AnchorPane prefHeight="102.0" prefWidth="498.0" style="-fx-background-color: #85C57D;">
+               <children>
+                  <Label layoutX="14.0" layoutY="69.0" text="Administrador" textFill="WHITE" />
+                  <Label layoutX="14.0" layoutY="31.0" prefHeight="38.0" prefWidth="302.0" text="Painel De Controle" textFill="WHITE">
+                     <font>
+                        <Font name="Arial Bold" size="33.0" />
+                     </font>
+                  </Label>
+               </children></AnchorPane>
+         </children>
+      </VBox>
+   </center>
+</BorderPane>
