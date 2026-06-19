@@ -81,3 +81,16 @@
     -fx-background-color: #8B2D1F;
     -fx-border-color: #8B2D1F;
 }
+
+.card-pequeno {
+    -fx-background-color: #F2F0EB;
+    -fx-background-radius: 18px;
+    -fx-effect: dropshadow(
+        gaussian,
+        rgba(0,0,0,0.30),
+        24,
+        0,
+        0,
+        6
+    );
+}

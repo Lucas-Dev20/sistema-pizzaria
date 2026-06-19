@@ -17,7 +17,7 @@ public class Main extends Application {
 
         stage.setTitle("La Piazza Pizzaria");
         stage.setScene(scene);
-        stage.setResizable(false);
+        stage.setMaximized(true);
         stage.show();
     }
 
