@@ -6,6 +6,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
@@ -27,17 +29,17 @@ public class GerenciarClientesController {
 
     @FXML
     public void initialize() {
-        // 1. Mapeia as colunas normais
+        //mapeia as colunas normais
         colNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
         colCpf.setCellValueFactory(new PropertyValueFactory<>("cpf"));
         colTelefone.setCellValueFactory(new PropertyValueFactory<>("telefone"));
         colEndereco.setCellValueFactory(new PropertyValueFactory<>("endereco"));
         colBairro.setCellValueFactory(new PropertyValueFactory<>("bairro"));
 
-        // 2. Cria e adiciona os botões de Editar e Excluir na coluna de Ações
+        //cria e adiciona os botões de Editar e Excluir na coluna de Ações
         configurarBotoesAcao();
 
-        // 3. Carrega os dados do banco
+        //carrega os dados do banco
         atualizarTabela();
     }
 
@@ -51,7 +53,7 @@ public class GerenciarClientesController {
                     private final HBox container = new HBox(10, btnEditar, btnExcluir);
 
                     {
-                        // Estilização rápida via código (ou você pode criar classes no CSS)
+                        //estilização
                         btnEditar.setStyle("-fx-cursor: hand; -fx-background-color: transparent; -fx-text-fill: #333333;");
                         btnExcluir.setStyle("-fx-cursor: hand; -fx-background-color: transparent; -fx-text-fill: #B03A2A;");
                         container.setStyle("-fx-alignment: center;");
@@ -92,20 +94,77 @@ public class GerenciarClientesController {
     }
 
     private void handleEditarCliente(Cliente cliente) {
-        System.out.println("Editando o cliente: " + cliente.getNome() + " (ID: " + cliente.getIdCliente() + ")");
-        // Aqui você vai abrir a tela de formulário passando os dados dele para preencher os inputs!
+        try {
+            //carrega o arquivo FXML
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/br/edu/ufersa/pizzaria/views/EditarClienteView.fxml"));
+            Parent root = loader.load();
+
+            //pega o controller da tela de edição que acabou de nascer na memória
+            EditarClienteController controllerEdicao = loader.getController();
+
+            //PASSA O CLIENTE DA LINHA SELECIONADA PARA DENTRO DELE!
+            controllerEdicao.preencherCampos(cliente);
+
+            //exibe a tela
+            javafx.stage.Stage stage = (javafx.stage.Stage) tabelaClientes.getScene().getWindow();
+            stage.getScene().setRoot(root);
+            stage.setTitle("La Piazza - Editar Cliente");
+
+        } catch (java.io.IOException e) {
+            e.printStackTrace();
+        }
+    }
+    private void handleExcluirCliente(Cliente cliente) {
+        //alerta de confirmação para excluir
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmar Exclusão");
+        alert.setHeaderText(null);
+        alert.setContentText("Deseja realmente excluir o cliente " + cliente.getNome() + "?");
+
+        //opções de escolha 'sim ou nao'
+        ButtonType btnExcluir = new ButtonType("Excluir");
+        ButtonType btnCancelar = new ButtonType("Cancelar", ButtonBar.ButtonData.CANCEL_CLOSE);
+        alert.getButtonTypes().setAll(btnCancelar, btnExcluir);
+
+        //tela para resposta
+        alert.showAndWait().ifPresent(resposta -> {
+            if (resposta == btnExcluir) {
+                try {
+                    //caso clique em excluir, chama a service para fazer o DELETE no MySQL pelo telefone
+                    clienteService.removerCliente(cliente.getTelefone());
+                    mostrarAvisoInformativo("Sucesso", "Cliente excluído com sucesso!");
+
+                    atualizarTabela(); //excluido e atualizado
+
+                } catch (Exception e) {
+                    mostrarAvisoErro("Erro", "Não foi possível excluir o cliente do banco de dados.");
+                    e.printStackTrace();
+                }
+            }
+            // caso clique em cancelar, fecha sozinho e nada acontece
+        });
     }
 
-    private void handleExcluirCliente(Cliente cliente) {
-        System.out.println("Deletando o cliente: " + cliente.getNome());
-        // Chama a sua service para apagar pelo telefone (como está na sua DAO)
-        clienteService.removerCliente(cliente.getTelefone());
-        atualizarTabela(); // Recarrega a tabela na hora, sumindo com ele da tela!
+    // outros metodos auxiliares para os alertas de feedback
+    private void mostrarAvisoInformativo(String titulo, String msg) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(msg);
+        alert.showAndWait();
+    }
+
+    private void mostrarAvisoErro(String titulo, String msg) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(msg);
+        alert.showAndWait();
     }
 
     @FXML
     private void handleNovoCliente(ActionEvent event) {
-        System.out.println("Abrindo tela de cadastro de cliente...");
+        LoginController.trocarConteudo(event, "/br/edu/ufersa/pizzaria/views/NovoClienteView.fxml", "La Piazza - Novo Cliente");
     }
 
     @FXML

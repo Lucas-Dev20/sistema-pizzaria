@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="650.0" prefWidth="600.0"
+            stylesheets="@../css/style.css"
+            style="-fx-background-color: rgba(0, 0, 0, 0.4);"
+            xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="br.edu.ufersa.poo.pizzaria.controllers.NovoClienteController">
+
+    <VBox alignment="CENTER" AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
+          AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+
+        <Pane styleClass="login-card" maxWidth="480" prefHeight="580">
+            <VBox spacing="12" layoutX="35" layoutY="25" prefWidth="410">
+
+                <Label text="Novo Cliente" styleClass="titulo" style="-fx-font-size: 24;"/>
+                <Separator style="-fx-padding: 0 0 5 0;"/>
+
+                <Label text="Nome completo" style="-fx-font-weight: bold;"/>
+                <TextField fx:id="txtNome" promptText="Digite o nome completo" styleClass="campo"/>
+
+                <Label text="CPF" style="-fx-font-weight: bold;"/>
+                <TextField fx:id="txtCpf" promptText="000.000.000-00" styleClass="campo"/>
+
+                <Label text="Telefone" style="-fx-font-weight: bold;"/>
+                <TextField fx:id="txtTelefone" promptText="(00)00000-0000" styleClass="campo"/>
+
+                <Label text="Endereço" style="-fx-font-weight: bold;"/>
+                <TextField fx:id="txtEndereco" promptText="Rua, número e complemento" styleClass="campo"/>
+
+                <Label text="Bairro" style="-fx-font-weight: bold;"/>
+                <TextField fx:id="txtBairro" promptText="Digite o bairro" styleClass="campo"/>
+
+                <HBox spacing="20" alignment="CENTER" style="-fx-padding: 15 0 0 0;">
+                    <Button text="Cancelar" onAction="#handleCancelar" styleClass="botao"/>
+                    <Button text="Salvar" onAction="#handleSalvar" styleClass="botao-primary"/>
+                </HBox>
+
+            </VBox>
+        </Pane>
+    </VBox>
+</AnchorPane>

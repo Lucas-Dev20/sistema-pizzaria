@@ -31,7 +31,7 @@
 
             <VBox styleClass="header-banner" style="-fx-background-color: #7CB375; -fx-padding: 20;">
                 <Label text="Clientes" style="-fx-text-fill: white; -fx-font-size: 28; -fx-font-weight: bold;"/>
-                <Label text="Administrador" style="-fx-text-fill: white; -fx-font-size: 14;"/>
+                <Label text="" style="-fx-text-fill: white; -fx-font-size: 14;"/>
             </VBox>
 
             <VBox styleClass="content-card" style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 20;" VBox.vgrow="ALWAYS" spacing="15">
