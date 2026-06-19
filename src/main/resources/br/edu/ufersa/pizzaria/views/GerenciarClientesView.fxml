@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+
+<BorderPane prefHeight="700.0" prefWidth="900.0"
+            stylesheets="@../css/style.css"
+            xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="br.edu.ufersa.poo.pizzaria.controllers.GerenciarClientesController">
+
+    <left>
+        <VBox styleClass="sidebar" prefWidth="200" spacing="10">
+            <ImageView fitWidth="150" preserveRatio="true">
+                <Image url="@../images/logo.png"/>
+            </ImageView>
+            <Button text="Pedidos" styleClass="sidebar-btn"/>
+            <Button text="Clientes" styleClass="sidebar-btn-active"/>
+            <Button text="Tipos de pizza" styleClass="sidebar-btn"/>
+            <Button text="Adicionais" styleClass="sidebar-btn"/>
+            <Button text="Estoque" styleClass="sidebar-btn"/>
+            <Button text="Relatórios" styleClass="sidebar-btn"/>
+            <Region VBox.vgrow="ALWAYS" />
+            <Button text="Sair" styleClass="sidebar-btn-exit" onAction="#handleSair"/>
+        </VBox>
+    </left>
+
+    <center>
+        <VBox spacing="20" style="-fx-padding: 30; -fx-background-color: #F4F4F4;">
+
+            <VBox styleClass="header-banner" style="-fx-background-color: #7CB375; -fx-padding: 20;">
+                <Label text="Clientes" style="-fx-text-fill: white; -fx-font-size: 28; -fx-font-weight: bold;"/>
+                <Label text="Administrador" style="-fx-text-fill: white; -fx-font-size: 14;"/>
+            </VBox>
+
+            <VBox styleClass="content-card" style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 20;" VBox.vgrow="ALWAYS" spacing="15">
+
+                <HBox spacing="20" alignment="CENTER_LEFT">
+                    <TextField fx:id="txtBusca" promptText="Buscar cliente..." styleClass="search-field" HBox.hgrow="ALWAYS"/>
+                    <Button text="+ Novo Cliente" onAction="#handleNovoCliente" styleClass="btn-success"/>
+                </HBox>
+
+                <TableView fx:id="tabelaClientes" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colNome" text="Nome" prefWidth="150"/>
+                        <TableColumn fx:id="colCpf" text="CPF" prefWidth="120"/>
+                        <TableColumn fx:id="colTelefone" text="Telefone" prefWidth="120"/>
+                        <TableColumn fx:id="colEndereco" text="Endereço" prefWidth="180"/>
+                        <TableColumn fx:id="colBairro" text="Bairro" prefWidth="120"/>
+                        <TableColumn fx:id="colAcoes" text="Ações" prefWidth="100"/>
+                    </columns>
+                </TableView>
+
+            </VBox>
+        </VBox>
+    </center>
+</BorderPane>

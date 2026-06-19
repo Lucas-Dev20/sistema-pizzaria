@@ -25,7 +25,7 @@
     -fx-pref-width: 440px;
 }
 
-.campo:focused {
+.campo:focus {
     -fx-background-color: #DAD7D0;
     -fx-border-color: #B03A2A;
     -fx-border-width: 1.5px;
@@ -93,4 +93,130 @@
         0,
         6
     );
+}
+
+/* ==========================================================================
+   TELA: GERENCIAR CLIENTES (DASHBOARD & TABELA)
+   ========================================================================== */
+
+/* --- 1. MENU LATERAL (SIDEBAR) --- */
+.sidebar {
+    -fx-background-color: #B03A2A; /* Mantém o vermelho padrão do seu botão/login */
+    -fx-padding: 20px 10px 20px 10px;
+    -fx-alignment: top-center;
+}
+
+/* Estilo padrão de todos os botões do menu lateral */
+.sidebar-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 14px;
+    -fx-alignment: center-left;
+    -fx-pref-width: 180px;
+    -fx-pref-height: 40px;
+    -fx-cursor: hand;
+}
+.sidebar-btn:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-background-radius: 5px;
+}
+
+/* Destaque sutil para a aba que está aberta no momento (Clientes) */
+.sidebar-btn-active {
+    -fx-background-color: rgba(255, 255, 255, 0.2);
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-alignment: center-left;
+    -fx-pref-width: 180px;
+    -fx-pref-height: 40px;
+    -fx-background-radius: 5px;
+}
+
+/* Botão Sair fixado no rodapé */
+.sidebar-btn-exit {
+    -fx-background-color: transparent;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 14px;
+    -fx-alignment: center-left;
+    -fx-pref-width: 180px;
+    -fx-border-color: rgba(255, 255, 255, 0.2) transparent transparent transparent; /* Linha fina acima do botão */
+    -fx-padding: 15px 0px 0px 5px;
+    -fx-cursor: hand;
+}
+.sidebar-btn-exit:hover {
+    -fx-underline: true;
+}
+
+/* --- 2. BARRA SUPERIOR VERDE (HEADER) --- */
+.header-banner {
+    -fx-background-color: #7CB375; /* O verde que você definiu no Figma */
+    -fx-background-radius: 0 0 10px 10px;
+}
+
+/* --- 3. ÁREA DE BUSCA E COMPONENTES --- */
+.search-field {
+    -fx-background-color: #E4E1DB; /* Mesma cor de fundo cinza dos seus inputs de login */
+    -fx-background-radius: 20px;
+    -fx-border-color: transparent;
+    -fx-padding: 8px 15px 8px 15px;
+    -fx-font-size: 13px;
+}
+.search-field:focus {
+    -fx-background-color: #DAD7D0;
+    -fx-border-color: #B03A2A;
+    -fx-border-width: 1px;
+    -fx-border-radius: 20px;
+}
+
+/* Botão "+ Novo Cliente" que imita o seu estilo outline */
+.btn-success {
+    -fx-background-color: #FFFFFF;
+    -fx-text-fill: #1A1A1A;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-background-radius: 30px;
+    -fx-border-radius: 30px;
+    -fx-border-color: #CCCCCC;
+    -fx-border-width: 1px;
+    -fx-padding: 8px 20px 8px 20px;
+    -fx-cursor: hand;
+}
+.btn-success:hover {
+    -fx-background-color: #E4E1DB;
+}
+
+/* --- 4. CUSTOMIZAÇÃO LIMPA DA TABELA (TABLEVIEW) --- */
+.table-view {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+/* Remove os fundos cinzas padrões dos cabeçalhos da tabela */
+.table-view .column-header-background {
+    -fx-background-color: transparent;
+    -fx-padding: 0 0 10px 0;
+}
+
+.table-view .column-header {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-size: 40px;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: #1A1A1A;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+}
+
+/* Customização das linhas com dados */
+.table-row-cell {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent transparent #E4E1DB transparent; /* Linha inferior sutil dividindo os clientes */
+    -fx-padding: 12px 0 12px 0;
+}
+.table-view .table-row-cell:hover {
+    /* O JavaFX já gerencia o hover internamente de forma segura se usarmos assim */
+    -fx-background-color: rgba(228, 225, 219, 0.3);
 }
