@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+
+<BorderPane prefHeight="700.0" prefWidth="950.0"
+            stylesheets="@../css/style.css"
+            xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="br.edu.ufersa.poo.pizzaria.controllers.GerenciarPizzasController">
+
+    <left>
+        <VBox styleClass="sidebar" prefWidth="200" spacing="10">
+            <ImageView fitWidth="150" preserveRatio="true">
+                <Image url="@../images/logo.png"/>
+            </ImageView>
+            <Button text="Pedidos" styleClass="sidebar-btn"/>
+            <Button text="Clientes" styleClass="sidebar-btn" onAction="#handleIrClientes"/>
+            <Button text="Tipos de pizza" styleClass="sidebar-btn-active"/>
+            <Button text="Adicionais" styleClass="sidebar-btn"/>
+            <Button text="Estoque" styleClass="sidebar-btn"/>
+            <Button text="Relatórios" styleClass="sidebar-btn"/>
+            <Region VBox.vgrow="ALWAYS"/>
+            <Button text="Sair" styleClass="sidebar-btn-exit" onAction="#handleSair"/>
+        </VBox>
+    </left>
+
+    <center>
+        <VBox spacing="20" style="-fx-padding: 30; -fx-background-color: #F4F4F4;">
+
+            <VBox styleClass="header-banner" style="-fx-padding: 20;">
+                <Label text="Tipos de pizza" style="-fx-text-fill: white; -fx-font-size: 28; -fx-font-weight: bold;"/>
+                <Label fx:id="lblTipoUsuario" text="" style="-fx-text-fill: white; -fx-font-size: 14;"/>
+            </VBox>
+
+            <VBox styleClass="content-card" style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 20;" VBox.vgrow="ALWAYS" spacing="15">
+
+                <HBox spacing="20" alignment="CENTER_LEFT">
+                    <TextField fx:id="txtBusca" promptText="Buscar sabor..." styleClass="search-field" HBox.hgrow="ALWAYS"/>
+                    <Button fx:id="btnNovoSabor" text="+ Novo Sabor" onAction="#handleNovoSabor" styleClass="btn-success"/>
+                </HBox>
+
+                <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-background-insets: 0; -fx-padding: 5;" VBox.vgrow="ALWAYS">
+                    <TilePane fx:id="containerPizzas" hgap="20" vgap="20" prefColumns="2" style="-fx-background-color: white;" />
+                </ScrollPane>
+
+            </VBox>
+        </VBox>
+    </center>
+</BorderPane>

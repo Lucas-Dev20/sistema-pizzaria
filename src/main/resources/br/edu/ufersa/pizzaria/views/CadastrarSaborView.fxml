@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="650.0" prefWidth="600.0"
+            stylesheets="@../css/style.css"
+            style="-fx-background-color: rgba(0, 0, 0, 0.4);"
+            xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="br.edu.ufersa.poo.pizzaria.controllers.CadastrarSaborController">
+
+    <VBox alignment="CENTER" AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
+          AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+
+        <Pane styleClass="login-card" maxWidth="480" prefHeight="580">
+            <VBox spacing="12" layoutX="35" layoutY="25" prefWidth="410">
+
+                <Label text="Cadastrar Novo Sabor" styleClass="titulo" style="-fx-font-size: 24;"/>
+                <Separator style="-fx-padding: 0 0 5 0;"/>
+
+                <!-- Nome do Sabor -->
+                <Label text="Sabor" style="-fx-font-weight: bold;"/>
+                <TextField fx:id="txtSabor" promptText="Digite o sabor novo" styleClass="campo"/>
+
+                <!-- Ingredientes -->
+                <Label text="Ingredientes" style="-fx-font-weight: bold;"/>
+                <TextField fx:id="txtIngredientes" promptText="Liste os ingredientes" styleClass="campo"/>
+
+                <!-- Seção de Preços -->
+                <Label text="Preços por Tamanho" style="-fx-font-size: 16; -fx-font-weight: bold; -fx-padding: 10 0 0 0;"/>
+
+                <HBox spacing="15" alignment="CENTER_LEFT">
+                    <Label text="Pequena (R$)" prefWidth="100" style="-fx-font-weight: bold;"/>
+                    <TextField fx:id="txtPrecoPequena" promptText="000.000" styleClass="campo" style="-fx-pref-width: 120;"/>
+                </HBox>
+
+                <HBox spacing="15" alignment="CENTER_LEFT">
+                    <Label text="Média (R$)" prefWidth="100" style="-fx-font-weight: bold;"/>
+                    <TextField fx:id="txtPrecoMedia" promptText="000.000" styleClass="campo" style="-fx-pref-width: 120;"/>
+                </HBox>
+
+                <HBox spacing="15" alignment="CENTER_LEFT">
+                    <Label text="Grande (R$)" prefWidth="100" style="-fx-font-weight: bold;"/>
+                    <TextField fx:id="txtPrecoGrande" promptText="000.000" styleClass="campo" style="-fx-pref-width: 120;"/>
+                </HBox>
+
+                <!-- BOTÕES DE AÇÃO -->
+                <HBox spacing="20" alignment="CENTER" style="-fx-padding: 20 0 0 0;">
+                    <Button text="Cancelar" onAction="#handleCancelar" styleClass="botao"/>
+                    <Button text="Salvar" onAction="#handleSalvar" styleClass="botao-primary"/>
+                </HBox>
+
+            </VBox>
+        </Pane>
+    </VBox>
+</AnchorPane>
