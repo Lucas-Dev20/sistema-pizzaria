@@ -99,13 +99,20 @@
    TELA: GERENCIAR CLIENTES (DASHBOARD & TABELA)
    ========================================================================== */
 
-/* --- 1. MENU LATERAL (SIDEBAR) --- */
+/* MENU LATERAL (SIDEBAR) */
 .sidebar {
     -fx-background-color: #B03A2A; /* Mantém o vermelho padrão do seu botão/login */
-    -fx-padding: 20px 10px 20px 10px;
+    -fx-padding: 30px 20px 20px 10px;
     -fx-alignment: top-center;
 }
+.sidebar-divisor {
+    -fx-padding: 6 14 6 14;
+}
 
+.sidebar-divisor .line {
+    -fx-border-color: rgba(255,255,255,0.35);
+    -fx-border-width: 1px 0 0 0;
+}
 /* Estilo padrão de todos os botões do menu lateral */
 .sidebar-btn {
     -fx-background-color: transparent;
@@ -219,6 +226,7 @@
 .table-view .table-row-cell:hover {
     -fx-background-color: rgba(228, 225, 219, 0.3);
 }
+ 
 
 /* 5. CARDS DE SABORES (TIPO DE PIZZA)*/
 .pizza-card {
@@ -240,3 +248,95 @@
     -fx-padding: 4px 10px 4px 10px;
     -fx-font-size: 12px;
 }
+
+/* Tela pedidos */
+.linha-tabela {
+       -fx-background-color: #FFFFFF;
+       -fx-border-color: transparent transparent #F5F5F5 transparent;
+       -fx-border-width: 0 0 1px 0;
+   }
+
+   .linha-tabela:hover {
+       -fx-background-color: #FBFBFA;
+   }
+
+   /* ---------- BOTÕES DE AÇÃO (editar / excluir) NA TABELA ---------- */
+
+   .btn-icone {
+       -fx-background-color: transparent;
+       -fx-border-color: #CCCCCC;
+       -fx-border-radius: 6px;
+       -fx-background-radius: 6px;
+       -fx-border-width: 1px;
+       -fx-pref-width: 30px;
+       -fx-pref-height: 30px;
+       -fx-font-size: 13px;
+       -fx-cursor: hand;
+       -fx-padding: 0;
+   }
+
+   .btn-icone:hover {
+       -fx-background-color: #EEEEEE;
+   }
+
+   .btn-icone-excluir {
+       -fx-border-color: #C0392B;
+       -fx-text-fill: #C0392B;
+   }
+
+   .btn-icone-excluir:hover {
+       -fx-background-color: #FDECEA;
+   }
+
+   /* ---------- COMBOBOX DENTRO DOS MODAIS (Novo/Editar Pedido) ---------- */
+
+   .combo-filtro {
+       -fx-background-color: #FFFFFF;
+       -fx-background-radius: 8px;
+       -fx-border-color: #DEDBD4;
+       -fx-border-radius: 8px;
+       -fx-border-width: 1px;
+       -fx-pref-height: 40px;
+       -fx-font-size: 13px;
+   }
+
+   /* ---------- BOTÕES DOS MODAIS (Novo Pedido, Editar, Excluir) ---------- */
+   /* Só adicione estas duas classes se "botao" e "botao-primary"        */
+   /* ainda não existirem no style.css do grupo (provavelmente já existem  */
+   /* pela tela de Login) — nesse caso, pule este bloco.                 */
+
+   .botao {
+       -fx-background-color: #FFFFFF;
+       -fx-text-fill: #1A1A1A;
+       -fx-font-size: 14px;
+       -fx-font-weight: 600;
+       -fx-background-radius: 30px;
+       -fx-border-radius: 30px;
+       -fx-border-color: #CCCCCC;
+       -fx-border-width: 1px;
+       -fx-pref-width: 140px;
+       -fx-pref-height: 40px;
+       -fx-cursor: hand;
+   }
+
+   .botao:hover {
+       -fx-background-color: #F0F0F0;
+   }
+
+   .botao-primary {
+       -fx-background-color: #7CB375;
+       -fx-text-fill: #FFFFFF;
+       -fx-font-size: 14px;
+       -fx-font-weight: 600;
+       -fx-background-radius: 30px;
+       -fx-border-radius: 30px;
+       -fx-border-color: #7CB375;
+       -fx-border-width: 1px;
+       -fx-pref-width: 140px;
+       -fx-pref-height: 40px;
+       -fx-cursor: hand;
+   }
+
+   .botao-primary:hover {
+       -fx-background-color: #6BA063;
+   }
