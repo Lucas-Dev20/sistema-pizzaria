@@ -49,9 +49,12 @@ public class Adicional {
 
     //adicionar quantidade se o valor não for negativo
     public void setQtd(int quantidade){
-        if (quantidade <= 0) {
-            System.out.println("Quantidade deve ser positiva");
-        } 
+        if (quantidade < 0){
+            throw new IllegalArgumentException(
+                    "Quantidade não pode ser negativa."
+            );
+        }
+
         this.quantidade = quantidade;
     }
 

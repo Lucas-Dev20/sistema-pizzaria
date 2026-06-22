@@ -1,5 +1,6 @@
-package br.edu.ufersa.poo.pizzaria.model.services;
+package br.edu.ufersa.poo.pizzaria.services;
 import br.edu.ufersa.poo.pizzaria.model.entities.*;
+import br.edu.ufersa.poo.pizzaria.DAO.ReposicaoEstoqueDAO;
 import java.util.ArrayList;
 import java.time.LocalDate;
 import java.util.List;
@@ -11,6 +12,8 @@ public class Relatorio {
 
     //lista de estoques
     private List<Estoque> estoques;
+
+    private final ReposicaoEstoqueDAO reposicaoDAO = new ReposicaoEstoqueDAO();
 
     //construtor
     public Relatorio(List<Pedido> pedidos, List<Estoque> estoques) {
@@ -86,14 +89,12 @@ public class Relatorio {
         return total;
     }
 
-    //soma os gastos com estoque (mecherei nisso no futuro para automatizar com a class Pedido)
+
     public double gastosEstoques() {
-        double total = 0;
+        return reposicaoDAO.calcularGastosReposicao();
+    }
 
-        for (Estoque e : estoques) {
-            total += e.getGastoTotal();
-        }
-
-        return total;
+    public double calcularLucro() {
+        return totalVendas() - gastosEstoques();
     }
 }
