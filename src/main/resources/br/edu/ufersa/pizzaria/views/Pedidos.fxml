@@ -18,12 +18,12 @@
 
             <Region prefHeight="1" style="-fx-background-color: rgba(255,255,255,0.35);" />
 
-            <Button onAction="#irPedidos" styleClass="sidebar-btn-active" text="Pedidos" />
-            <Button onAction="#irClientes" styleClass="sidebar-btn" text="Clientes" />
-            <Button onAction="#irTiposPizza" styleClass="sidebar-btn" text="Tipos de pizza" />
-            <Button onAction="#irAdicionais" styleClass="sidebar-btn" text="Adicionais" />
-            <Button onAction="#irEstoque" styleClass="sidebar-btn" text="Estoque" />
-            <Button onAction="#irRelatorios" styleClass="sidebar-btn" text="Relatórios" />
+            <Button onAction="#irPedidos" styleClass="sidebar-btn-active" text="📋 Pedidos" />
+            <Button onAction="#irClientes" styleClass="sidebar-btn" text="👥 Clientes" />
+            <Button onAction="#irTiposPizza" styleClass="sidebar-btn" text="🍕 Tipos de pizza" />
+            <Button onAction="#irAdicionais" styleClass="sidebar-btn" text="💼 Adicionais" />
+            <Button onAction="#irEstoque" styleClass="sidebar-btn" text="📦 Estoque" />
+            <Button onAction="#irRelatorios" styleClass="sidebar-btn" text="📊 Relatórios" />
 
             <Region VBox.vgrow="ALWAYS" />
 

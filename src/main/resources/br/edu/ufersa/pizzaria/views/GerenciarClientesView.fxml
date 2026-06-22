@@ -10,19 +10,30 @@
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="br.edu.ufersa.poo.pizzaria.controllers.GerenciarClientesController">
 
+    <!-- MENU LATERAL ESQUERDO COM SÍMBOLOS E MÉTODOS DE NAVEGAÇÃO -->
     <left>
         <VBox styleClass="sidebar" prefWidth="200" spacing="10">
-            <ImageView fitWidth="150" preserveRatio="true">
-                <Image url="@../images/logo.png"/>
+            <ImageView fitWidth="150" preserveRatio="true" style="-fx-padding: 0 0 20 0;">
+                <image>
+                    <Image url="@../images/logo.png"/>
+                </image>
             </ImageView>
-            <Button text="Pedidos" styleClass="sidebar-btn"/>
-            <Button text="Clientes" styleClass="sidebar-btn-active"/>
-            <Button text="Tipos de pizza" styleClass="sidebar-btn"/>
-            <Button text="Adicionais" styleClass="sidebar-btn"/>
-            <Button text="Estoque" styleClass="sidebar-btn"/>
-            <Button text="Relatórios" styleClass="sidebar-btn"/>
-            <Region VBox.vgrow="ALWAYS" />
-            <Button text="Sair" styleClass="sidebar-btn-exit" onAction="#handleSair"/>
+
+            <Button text="📋 Pedidos" styleClass="sidebar-btn" onAction="#irPedidos"/>
+
+            <Button text="👥 Clientes" styleClass="sidebar-btn-active" onAction="#irClientes"/>
+
+            <Button text="🍕 Tipos de pizza" styleClass="sidebar-btn" onAction="#irTiposPizza"/>
+
+            <Button text="💼 Adicionais" styleClass="sidebar-btn" onAction="#irAdicionais"/>
+
+            <Button text="📦 Estoque" styleClass="sidebar-btn" onAction="#irEstoque"/>
+
+            <Button text="📊 Relatórios" styleClass="sidebar-btn" onAction="#irRelatorios"/>
+
+            <Region VBox.vgrow="ALWAYS"/>
+
+            <Button text="🚪 Sair" styleClass="sidebar-btn-exit" onAction="#sair"/>
         </VBox>
     </left>
 

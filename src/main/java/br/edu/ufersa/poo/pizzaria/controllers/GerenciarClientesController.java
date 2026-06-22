@@ -15,14 +15,22 @@ import javafx.util.Callback;
 
 public class GerenciarClientesController {
 
-    @FXML private TextField txtBusca;
-    @FXML private TableView<Cliente> tabelaClientes;
-    @FXML private TableColumn<Cliente, String> colNome;
-    @FXML private TableColumn<Cliente, String> colCpf;
-    @FXML private TableColumn<Cliente, String> colTelefone;
-    @FXML private TableColumn<Cliente, String> colEndereco;
-    @FXML private TableColumn<Cliente, String> colBairro;
-    @FXML private TableColumn<Cliente, Void> colAcoes; // Coluna dos botões
+    @FXML
+    private TextField txtBusca;
+    @FXML
+    private TableView<Cliente> tabelaClientes;
+    @FXML
+    private TableColumn<Cliente, String> colNome;
+    @FXML
+    private TableColumn<Cliente, String> colCpf;
+    @FXML
+    private TableColumn<Cliente, String> colTelefone;
+    @FXML
+    private TableColumn<Cliente, String> colEndereco;
+    @FXML
+    private TableColumn<Cliente, String> colBairro;
+    @FXML
+    private TableColumn<Cliente, Void> colAcoes; // Coluna dos botões
 
     private final ClienteService clienteService = new ClienteService();
     private ObservableList<Cliente> listaClientesOb = FXCollections.observableArrayList();
@@ -114,6 +122,7 @@ public class GerenciarClientesController {
             e.printStackTrace();
         }
     }
+
     private void handleExcluirCliente(Cliente cliente) {
         //alerta de confirmação para excluir
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -166,9 +175,39 @@ public class GerenciarClientesController {
     private void handleNovoCliente(ActionEvent event) {
         LoginController.trocarConteudo(event, "/br/edu/ufersa/pizzaria/views/NovoClienteView.fxml", "La Piazza - Novo Cliente");
     }
+//METODOS DE NAVEGAÇÃO
+    @FXML
+    private void irPedidos(ActionEvent event) {
+        LoginController.trocarConteudo(event, "/br/edu/ufersa/pizzaria/views/GerenciarPedidosView.fxml", "La Piazza - Pedidos");
+    }
 
     @FXML
-    private void handleSair(ActionEvent event) {
-        LoginController.trocarConteudo(event, "/br/edu/ufersa/pizzaria/views/LoginView.fxml", "La Piazza - Login");
+    private void irClientes(ActionEvent event) {
+        atualizarTabela(); // já está na tela clientes entao seria um f5 digamos
+    }
+
+    @FXML
+    private void irTiposPizza(ActionEvent event) {
+        LoginController.trocarConteudo(event, "/br/edu/ufersa/pizzaria/views/GerenciarPizzasView.fxml", "La Piazza - Tipos de Pizza");
+    }
+
+    @FXML
+    private void irAdicionais(ActionEvent event) {
+        LoginController.trocarConteudo(event, "/br/edu/ufersa/pizzaria/views/GerenciarAdicionaisView.fxml", "La Piazza - Adicionais");
+    }
+
+    @FXML
+    private void irEstoque(ActionEvent event) {
+        LoginController.trocarConteudo(event, "/br/edu/ufersa/pizzaria/views/GerenciarEstoqueView.fxml", "La Piazza - Estoque");
+    }
+
+    @FXML
+    private void irRelatorios(ActionEvent event) {
+        LoginController.trocarConteudo(event, "/br/edu/ufersa/pizzaria/views/GerenciarRelatoriosView.fxml", "La Piazza - Relatórios");
+    }
+
+    @FXML
+    private void sair(ActionEvent event) {
+        LoginController.trocarConteudo(event, "/br/edu/ufersa/pizzaria/views/LoginView.fxml", "La Piazza Pizzaria");
     }
 }

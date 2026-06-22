@@ -49,17 +49,43 @@ public class GerenciarPizzasController {
     private void handleNovoSabor(ActionEvent event) {
         LoginController.trocarConteudo(event, "/br/edu/ufersa/pizzaria/views/CadastrarSaborView.fxml", "La Piazza - Cadastrar Sabor");
     }
+//METODOS DE NAVEGAÇÃO
+    @FXML
+    private void irPedidos(ActionEvent event) {
+        LoginController.trocarConteudo(event, "/br/edu/ufersa/pizzaria/views/GerenciarPedidosView.fxml", "La Piazza - Pedidos");
+    }
 
     @FXML
-    private void handleIrClientes(ActionEvent event) {
+    private void irClientes(ActionEvent event) {
         LoginController.trocarConteudo(event, "/br/edu/ufersa/pizzaria/views/GerenciarClientesView.fxml", "La Piazza - Clientes");
     }
 
     @FXML
-    private void handleSair(ActionEvent event) {
-        LoginController.trocarConteudo(event, "/br/edu/ufersa/pizzaria/views/LoginView.fxml", "La Piazza - Login");
+    private void irTiposPizza(ActionEvent event) {
+        renderizarCardsPizza();
     }
 
+    @FXML
+    private void irAdicionais(ActionEvent event) {
+        LoginController.trocarConteudo(event, "/br/edu/ufersa/pizzaria/views/GerenciarAdicionaisView.fxml", "La Piazza - Adicionais");
+    }
+
+    @FXML
+    private void irEstoque(ActionEvent event) {
+        LoginController.trocarConteudo(event, "/br/edu/ufersa/pizzaria/views/GerenciarEstoqueView.fxml", "La Piazza - Estoque");
+    }
+
+    @FXML
+    private void irRelatorios(ActionEvent event) {
+        LoginController.trocarConteudo(event, "/br/edu/ufersa/pizzaria/views/GerenciarRelatoriosView.fxml", "La Piazza - Relatórios");
+    }
+
+    @FXML
+    private void sair(ActionEvent event) {
+        LoginController.trocarConteudo(event, "/br/edu/ufersa/pizzaria/views/LoginView.fxml", "La Piazza Pizzaria");
+    }
+
+//METODO DE EXCLUSÃO DE SABOR PARA EMITIR A MENSAGEM NA CAIXINHA
     public void handleExcluirSabor(String nomeSabor, int idPizza) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirmar Exclusão");
