@@ -340,3 +340,20 @@
    .botao-primary:hover {
        -fx-background-color: #6BA063;
    }
+
+/*--CUSTOMIZAÇÃO DO PAINEL DE CONTROLE--*/
+
+    /* definição padrão dos botões*/
+    .dashboard-menu-hover{
+        -fx-background-color: transparent;
+    }
+
+    /* muda a cor para um tom mais escuro ao passar o mouse */
+    .dashboard-menu-item:hover{
+        -fx-background-color: #8B0000;
+    }
+
+    .dashboard-menu-item-border{
+        -fx-border-width: 0 0 2 0;
+        -fx-border-color: white;
+    }
