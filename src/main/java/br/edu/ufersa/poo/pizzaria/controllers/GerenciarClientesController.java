@@ -173,7 +173,8 @@ public class GerenciarClientesController {
 
     @FXML
     private void handleNovoCliente(ActionEvent event) {
-        LoginController.trocarConteudo(event, "/br/edu/ufersa/pizzaria/views/NovoClienteView.fxml", "La Piazza - Novo Cliente");
+        LoginController.abrirModal("/br/edu/ufersa/pizzaria/views/CadastrarClienteView.fxml", "La Piazza - Novo Cliente");
+        atualizarTabela(); // volta à tela de clientes principal após fechar o popup
     }
 //METODOS DE NAVEGAÇÃO
     @FXML

@@ -1,5 +1,7 @@
 package br.edu.ufersa.poo.pizzaria.controllers;
 
+import br.edu.ufersa.poo.pizzaria.model.entities.Usuario;
+import br.edu.ufersa.poo.pizzaria.model.services.PizzaService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -13,8 +15,15 @@ public class CadastrarSaborController {
     @FXML private TextField txtPrecoMedia;
     @FXML private TextField txtPrecoGrande;
 
-    // instancia o sabor quando pronto
-    // private PizzaService pizzaService = new PizzaService();
+    private PizzaService pizzaService = new PizzaService();
+
+    // Atributo para armazenar o usuário que está operando o sistema
+    private Usuario usuarioOperador;
+
+    // Método público para a tela anterior passar o usuário logado para este modal
+    public void setUsuarioOperador(Usuario usuario) {
+        this.usuarioOperador = usuario;
+    }
 
     @FXML
     private void handleSalvar(ActionEvent event) {
@@ -26,29 +35,40 @@ public class CadastrarSaborController {
                 throw new IllegalArgumentException("Todos os campos devem ser preenchidos.");
             }
 
-            // tratamento e conversão de preços informados
             double precoPequena = Double.parseDouble(txtPrecoPequena.getText().replace(",", "."));
             double precoMedia = Double.parseDouble(txtPrecoMedia.getText().replace(",", "."));
             double precoGrande = Double.parseDouble(txtPrecoGrande.getText().replace(",", "."));
 
-            //pizzaService.cadastrarNovaPizza(sabor, ingredientes, precoPequena, precoMedia, precoGrande);
+            // Validação estrita: se a tela principal esquecer de mandar o usuário, o sistema barra
+            if (usuarioOperador == null) {
+                throw new IllegalArgumentException("Sessão inválida: Nenhum usuário operando o formulário.");
+            }
+
+            // 3. Envia o operador correto do sistema para a Service validar as permissões
+            pizzaService.cadastrarPizza(sabor + " (Pequena)", precoPequena, usuarioOperador);
+            pizzaService.cadastrarPizza(sabor + " (Média)", precoMedia, usuarioOperador);
+            pizzaService.cadastrarPizza(sabor + " (Grande)", precoGrande, usuarioOperador);
 
             mostrarMensagem(Alert.AlertType.INFORMATION, "Sucesso", "Novo sabor cadastrado com êxito!");
-            fecharFormulario(event);
+
+            // Modo Pop-up: Apenas fecha a janelinha flutuante
+            javafx.stage.Stage stage = (javafx.stage.Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
+            stage.close();
 
         } catch (NumberFormatException e) {
             mostrarMensagem(Alert.AlertType.WARNING, "Erro de Preço", "Por favor, preencha os preços usando valores numéricos válidos.");
         } catch (IllegalArgumentException e) {
             mostrarMensagem(Alert.AlertType.WARNING, "Validação", e.getMessage());
         } catch (Exception e) {
-            mostrarMensagem(Alert.AlertType.ERROR, "Erro", "Houve um erro inesperado ao salvar o novo sabor.");
+            mostrarMensagem(Alert.AlertType.ERROR, "Erro no Banco", "Houve um erro inesperado ao salvar no banco de dados.");
             e.printStackTrace();
         }
     }
 
     @FXML
     private void handleCancelar(ActionEvent event) {
-        fecharFormulario(event);
+        javafx.stage.Stage stage = (javafx.stage.Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
+        stage.close();
     }
 
     private void fecharFormulario(ActionEvent event) {

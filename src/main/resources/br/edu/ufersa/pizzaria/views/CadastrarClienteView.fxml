@@ -8,7 +8,7 @@
             style="-fx-background-color: rgba(0, 0, 0, 0.4);"
             xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="br.edu.ufersa.poo.pizzaria.controllers.NovoClienteController">
+            fx:controller="br.edu.ufersa.poo.pizzaria.controllers.CadastrarClienteController">
 
     <VBox alignment="CENTER" AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
           AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">

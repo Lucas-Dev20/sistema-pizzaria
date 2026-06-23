@@ -47,7 +47,8 @@ public class GerenciarPizzasController {
 
     @FXML
     private void handleNovoSabor(ActionEvent event) {
-        LoginController.trocarConteudo(event, "/br/edu/ufersa/pizzaria/views/CadastrarSaborView.fxml", "La Piazza - Cadastrar Sabor");
+        LoginController.abrirModal("/br/edu/ufersa/pizzaria/views/CadastrarSaborView.fxml", "Novo Sabor");
+        renderizarCardsPizza(); // volta à tela principal de tipos de pizza após fechar o popup
     }
 //METODOS DE NAVEGAÇÃO
     @FXML
