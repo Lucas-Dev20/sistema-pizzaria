@@ -10,7 +10,7 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         FXMLLoader loader = new FXMLLoader(
-                getClass().getResource("/br/edu/ufersa/pizzaria/views/LoginViewView.fxml")
+                getClass().getResource("/br/edu/ufersa/pizzaria/views/LoginView.fxml")
         );
 
         Scene scene = new Scene(loader.load());

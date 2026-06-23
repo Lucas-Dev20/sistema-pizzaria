@@ -48,7 +48,7 @@ public class GerenciarClientesController {
         configurarBotoesAcao();
 
         //carrega os dados do banco
-        atualizarTabela();
+        //atualizarTabela();
     }
 
     private void configurarBotoesAcao() {
@@ -104,7 +104,7 @@ public class GerenciarClientesController {
     private void handleEditarCliente(Cliente cliente) {
         try {
             //carrega o arquivo FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/br/edu/ufersa/pizzaria/views/EditarClienteView.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/br/edu/ufersa/poo/pizzaria/views/EditarClienteView.fxml"));
             Parent root = loader.load();
 
             //pega o controller da tela de edição que acabou de nascer na memória
@@ -174,7 +174,7 @@ public class GerenciarClientesController {
     @FXML
     private void handleNovoCliente(ActionEvent event) {
         LoginController.abrirModal("/br/edu/ufersa/pizzaria/views/CadastrarClienteView.fxml", "La Piazza - Novo Cliente");
-        atualizarTabela(); // volta à tela de clientes principal após fechar o popup
+        atualizarTabela();
     }
 //METODOS DE NAVEGAÇÃO
     @FXML

@@ -2,7 +2,7 @@ package br.edu.ufersa.poo.pizzaria.model.entities;
 
 public class Cliente 
 {
-    private int idCliente; // NOVO ATRIBUTO
+    private int idCliente = -1; //novo cliente ao cadastrar
     private String nome;
     private String endereco;
     private String cpf;
@@ -11,7 +11,7 @@ public class Cliente
 
     // CONSTRUTOR NOVO que inclui o id
     public Cliente(int id, String nome, String endereco, String cpf, String telefone, String bairro) {
-        this.idCliente = id;
+        this.idCliente = -1;
         this.nome = nome;
         this.endereco = endereco;
         this.cpf = cpf;

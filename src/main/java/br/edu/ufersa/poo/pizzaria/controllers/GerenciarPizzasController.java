@@ -1,5 +1,6 @@
 package br.edu.ufersa.poo.pizzaria.controllers;
 
+import br.edu.ufersa.poo.pizzaria.model.services.PizzaService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -16,6 +17,7 @@ public class GerenciarPizzasController {
     @FXML private TextField txtBusca;
     @FXML private Button btnNovoSabor;
     @FXML private TilePane containerPizzas;
+    private final PizzaService pizzaService = new PizzaService();
 
     // analise do tipo de login para o 'poder' de cadastrar um novo sabor ser permitido ou nao
     private boolean ehAdministrador = true;
@@ -39,10 +41,32 @@ public class GerenciarPizzasController {
     }
 
     private void renderizarCardsPizza() {
+        // MENSAGEM EM CAPS LOCK: LIMPA O CONTAINER VISUAL ANTES DE CARREGAR AS NOVAS PIZZAS
         containerPizzas.getChildren().clear();
 
-        //um loop no bd será feito para mostrar as pizzas salvas
-        System.out.println("Carregando catálogo de sabores do banco...");
+        // ENVOLVIDO EM TRY/CATCH PARA PROTEGER A INTERFACE CASO EXISTA ALGUM DADO CORROMPIDO NO BANCO
+        try {
+            // MENSAGEM EM CAPS LOCK: BUSCANDO A LISTA REAL DE PIZZAS DO BANCO DE DADOS ATRAVÉS DA SERVICE
+            // OBS: AJUSTE O NOME DO MÉTODO ABAIXO CONFORME SEU PIZZASERVICE DEPOIS (EX: listarTodasPizzas() OU SIMILAR)
+            var listaPizzas = pizzaService.listarTodasPizzas();
+
+            if (listaPizzas != null) {
+                for (var pizza : listaPizzas) {
+                    // LÓGICA DE INSTANCIAR E ADICIONAR OS CARDS VISUAIS NO CONTAINER
+                }
+            }
+
+        } catch (Exception e) {
+            System.err.println("MENSAGEM EM CAPS LOCK: ERRO AO CARREGAR CATÁLOGO DE SABORES DO BANCO DE DADOS.");
+            e.printStackTrace();
+
+            // EXIBE O ALERTA DE ERRO DE FORMA CONTROLADA SEM DERRUBAR O SISTEMA
+            Alert erro = new Alert(Alert.AlertType.ERROR);
+            erro.setTitle("Erro de Carregamento");
+            erro.setHeaderText(null);
+            erro.setContentText("Não foi possível carregar o catálogo de pizzas do banco de dados.");
+            erro.showAndWait();
+        }
     }
 
     @FXML

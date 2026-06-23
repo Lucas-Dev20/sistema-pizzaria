@@ -2,6 +2,8 @@ package br.edu.ufersa.poo.pizzaria.controllers;
 
 import br.edu.ufersa.poo.pizzaria.model.entities.Adicional;
 import br.edu.ufersa.poo.pizzaria.model.services.AdicionalService;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -10,37 +12,66 @@ public class GerenciarAdicionaisController {
 
     @FXML private TextField txtBusca;
     @FXML private Button btnNovoAdicional;
-    @FXML private TableView<?> tabelaAdicionais; // Ajuste o tipo <?> para sua entidade Adicional depois
+    @FXML private TableView<?> tabelaAdicionais; // Mantido o original <?>
     @FXML private TableColumn<?, String> colNome;
     @FXML private TableColumn<?, Double> colPreco;
     @FXML private TableColumn<?, String> colEstoque;
     @FXML private TableColumn<?, Void> colAcoes;
     private final AdicionalService adicionalService = new AdicionalService();
-
+    private ObservableList<Adicional> listaAdicionaisOb = FXCollections.observableArrayList();
     @FXML
     public void initialize() {
-        // Inicializa mapeamento das colunas e carrega dados
+        // carrega o bd
         atualizarTabela();
     }
 
     private void atualizarTabela() {
-        System.out.println("Buscando adicionais do banco de dados...");
+        // ENVOLVIDO EM TRY/CATCH PARA GARANTIR QUE ERROS NO BANCO NÃO TRAVEM A INTERFACE
+        try {
+            listaAdicionaisOb.clear();
+
+            // MENSAGEM EM CAPS LOCK: BUSCANDO OS DADOS REAIS DO BANCO ATRAVÉS DA SERVICE
+            listaAdicionaisOb.addAll(adicionalService.listarTodosAdicionais());
+
+            // JOGA OS DADOS DENTRO DA TABELA DA TELA
+            tabelaAdicionais.setItems((ObservableList) listaAdicionaisOb);
+        } catch (Exception e) {
+            System.err.println("MENSAGEM EM CAPS LOCK: ERRO AO CARREGAR DADOS DE ADICIONAIS DO BANCO DE DADOS.");
+            e.printStackTrace();
+
+            // ALERTA PARA AVISAR O USUÁRIO SEM DERRUBAR A NAVEGAÇÃO DA TELA
+            Alert erro = new Alert(Alert.AlertType.ERROR);
+            erro.setTitle("Erro de Carregamento");
+            erro.setHeaderText(null);
+            erro.setContentText("Não foi possível carregar os adicionais do banco de dados.");
+            erro.showAndWait();
+        }
     }
 
     @FXML
     private void handleNovoAdicional(ActionEvent event) {
         LoginController.abrirModal("/br/edu/ufersa/pizzaria/views/CadastrarAdicionalView.fxml", "Novo Adicional");
-        atualizarTabela(); // volta à tela de adicionais principal assim que o popup fechar!
+        atualizarTabela();
     }
 
     private void handleExcluirAdicional(Adicional adicionalSelecionado) {
-        //  Cria o alerta de confirmação customizado para o pop-up
+        // PROTEÇÃO: Adicionada aqui no topo de forma segura
+        if (adicionalSelecionado == null) {
+            Alert avisoSelection = new Alert(Alert.AlertType.WARNING);
+            avisoSelection.setTitle("Aviso");
+            avisoSelection.setHeaderText(null);
+            avisoSelection.setContentText("Por favor, selecione um adicional na tabela para poder excluir.");
+            avisoSelection.showAndWait();
+            return;
+        }
+
+        // Cria o alerta de confirmação customizado para o pop-up
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Deseja excluir?");
         alert.setHeaderText(null);
         alert.setContentText("Você tem certeza que deseja deletar o adicional \"" + adicionalSelecionado.getNome() + "\"?");
 
-        // Define os botões de opção
+        // Define os botões de opção corretamente com ButtonData
         ButtonType btnCancelar = new ButtonType("Cancelar", ButtonBar.ButtonData.CANCEL_CLOSE);
         ButtonType btnExcluir = new ButtonType("Excluir", ButtonBar.ButtonData.OK_DONE);
         alert.getButtonTypes().setAll(btnCancelar, btnExcluir);
@@ -50,37 +81,23 @@ public class GerenciarAdicionaisController {
 
         if (resultado.isPresent() && resultado.get() == btnExcluir) {
             try {
-                // PROTEÇÃO: Evita que o sistema quebre se não houver linha selecionada
-                if (adicionalSelecionado == null) {
-                    Alert avisoSelection = new Alert(Alert.AlertType.WARNING);
-                    avisoSelection.setTitle("Aviso");
-                    avisoSelection.setHeaderText(null);
-                    avisoSelection.setContentText("Por favor, selecione um adicional na tabela para poder excluir.");
-                    avisoSelection.showAndWait();
-                    return;
-                }
-                // 4. Dispara a regra de remoção passando o Nome do adicional conforme sua Service exige
                 adicionalService.removerAdicional(adicionalSelecionado.getNome());
 
-                // 5. Exibe o feedback de sucesso ao usuário
                 Alert sucesso = new Alert(Alert.AlertType.INFORMATION);
                 sucesso.setTitle("Sucesso");
                 sucesso.setHeaderText(null);
                 sucesso.setContentText("Adicional removido com sucesso!");
                 sucesso.showAndWait();
 
-                // 6. Atualiza a tabela do painel de fundo imediatamente
                 atualizarTabela();
 
             } catch (IllegalArgumentException e) {
-                // Captura o erro caso o nome seja vazio ou inválido pela Service
                 Alert aviso = new Alert(Alert.AlertType.WARNING);
                 aviso.setTitle("Aviso de Validação");
                 aviso.setHeaderText(null);
                 aviso.setContentText(e.getMessage());
                 aviso.showAndWait();
             } catch (Exception e) {
-                // Tratamento geral para falhas de conexão ou SQL
                 Alert erro = new Alert(Alert.AlertType.ERROR);
                 erro.setTitle("Erro");
                 erro.setHeaderText(null);
@@ -91,7 +108,7 @@ public class GerenciarAdicionaisController {
         }
     }
 
-//METODOS DE NAVEGAÇÃO
+    //METODOS DE NAVEGAÇÃO ORIGINAIS
     @FXML
     private void irPedidos(ActionEvent event) {
         LoginController.trocarConteudo(event, "/br/edu/ufersa/pizzaria/views/GerenciarPedidosView.fxml", "La Piazza - Pedidos");
