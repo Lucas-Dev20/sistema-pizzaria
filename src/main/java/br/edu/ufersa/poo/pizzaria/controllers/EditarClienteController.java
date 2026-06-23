@@ -54,7 +54,9 @@ public class EditarClienteController {
 
     @FXML
     private void handleCancelar(ActionEvent event) {
-        fecharFormulario(event);
+        // Apenas fecha o pop-up de forma limpa, sem carregar nenhum FXML
+        javafx.stage.Stage stage = (javafx.stage.Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
+        stage.close();
     }
 
     private void fecharFormulario(ActionEvent event) {
