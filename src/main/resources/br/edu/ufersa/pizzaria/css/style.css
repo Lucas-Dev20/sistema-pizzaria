@@ -357,3 +357,61 @@
         -fx-border-width: 0 0 2 0;
         -fx-border-color: white;
     }
+
+    /* ==========================================================================
+       TELA: ESTOQUE
+       ========================================================================== */
+
+    /* Cabeçalho das colunas da tabela de Estoque */
+    .col-header {
+        -fx-font-weight: bold;
+        -fx-font-size: 13px;
+        -fx-text-fill: #1A1A1A;
+    }
+
+    /* Badge de status "Disponível" */
+    .status-disponivel {
+        -fx-text-fill: #27AE60;
+        -fx-font-weight: 600;
+    }
+
+    /* Badge de status "Esgotado" */
+    .status-esgotado {
+        -fx-text-fill: #C0392B;
+        -fx-font-weight: 600;
+    }
+
+    /* Campos do modal de Adicionar/Editar item de estoque */
+    .estoque-modal-campo {
+        -fx-background-color: #E4E1DB;
+        -fx-background-radius: 8px;
+        -fx-border-color: transparent;
+        -fx-pref-height: 42px;
+        -fx-font-size: 13px;
+    }
+
+    .estoque-modal-campo:focus {
+        -fx-background-color: #DAD7D0;
+        -fx-border-color: #B03A2A;
+        -fx-border-width: 1.5px;
+        -fx-border-radius: 8px;
+    }
+
+    /* Label de seção dentro do modal de estoque */
+    .estoque-modal-label {
+        -fx-font-size: 14px;
+        -fx-font-weight: 600;
+        -fx-text-fill: #1A1A1A;
+    }
+
+    /* Alerta de item com quantidade baixa (uso futuro no dashboard) */
+    .alerta-estoque-baixo {
+        -fx-background-color: #FEF9E7;
+        -fx-border-color: #F39C12;
+        -fx-border-width: 1px;
+        -fx-border-radius: 8px;
+        -fx-background-radius: 8px;
+        -fx-padding: 8px 12px;
+        -fx-text-fill: #9A6400;
+        -fx-font-weight: 600;
+    }
