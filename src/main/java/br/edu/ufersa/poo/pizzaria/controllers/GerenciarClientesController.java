@@ -48,8 +48,9 @@ public class GerenciarClientesController {
         configurarBotoesAcao();
 
         //carrega os dados do banco
-        //atualizarTabela();
+        atualizarTabela();
     }
+
 
     private void configurarBotoesAcao() {
         Callback<TableColumn<Cliente, Void>, TableCell<Cliente, Void>> cellFactory = new Callback<>() {
