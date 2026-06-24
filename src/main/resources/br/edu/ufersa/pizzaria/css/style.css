@@ -1,0 +1,416 @@
+.background {
+    -fx-background-color: #B03A2A;
+}
+
+.login-card {
+    -fx-background-color: #F2F0EB;
+    -fx-background-radius: 18px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.30), 24, 0, 0, 6);
+    -fx-min-height: 650px;
+    -fx-pref-height: 650px;
+}
+
+.titulo {
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1A1A1A;
+}
+
+.campo {
+    -fx-background-color: #E4E1DB;
+    -fx-background-radius: 8px;
+    -fx-border-color: transparent;
+    -fx-pref-height: 42px;
+    -fx-font-size: 13px;
+    -fx-pref-width: 440px;
+}
+
+.campo:focus {
+    -fx-background-color: #DAD7D0;
+    -fx-border-color: #B03A2A;
+    -fx-border-width: 1.5px;
+    -fx-border-radius: 8px;
+}
+
+.botao {
+    -fx-background-color: #FFFFFF;
+    -fx-text-fill: #1A1A1A;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-background-radius: 30px;
+    -fx-border-radius: 30px;
+    -fx-border-color: #CCCCCC;
+    -fx-border-width: 1px;
+    -fx-pref-width: 160px;
+    -fx-pref-height: 44px;
+    -fx-cursor: hand;
+}
+
+.botao:hover {
+    -fx-background-color: #B03A2A;
+    -fx-text-fill: #FFFFFF;
+    -fx-border-color: #B03A2A;
+}
+
+.link {
+    -fx-text-fill: #B03A2A;
+    -fx-font-size: 13px;
+    -fx-border-color: transparent;
+}
+
+.link:hover {
+    -fx-text-fill: #8B2D1F;
+    -fx-underline: true;
+}
+
+.botao-primary {
+    -fx-background-color: #B03A2A;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-background-radius: 30px;
+    -fx-border-radius: 30px;
+    -fx-border-color: #B03A2A;
+    -fx-border-width: 1px;
+    -fx-pref-width: 160px;
+    -fx-pref-height: 44px;
+    -fx-cursor: hand;
+}
+
+.botao-primary:hover {
+    -fx-background-color: #8B2D1F;
+    -fx-border-color: #8B2D1F;
+}
+
+.card-pequeno {
+    -fx-background-color: #F2F0EB;
+    -fx-background-radius: 18px;
+    -fx-effect: dropshadow(
+        gaussian,
+        rgba(0,0,0,0.30),
+        24,
+        0,
+        0,
+        6
+    );
+}
+
+/* ==========================================================================
+   TELA: GERENCIAR CLIENTES (DASHBOARD & TABELA)
+   ========================================================================== */
+
+/* MENU LATERAL (SIDEBAR) */
+.sidebar {
+    -fx-background-color: #B03A2A; /* Mantém o vermelho padrão do seu botão/login */
+    -fx-padding: 30px 20px 20px 10px;
+    -fx-alignment: top-center;
+}
+.sidebar-divisor {
+    -fx-padding: 6 14 6 14;
+}
+
+.sidebar-divisor .line {
+    -fx-border-color: rgba(255,255,255,0.35);
+    -fx-border-width: 1px 0 0 0;
+}
+/* Estilo padrão de todos os botões do menu lateral */
+.sidebar-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 14px;
+    -fx-alignment: center-left;
+    -fx-pref-width: 190px;
+    -fx-pref-height: 40px;
+    -fx-cursor: hand;
+}
+.sidebar-btn:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-background-radius: 5px;
+}
+
+/* Destaque sutil para a aba que está aberta no momento (Clientes) */
+.sidebar-btn-active {
+    -fx-background-color: rgba(255, 255, 255, 0.2);
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-alignment: center-left;
+    -fx-pref-width: 180px;
+    -fx-pref-height: 40px;
+    -fx-background-radius: 5px;
+}
+
+/* Botão Sair fixado no rodapé */
+.sidebar-btn-exit {
+    -fx-background-color: transparent;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 14px;
+    -fx-alignment: center-left;
+    -fx-pref-width: 180px;
+    -fx-padding: 1px 0px 0px 5px;
+    -fx-cursor: hand;
+}
+.sidebar-btn-exit:hover {
+    -fx-underline: true;
+}
+
+/* --- 2. BARRA SUPERIOR VERDE (HEADER) --- */
+.header-banner {
+    -fx-background-color: #7CB375; /* O verde que você definiu no Figma */
+    -fx-background-radius: 0 0 10px 10px;
+}
+
+/* --- 3. ÁREA DE BUSCA E COMPONENTES --- */
+.search-field {
+    -fx-background-color: #E4E1DB; /* Mesma cor de fundo cinza dos seus inputs de login */
+    -fx-background-radius: 20px;
+    -fx-border-color: transparent;
+    -fx-padding: 8px 15px 8px 15px;
+    -fx-font-size: 13px;
+}
+.search-field:focus {
+    -fx-background-color: #DAD7D0;
+    -fx-border-color: #B03A2A;
+    -fx-border-width: 1px;
+    -fx-border-radius: 20px;
+}
+
+/* Botão "+ Novo Cliente" que imita o seu estilo outline */
+.btn-success {
+    -fx-background-color: #FFFFFF;
+    -fx-text-fill: #1A1A1A;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-background-radius: 30px;
+    -fx-border-radius: 30px;
+    -fx-border-color: #CCCCCC;
+    -fx-border-width: 1px;
+    -fx-padding: 8px 20px 8px 20px;
+    -fx-cursor: hand;
+}
+.btn-success:hover {
+    -fx-background-color: #E4E1DB;
+}
+
+/* --- 4. CUSTOMIZAÇÃO LIMPA DA TABELA (TABLEVIEW) --- */
+.table-view {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+/* Remove os fundos cinzas padrões dos cabeçalhos da tabela */
+.table-view .column-header-background {
+    -fx-background-color: transparent;
+    -fx-padding: 0 0 10px 0;
+}
+
+.table-view .column-header {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-size: 40px;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: #1A1A1A;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+}
+
+/* Customização das linhas com dados */
+.table-row-cell {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent transparent #E4E1DB transparent; /* Linha inferior sutil dividindo os clientes */
+    -fx-padding: 12px 0 12px 0;
+}
+.table-view .table-row-cell:hover {
+    -fx-background-color: rgba(228, 225, 219, 0.3);
+}
+ 
+
+/* 5. CARDS DE SABORES (TIPO DE PIZZA)*/
+.pizza-card {
+    -fx-background-color: #F2F0EB; /* Mesma cor de fundo do seu card de login */
+    -fx-background-radius: 15px;
+    -fx-padding: 15px;
+    -fx-pref-width: 320px;
+}
+
+.pizza-sabor-titulo {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1A1A1A;
+}
+
+.badge-tamanho {
+    -fx-background-color: #E4E1DB;
+    -fx-background-radius: 10px;
+    -fx-padding: 4px 10px 4px 10px;
+    -fx-font-size: 12px;
+}
+
+/* Tela pedidos */
+.linha-tabela {
+       -fx-background-color: #FFFFFF;
+       -fx-border-color: transparent transparent #F5F5F5 transparent;
+       -fx-border-width: 0 0 1px 0;
+   }
+
+   .linha-tabela:hover {
+       -fx-background-color: #FBFBFA;
+   }
+
+   /* ---------- BOTÕES DE AÇÃO (editar / excluir) NA TABELA ---------- */
+
+   .btn-icone {
+       -fx-background-color: transparent;
+       -fx-border-color: #CCCCCC;
+       -fx-border-radius: 6px;
+       -fx-background-radius: 6px;
+       -fx-border-width: 1px;
+       -fx-pref-width: 30px;
+       -fx-pref-height: 30px;
+       -fx-font-size: 13px;
+       -fx-cursor: hand;
+       -fx-padding: 0;
+   }
+
+   .btn-icone:hover {
+       -fx-background-color: #EEEEEE;
+   }
+
+   .btn-icone-excluir {
+       -fx-border-color: #C0392B;
+       -fx-text-fill: #C0392B;
+   }
+
+   .btn-icone-excluir:hover {
+       -fx-background-color: #FDECEA;
+   }
+
+   /* ---------- COMBOBOX DENTRO DOS MODAIS (Novo/Editar Pedido) ---------- */
+
+   .combo-filtro {
+       -fx-background-color: #FFFFFF;
+       -fx-background-radius: 8px;
+       -fx-border-color: #DEDBD4;
+       -fx-border-radius: 8px;
+       -fx-border-width: 1px;
+       -fx-pref-height: 40px;
+       -fx-font-size: 13px;
+   }
+
+   /* ---------- BOTÕES DOS MODAIS (Novo Pedido, Editar, Excluir) ---------- */
+   /* Só adicione estas duas classes se "botao" e "botao-primary"        */
+   /* ainda não existirem no style.css do grupo (provavelmente já existem  */
+   /* pela tela de Login) — nesse caso, pule este bloco.                 */
+
+   .botao {
+       -fx-background-color: #FFFFFF;
+       -fx-text-fill: #1A1A1A;
+       -fx-font-size: 14px;
+       -fx-font-weight: 600;
+       -fx-background-radius: 30px;
+       -fx-border-radius: 30px;
+       -fx-border-color: #CCCCCC;
+       -fx-border-width: 1px;
+       -fx-pref-width: 140px;
+       -fx-pref-height: 40px;
+       -fx-cursor: hand;
+   }
+
+   .botao:hover {
+       -fx-background-color: #F0F0F0;
+   }
+
+   .botao-primary {
+       -fx-background-color: #7CB375;
+       -fx-text-fill: #FFFFFF;
+       -fx-font-size: 14px;
+       -fx-font-weight: 600;
+       -fx-background-radius: 30px;
+       -fx-border-radius: 30px;
+       -fx-border-color: #7CB375;
+       -fx-border-width: 1px;
+       -fx-pref-width: 140px;
+       -fx-pref-height: 40px;
+       -fx-cursor: hand;
+   }
+
+   .botao-primary:hover {
+       -fx-background-color: #6BA063;
+   }
+
+/*--CUSTOMIZAÇÃO DO PAINEL DE CONTROLE--*/
+
+    /* definição padrão dos botões*/
+    .dashboard-menu-hover{
+        -fx-background-color: transparent;
+    }
+
+    /* muda a cor para um tom mais escuro ao passar o mouse */
+    .dashboard-menu-item:hover{
+        -fx-background-color: #8B0000;
+    }
+
+    .dashboard-menu-item-border{
+        -fx-border-width: 0 0 2 0;
+        -fx-border-color: white;
+    }
+
+    /* ==========================================================================
+       TELA: ESTOQUE
+       ========================================================================== */
+
+    /* Cabeçalho das colunas da tabela de Estoque */
+    .col-header {
+        -fx-font-weight: bold;
+        -fx-font-size: 13px;
+        -fx-text-fill: #1A1A1A;
+    }
+
+    /* Badge de status "Disponível" */
+    .status-disponivel {
+        -fx-text-fill: #27AE60;
+        -fx-font-weight: 600;
+    }
+
+    /* Badge de status "Esgotado" */
+    .status-esgotado {
+        -fx-text-fill: #C0392B;
+        -fx-font-weight: 600;
+    }
+
+    /* Campos do modal de Adicionar/Editar item de estoque */
+    .estoque-modal-campo {
+        -fx-background-color: #E4E1DB;
+        -fx-background-radius: 8px;
+        -fx-border-color: transparent;
+        -fx-pref-height: 42px;
+        -fx-font-size: 13px;
+    }
+
+    .estoque-modal-campo:focus {
+        -fx-background-color: #DAD7D0;
+        -fx-border-color: #B03A2A;
+        -fx-border-width: 1.5px;
+        -fx-border-radius: 8px;
+    }
+
+    /* Label de seção dentro do modal de estoque */
+    .estoque-modal-label {
+        -fx-font-size: 14px;
+        -fx-font-weight: 600;
+        -fx-text-fill: #1A1A1A;
+    }
+
+    /* Alerta de item com quantidade baixa (uso futuro no dashboard) */
+    .alerta-estoque-baixo {
+        -fx-background-color: #FEF9E7;
+        -fx-border-color: #F39C12;
+        -fx-border-width: 1px;
+        -fx-border-radius: 8px;
+        -fx-background-radius: 8px;
+        -fx-padding: 8px 12px;
+        -fx-text-fill: #9A6400;
+        -fx-font-weight: 600;
+    }

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="700.0" prefWidth="700.0"
+            stylesheets="@../css/style.css"
+            styleClass="background"
+            xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="br.edu.ufersa.poo.pizzaria.controllers.LoginController">
+
+    <VBox alignment="CENTER"
+          AnchorPane.topAnchor="0.0"
+          AnchorPane.bottomAnchor="0.0"
+          AnchorPane.leftAnchor="0.0"
+          AnchorPane.rightAnchor="0.0">
+
+        <Pane styleClass="login-card" maxWidth="550">
+
+            <VBox spacing="15" layoutX="30" layoutY="20" prefWidth="490">
+
+                <HBox alignment="CENTER">
+                    <ImageView fitHeight="250" fitWidth="350" preserveRatio="true">
+                        <image>
+                            <Image url="@../images/logo.png"/>
+                        </image>
+                    </ImageView>
+                </HBox>
+
+                <Label text="Faça login" styleClass="titulo"/>
+
+                <Label text="Usuário"/>
+                <TextField fx:id="txtUsuario"
+                           promptText="joaosilva@email.com"
+                           styleClass="campo"/>
+
+                <Label text="Senha"/>
+                <PasswordField fx:id="txtSenha"
+                               promptText="Digite a senha"
+                               styleClass="campo"/>
+
+                <HBox spacing="30" alignment="CENTER">
+                    <Button text="Criar conta"
+                            onAction="#abrirCadastro"
+                            styleClass="botao"/>
+                    <Button text="Entrar"
+                            onAction="#fazerLogin"
+                            styleClass="botao-primary"/>
+                </HBox>
+
+                <HBox alignment="CENTER">
+                    <Hyperlink text="Esqueceu a senha?"
+                               onAction="#esqueceuSenha"
+                               styleClass="link"/>
+                </HBox>
+
+            </VBox>
+
+        </Pane>
+
+    </VBox>
+
+</AnchorPane>

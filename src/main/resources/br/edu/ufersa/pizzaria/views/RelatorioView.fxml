@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane prefHeight="700.0" prefWidth="1050.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.edu.ufersa.poo.pizzaria.controllers.RelatorioController">
+
+    <!-- ══════════════════════════════════════════════════
+         SIDEBAR — idêntica a Pedidos.fxml
+    ══════════════════════════════════════════════════ -->
+    <left>
+        <VBox prefWidth="200" spacing="10" styleClass="sidebar">
+            <ImageView fitWidth="180.0" preserveRatio="true">
+                <Image url="@../images/logo.png" />
+                <VBox.margin><Insets top="-40.0" /></VBox.margin>
+            </ImageView>
+
+            <Button onAction="#irPedidos" text="📋 Pedidos">
+            <styleClass>
+               <String fx:value="sidebar-btn" />
+               <String fx:value="dashboard-menu-item-border" />
+            </styleClass></Button>
+            <Button onAction="#irClientes" text="👥 Clientes">
+            <styleClass>
+               <String fx:value="sidebar-btn" />
+               <String fx:value="dashboard-menu-item-border" />
+            </styleClass></Button>
+            <Button onAction="#irTiposPizza" text="🍕 Tipos de pizza">
+            <styleClass>
+               <String fx:value="sidebar-btn" />
+               <String fx:value="dashboard-menu-item-border" />
+            </styleClass></Button>
+            <Button onAction="#irAdicionais" text="💼 Adicionais">
+            <styleClass>
+               <String fx:value="sidebar-btn" />
+               <String fx:value="dashboard-menu-item-border" />
+            </styleClass></Button>
+            <Button onAction="#irEstoque" text="📦 Estoque">
+            <styleClass>
+               <String fx:value="sidebar-btn" />
+               <String fx:value="dashboard-menu-item-border" />
+            </styleClass></Button>
+            <Button onAction="#irRelatorios" text="📊 Relatórios">
+            <styleClass>
+               <String fx:value="sidebar-btn-active" />
+               <String fx:value="dashboard-menu-item-border" />
+            </styleClass></Button>
+
+            <Region styleClass="dashboard-menu-item-border" VBox.vgrow="ALWAYS" />
+            <Button onAction="#sair" styleClass="sidebar-btn-exit" text="Sair" />
+        </VBox>
+    </left>
+
+    <!-- ══════════════════════════════════════════════════
+         CENTRO
+    ══════════════════════════════════════════════════ -->
+    <center>
+        <VBox spacing="16" style="-fx-padding: 30; -fx-background-color: #F4F4F4;">
+
+            <!-- HEADER VERDE -->
+            <VBox maxWidth="1.7976931348623157E308" style="-fx-background-color: #7CB375; -fx-padding: 20;" styleClass="header-banner">
+                <HBox alignment="CENTER_LEFT">
+                    <Label style="-fx-text-fill: white; -fx-font-size: 28; -fx-font-weight: bold;" text="Relatório">
+                        <HBox.margin><Insets top="10.0" /></HBox.margin>
+                    </Label>
+                    <Region HBox.hgrow="ALWAYS" />
+                    <Button onAction="#exportarRelatorio" styleClass="btn-success" text="⬇ Exportar relatório" />
+                </HBox>
+                <VBox.margin><Insets /></VBox.margin>
+            </VBox>
+
+            <!-- SCROLL GERAL -->
+            <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-border-color: transparent;" VBox.vgrow="ALWAYS">
+                <VBox spacing="16">
+
+                    <!-- ── CARD FILTROS ─────────────────────────────────── -->
+                    <VBox spacing="10" style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 16 20 16 20;">
+                        <HBox alignment="CENTER_LEFT">
+                            <Label style="-fx-font-size: 14px; -fx-font-weight: bold;" text="Filtros" />
+                            <Region HBox.hgrow="ALWAYS" />
+                            <Button onAction="#confirmarLimparFiltros" styleClass="btn-limpar-filtro" text="🗑 Limpar filtro" />
+                        </HBox>
+
+                        <HBox alignment="CENTER_LEFT" spacing="12">
+                            <VBox spacing="4">
+                                <Label styleClass="filtro-label" text="Período" />
+                                <ComboBox fx:id="filtroPeriodo" onAction="#aplicarFiltros" prefWidth="190" styleClass="combo-filtro" />
+                            </VBox>
+                            <VBox spacing="4">
+                                <Label styleClass="filtro-label" text="Estado" />
+                                <ComboBox fx:id="filtroEstado" onAction="#aplicarFiltros" prefWidth="160" styleClass="combo-filtro" />
+                            </VBox>
+                            <VBox spacing="4">
+                                <Label styleClass="filtro-label" text="Sabor" />
+                                <ComboBox fx:id="filtroSabor" onAction="#aplicarFiltros" prefWidth="180" styleClass="combo-filtro" />
+                            </VBox>
+                            <VBox spacing="4">
+                                <Label styleClass="filtro-label" text="Cliente" />
+                                <ComboBox fx:id="filtroCliente" onAction="#aplicarFiltros" prefWidth="180" styleClass="combo-filtro" />
+                            </VBox>
+                        </HBox>
+                    </VBox>
+
+                    <!-- ── CARDS DE MÉTRICAS ────────────────────────────── -->
+                    <HBox spacing="12">
+
+                        <!-- Faturamento -->
+                        <VBox spacing="6" styleClass="metrica-card" HBox.hgrow="ALWAYS">
+                            <HBox alignment="CENTER_LEFT" spacing="6">
+                                <Label styleClass="metrica-titulo" text="Faturamento" />
+                                <Label text="💰" />
+                            </HBox>
+                            <Label fx:id="labelFaturamento" styleClass="metrica-valor" text="R$ 0,00" />
+                        </VBox>
+
+                        <!-- Custo reposição -->
+                        <VBox spacing="6" styleClass="metrica-card" HBox.hgrow="ALWAYS">
+                            <HBox alignment="CENTER_LEFT" spacing="6">
+                                <Label styleClass="metrica-titulo" text="Custo reposição" />
+                                <Label text="📦" />
+                            </HBox>
+                            <Label fx:id="labelCusto" styleClass="metrica-valor-custo" text="R$ 0,00" />
+                        </VBox>
+
+                        <!-- Lucro -->
+                        <VBox spacing="6" styleClass="metrica-card" HBox.hgrow="ALWAYS">
+                            <HBox alignment="CENTER_LEFT" spacing="6">
+                                <Label styleClass="metrica-titulo" text="Lucro" />
+                                <Label text="📈" />
+                            </HBox>
+                            <Label fx:id="labelLucro" styleClass="metrica-valor-lucro" text="R$ 0,00" />
+                        </VBox>
+
+                        <!-- Total de pedidos -->
+                        <VBox spacing="6" styleClass="metrica-card" HBox.hgrow="ALWAYS">
+                            <HBox alignment="CENTER_LEFT" spacing="6">
+                                <Label styleClass="metrica-titulo" text="Total de pedidos" />
+                                <Label text="🍕" />
+                            </HBox>
+                            <Label fx:id="labelTotalPedidos" styleClass="metrica-valor" text="0" />
+                        </VBox>
+
+                        <!-- Sabor mais vendido -->
+                        <VBox prefWidth="210" spacing="6" styleClass="metrica-card">
+                            <HBox alignment="CENTER_LEFT" spacing="6">
+                                <Label styleClass="metrica-titulo" text="Sabor mais vendido" />
+                                <Label text="🍕" />
+                            </HBox>
+                            <VBox fx:id="boxSaboresMaisVendidos" spacing="3" />
+                        </VBox>
+
+                    </HBox>
+
+                    <!-- ── PEDIDOS POR ESTADO ───────────────────────────── -->
+                    <VBox spacing="12" style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 16 20 16 20;">
+                        <HBox alignment="CENTER_LEFT" spacing="8">
+                            <Label style="-fx-font-size: 14px; -fx-font-weight: bold;" text="Pedidos por estado" />
+                            <Label text="🍕" />
+                        </HBox>
+                        <HBox fx:id="boxEstados" spacing="12" />
+                    </VBox>
+
+                    <!-- ── VENDAS POR CLIENTE ───────────────────────────── -->
+                    <VBox spacing="10" style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 16 20 16 20;">
+                        <HBox alignment="CENTER_LEFT" spacing="8">
+                            <Label style="-fx-font-size: 14px; -fx-font-weight: bold;" text="Vendas por cliente" />
+                            <Label text="👥" />
+                        </HBox>
+
+                        <!-- cabeçalho da mini-tabela -->
+                        <HBox style="-fx-padding: 0 0 4 0;">
+                            <Label prefWidth="260" style="-fx-font-weight: bold; -fx-font-size: 13px;" text="Cliente" />
+                            <Label prefWidth="120" style="-fx-font-weight: bold; -fx-font-size: 13px;" text="Quantidade" />
+                            <Label prefWidth="140" style="-fx-font-weight: bold; -fx-font-size: 13px;" text="Valor Total" />
+                        </HBox>
+                        <Separator />
+
+                        <!-- linhas geradas pelo controller -->
+                        <VBox fx:id="listaVendasCliente" spacing="0" />
+                    </VBox>
+
+                </VBox>
+            </ScrollPane>
+
+        </VBox>
+    </center>
+
+</BorderPane>
