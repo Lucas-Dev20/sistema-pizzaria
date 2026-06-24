@@ -9,6 +9,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+
         // roda a automação do banco de dados antes de tudo
         br.edu.ufersa.poo.pizzaria.util.DatabaseInitializer.inicializarBanco();
 
