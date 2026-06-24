@@ -105,7 +105,7 @@ public class GerenciarClientesController {
     private void handleEditarCliente(Cliente cliente) {
         try {
             //carrega o arquivo FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/br/edu/ufersa/pizzaria/views/EditarClienteView.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/br/edu/ufersa/poo/pizzaria/views/EditarClienteView.fxml"));
             Parent root = loader.load();
 
             //pega o controller da tela de edição que acabou de nascer na memória
@@ -177,10 +177,10 @@ public class GerenciarClientesController {
         LoginController.abrirModal("/br/edu/ufersa/pizzaria/views/CadastrarClienteView.fxml", "La Piazza - Novo Cliente");
         atualizarTabela();
     }
-    //METODOS DE NAVEGAÇÃO
+//METODOS DE NAVEGAÇÃO
     @FXML
     private void irPedidos(ActionEvent event) {
-        LoginController.trocarConteudo(event, "/br/edu/ufersa/pizzaria/views/Pedidos.fxml", "La Piazza - Pedidos");
+        LoginController.trocarConteudo(event, "/br/edu/ufersa/pizzaria/views/GerenciarPedidosView.fxml", "La Piazza - Pedidos");
     }
 
     @FXML
@@ -200,15 +200,13 @@ public class GerenciarClientesController {
 
     @FXML
     private void irEstoque(ActionEvent event) {
-        LoginController.trocarConteudo(event, "/br/edu/ufersa/pizzaria/views/EstoqueView.fxml", "La Piazza - Estoque");
+        LoginController.trocarConteudo(event, "/br/edu/ufersa/pizzaria/views/GerenciarEstoqueView.fxml", "La Piazza - Estoque");
     }
 
     @FXML
     private void irRelatorios(ActionEvent event) {
-        LoginController.trocarConteudo(event, "/br/edu/ufersa/pizzaria/views/RelatorioView.fxml", "La Piazza - Relatórios");
+        LoginController.trocarConteudo(event, "/br/edu/ufersa/pizzaria/views/GerenciarRelatoriosView.fxml", "La Piazza - Relatórios");
     }
-
-    @FXML private void irFuncionarios(ActionEvent event){LoginController.trocarConteudo(event, "/br/edu/ufersa/pizzaria/views/GerenciarFuncionariosView.fxml", "La Piazza - Funcionários");}
 
     @FXML
     private void sair(ActionEvent event) {

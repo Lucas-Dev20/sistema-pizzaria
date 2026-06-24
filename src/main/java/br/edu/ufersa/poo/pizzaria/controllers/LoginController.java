@@ -2,227 +2,145 @@ package br.edu.ufersa.poo.pizzaria.controllers;
 
 import br.edu.ufersa.poo.pizzaria.model.entities.Usuario;
 import br.edu.ufersa.poo.pizzaria.model.services.UsuarioService;
-import br.edu.ufersa.poo.pizzaria.session.SessaoUsuario;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.stage.Modality;
+import javafx.scene.control.Alert;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javafx.scene.Node;
 
 import java.io.IOException;
 
-/**
- * Controller da tela de Login.
- *
- * Responsabilidades:
- *   1. Autenticar o usuário com e-mail + senha.
- *   2. Após login bem-sucedido, redirecionar para o Painel de controle.
- *   3. Métodos estáticos utilitários reutilizados pelos outros controllers
- *      (trocarConteudo, abrirModal) — já referenciados no código existente.
- */
 public class LoginController {
 
-    // ── Componentes da tela ───────────────────────────────────────────────────
-    @FXML private TextField     txtEmail;
+    @FXML private TextField     txtUsuario;
     @FXML private PasswordField txtSenha;
-    @FXML private Label         lblErro;
 
-    // ── Perfil selecionado pelos botões laterais ───────────────────────────────
-    // (os botões "Administrador" e "Funcionário" do design são apenas visuais/dica;
-    //  o perfil real vem do banco conforme o e-mail cadastrado)
-    private String perfilSelecionado = null; // "ADMIN" ou "FUNCIONARIO"
+    // ── SESSÃO GLOBAL ──────────────────────────────────────────────────────
+    // Guarda o usuário logado para ser consultado por qualquer outro
+    // controller (ex: GerenciarPizzasController verifica se é admin).
+    // É static para durar enquanto a aplicação estiver aberta.
+    private static Usuario usuarioLogado = null;
 
-    private final UsuarioService usuarioService = new UsuarioService();
-
-    // ── Inicialização ─────────────────────────────────────────────────────────
-    @FXML
-    public void initialize() {
-        lblErro.setVisible(false);
-        // Garante que o admin padrão existe no banco
-        try {
-            usuarioService.garantirAdminPadrao();
-        } catch (Exception e) {
-            // Silencia na tela; log no console
-            System.err.println("Aviso: não foi possível garantir admin padrão: " + e.getMessage());
-        }
+    public static Usuario getUsuarioLogado() {
+        return usuarioLogado;
     }
 
-    // ── Seleção de perfil (botões laterais) ───────────────────────────────────
-
-    @FXML private Button btnAdmin;
-    @FXML private Button btnFuncionario;
-
+    // ── LOGIN ──────────────────────────────────────────────────────────────
     @FXML
-    private void selecionarAdmin(ActionEvent event) {
-        perfilSelecionado = "ADMIN";
-        btnAdmin.setStyle("-fx-background-color: #8B2318; -fx-text-fill: white; -fx-background-radius: 20;");
-        btnFuncionario.setStyle(""); // reseta o outro
-    }
-
-    @FXML
-    private void selecionarFuncionario(ActionEvent event) {
-        perfilSelecionado = "FUNCIONARIO";
-        btnFuncionario.setStyle("-fx-background-color: #8B2318; -fx-text-fill: white; -fx-background-radius: 20;");
-        btnAdmin.setStyle(""); // reseta o outro
-    }
-
-    // ── Login ─────────────────────────────────────────────────────────────────
-
-    @FXML
-    private void handleEntrar(ActionEvent event) {
-        lblErro.setVisible(false);
-
-        String email = txtEmail.getText().trim();
+    private void fazerLogin(ActionEvent event) {
+        String login = txtUsuario.getText().trim();
         String senha = txtSenha.getText();
 
+        // Validação básica de campos vazios (sem consultar o banco)
+        if (login.isBlank() || senha.isBlank()) {
+            mostrarAviso("Preencha usuário e senha.");
+            return;
+        }
+
         try {
-            // Autentica e inicia a sessão
-            Usuario usuario = usuarioService.autenticar(email, senha);
+            // Chama o service, que chama o DAO, que faz:
+            // SELECT * FROM usuario WHERE login = ? AND senha = ?
+            Usuario usuario = UsuarioService.autenticar(login, senha);
 
-            // Redireciona para o painel principal
-            trocarConteudo(event,
+            if (usuario == null) {
+                // Banco não encontrou nenhum usuário com esse login+senha
+                mostrarAviso("Usuário ou senha incorretos.");
+                return;
+            }
+
+            // Autenticação OK — salva o usuário na sessão global
+            usuarioLogado = usuario;
+
+            // Redireciona para o painel de controle
+            trocarConteudo(
+                    event,
                     "/br/edu/ufersa/pizzaria/views/PainelDeControle.fxml",
-                    "La Piazza — Painel de Controle");
+                    "La Piazza - Painel de Controle"
+            );
 
+        } catch (IllegalArgumentException e) {
+            mostrarAviso(e.getMessage());
         } catch (Exception e) {
-            lblErro.setText(e.getMessage());
-            lblErro.setVisible(true);
-            txtSenha.clear();
+            mostrarErro("Erro ao conectar ao banco de dados. Verifique a conexão.");
+            e.printStackTrace();
         }
     }
 
-    // ── Criar conta ───────────────────────────────────────────────────────────
-    // Conforme o design, "Criar conta" abre um modal de registro.
-    // Contudo, pelo enunciado, apenas o ADM cadastra funcionários.
-    // Esta ação abre o formulário de auto-cadastro (caso habilitado),
-    // ou pode ser ocultada e substituída pelo fluxo de ADM cadastrar funcionário.
-
     @FXML
-    private void handleCriarConta(ActionEvent event) {
-        abrirModal("/br/edu/ufersa/pizzaria/views/CriarConta.fxml",
-                "Criar Conta");
+    private void esqueceuSenha(ActionEvent event) {
+        trocarConteudo(event, "/br/edu/ufersa/pizzaria/views/RecuperarSenha.fxml", "Recuperar Senha");
     }
 
-    // ── Recuperar senha ───────────────────────────────────────────────────────
-
     @FXML
-    private void handleEsqueceuSenha(ActionEvent event) {
-        abrirModal("/br/edu/ufersa/pizzaria/views/RecuperarSenha.fxml",
-                "Recuperar Senha");
+    private void abrirCadastro(ActionEvent event) {
+        trocarConteudo(event, "/br/edu/ufersa/pizzaria/views/CriarConta.fxml", "Criar Conta");
     }
 
-    // =========================================================================
-    // MÉTODOS ESTÁTICOS UTILITÁRIOS
-    // Reutilizados por TODOS os outros controllers para navegar entre telas.
-    // (Já referenciados no GerenciarAdicionaisController existente)
-    // =========================================================================
-
-    /**
-     * Troca o conteúdo da janela atual por outro FXML.
-     * Mantém a mesma janela (Stage) aberta.
-     *
-     * @param event   Evento JavaFX (para obter o Stage atual)
-     * @param fxmlPath Caminho do FXML de destino (ex: "/views/PedidosView.fxml")
-     * @param titulo  Título da nova janela
-     */
-    public static void trocarConteudo(ActionEvent event, String fxmlPath, String titulo) {
+    // ── NAVEGAÇÃO (estático — usado por todos os controllers) ──────────────
+    static void trocarConteudo(ActionEvent event, String fxmlPath, String titulo) {
         try {
-            FXMLLoader loader = new FXMLLoader(LoginController.class.getResource(fxmlPath));
+            FXMLLoader loader = new FXMLLoader(
+                    LoginController.class.getResource(fxmlPath)
+            );
             Parent root = loader.load();
 
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-
-            // Preserva maximizado e dimensões para que a tela não encolha ao navegar
-            boolean eraMaximizado = stage.isMaximized();
-            double largura = stage.getWidth();
-            double altura  = stage.getHeight();
-
-            stage.setScene(new Scene(root, largura, altura));
+            stage.getScene().setRoot(root);
             stage.setTitle(titulo);
 
-            if (eraMaximizado) {
-                stage.setMaximized(false); // força recálculo
-                stage.setMaximized(true);
-            }
-            stage.show();
-
         } catch (IOException e) {
-            System.err.println("Erro ao carregar tela: " + fxmlPath);
             e.printStackTrace();
-            mostrarAlertaEstatico(Alert.AlertType.ERROR, "Erro de Navegação",
-                    "Não foi possível abrir a tela solicitada.\nArquivo: " + fxmlPath);
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erro");
+            alert.setHeaderText(null);
+            alert.setContentText("Não foi possível carregar: " + fxmlPath);
+            alert.showAndWait();
         }
     }
 
-    /**
-     * Abre um FXML em uma nova janela modal (pop-up).
-     * Bloqueia a janela pai até o modal ser fechado.
-     *
-     * @param fxmlPath Caminho do FXML do modal
-     * @param titulo   Título da janela modal
-     */
+    // ── MODAL (usado por controllers para abrir subjanelas) ────────────────
     public static void abrirModal(String fxmlPath, String titulo) {
         try {
             FXMLLoader loader = new FXMLLoader(
-                    LoginController.class.getResource(fxmlPath));
+                    LoginController.class.getResource(fxmlPath)
+            );
             Parent root = loader.load();
 
-            Stage modal = new Stage();
-            modal.setTitle(titulo);
-            modal.setScene(new Scene(root));
-            modal.initModality(Modality.APPLICATION_MODAL);
-            modal.showAndWait();
+            Stage modalStage = new Stage();
+            modalStage.setTitle(titulo);
+            modalStage.initStyle(javafx.stage.StageStyle.UNDECORATED);
+            modalStage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+
+            javafx.scene.Scene scene = new javafx.scene.Scene(root);
+            modalStage.setScene(scene);
+            modalStage.centerOnScreen();
+            modalStage.showAndWait();
 
         } catch (IOException e) {
-            System.err.println("Erro ao abrir modal: " + fxmlPath);
+            System.err.println("Erro ao carregar o modal: " + fxmlPath);
             e.printStackTrace();
-            mostrarAlertaEstatico(Alert.AlertType.ERROR, "Erro",
-                    "Não foi possível abrir o formulário.");
         }
     }
 
-    /**
-     * Abre um modal e retorna o controller carregado.
-     * Útil quando o controller do modal precisa receber dados (ex: edição).
-     *
-     * @param fxmlPath Caminho do FXML
-     * @param titulo   Título da janela
-     * @param <T>      Tipo do controller esperado
-     * @return O controller do FXML carregado, ou null em caso de erro
-     */
-    public static <T> T abrirModalComController(String fxmlPath, String titulo) {
-        try {
-            FXMLLoader loader = new FXMLLoader(
-                    LoginController.class.getResource(fxmlPath));
-            Parent root = loader.load();
-
-            Stage modal = new Stage();
-            modal.setTitle(titulo);
-            modal.setScene(new Scene(root));
-            modal.initModality(Modality.APPLICATION_MODAL);
-            modal.showAndWait();
-
-            return loader.getController();
-
-        } catch (IOException e) {
-            System.err.println("Erro ao abrir modal com controller: " + fxmlPath);
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    // ── Helper de alerta estático ─────────────────────────────────────────────
-
-    private static void mostrarAlertaEstatico(Alert.AlertType tipo, String titulo, String msg) {
-        Alert alert = new Alert(tipo);
-        alert.setTitle(titulo);
+    // ── HELPERS ────────────────────────────────────────────────────────────
+    private void mostrarAviso(String msg) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Aviso");
         alert.setHeaderText(null);
         alert.setContentText(msg);
         alert.showAndWait();
     }
 
+    private void mostrarErro(String msg) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Erro");
+        alert.setHeaderText(null);
+        alert.setContentText(msg);
+        alert.showAndWait();
+    }
 }

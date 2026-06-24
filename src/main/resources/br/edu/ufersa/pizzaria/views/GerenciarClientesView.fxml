@@ -24,48 +24,40 @@
             </ImageView>
 
             <Button onAction="#irPedidos" text="📋 Pedidos">
-                <styleClass>
-                    <String fx:value="sidebar-btn" />
-                    <String fx:value="dashboard-menu-item-border" />
-                </styleClass></Button>
+            <styleClass>
+               <String fx:value="sidebar-btn" />
+               <String fx:value="dashboard-menu-item-border" />
+            </styleClass></Button>
 
             <Button onAction="#irClientes" text="👥 Clientes">
-                <styleClass>
-                    <String fx:value="sidebar-btn-active" />
-                    <String fx:value="dashboard-menu-item-border" />
-                </styleClass></Button>
+            <styleClass>
+               <String fx:value="sidebar-btn-active" />
+               <String fx:value="dashboard-menu-item-border" />
+            </styleClass></Button>
 
             <Button onAction="#irTiposPizza" text="🍕 Tipos de pizza">
-                <styleClass>
-                    <String fx:value="sidebar-btn" />
-                    <String fx:value="dashboard-menu-item-border" />
-                </styleClass></Button>
+            <styleClass>
+               <String fx:value="sidebar-btn" />
+               <String fx:value="dashboard-menu-item-border" />
+            </styleClass></Button>
 
             <Button onAction="#irAdicionais" text="💼 Adicionais">
-                <styleClass>
-                    <String fx:value="sidebar-btn" />
-                    <String fx:value="dashboard-menu-item-border" />
-                </styleClass></Button>
+            <styleClass>
+               <String fx:value="sidebar-btn" />
+               <String fx:value="dashboard-menu-item-border" />
+            </styleClass></Button>
 
             <Button onAction="#irEstoque" text="📦 Estoque">
-                <styleClass>
-                    <String fx:value="sidebar-btn" />
-                    <String fx:value="dashboard-menu-item-border" />
-                </styleClass></Button>
+            <styleClass>
+               <String fx:value="sidebar-btn" />
+               <String fx:value="dashboard-menu-item-border" />
+            </styleClass></Button>
 
             <Button onAction="#irRelatorios" text="📊 Relatórios">
-                <styleClass>
-                    <String fx:value="sidebar-btn" />
-                    <String fx:value="dashboard-menu-item-border" />
-                </styleClass></Button>
-
-            <Button onAction="#irFuncionarios" text="👤 Funcionários">
-                <styleClass>
-                    <String fx:value="sidebar-btn" />
-                    <String fx:value="dashboard-menu-item-border" />
-                </styleClass>
-            </Button>
-
+            <styleClass>
+               <String fx:value="sidebar-btn" />
+               <String fx:value="dashboard-menu-item-border" />
+            </styleClass></Button>
 
             <Region styleClass="dashboard-menu-item-border" VBox.vgrow="ALWAYS" />
 
