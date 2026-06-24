@@ -12,7 +12,6 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.layout.VBox?>
-<?import org.kordamp.ikonli.javafx.FontIcon?>
 
 <BorderPane prefHeight="700.0" prefWidth="950.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.edu.ufersa.poo.pizzaria.controllers.GerenciarPizzasController">
 
@@ -25,59 +24,41 @@
                 </image>
             </ImageView>
 
-            <Button alignment="CENTER" maxWidth="1.7976931348623157E308" onAction="#irPedidos" prefHeight="31.0" prefWidth="198.0" text=" Pedidos" VBox.vgrow="ALWAYS">
+            <Button alignment="CENTER" maxWidth="1.7976931348623157E308" onAction="#irPedidos" prefHeight="31.0" prefWidth="198.0" text="📋 Pedidos" VBox.vgrow="ALWAYS">
             <styleClass>
                <String fx:value="sidebar-btn" />
                <String fx:value="dashboard-menu-item-border" />
-            </styleClass>
-            <graphic>
-               <FontIcon iconColor="WHITE" iconLiteral="mdi2c-clipboard-check-multiple-outline" iconSize="20" />
-            </graphic></Button>
+            </styleClass></Button>
 
-            <Button onAction="#irClientes" text=" Clientes">
+            <Button onAction="#irClientes" text="👥 Clientes">
             <styleClass>
                <String fx:value="sidebar-btn" />
                <String fx:value="dashboard-menu-item-border" />
-            </styleClass>
-            <graphic>
-               <FontIcon iconColor="WHITE" iconLiteral="mdi2a-account-multiple" iconSize="20" />
-            </graphic></Button>
+            </styleClass></Button>
 
-            <Button onAction="#irTiposPizza" text=" Tipos de pizza">
+            <Button onAction="#irTiposPizza" text="🍕 Tipos de pizza">
             <styleClass>
                <String fx:value="sidebar-btn-active" />
                <String fx:value="dashboard-menu-item-border" />
-            </styleClass>
-            <graphic>
-               <FontIcon iconColor="WHITE" iconLiteral="mdi2p-pizza" iconSize="20" />
-            </graphic></Button>
+            </styleClass></Button>
 
-            <Button onAction="#irAdicionais" text=" Adicionais">
+            <Button onAction="#irAdicionais" text="💼 Adicionais">
             <styleClass>
                <String fx:value="sidebar-btn" />
                <String fx:value="dashboard-menu-item-border" />
-            </styleClass>
-            <graphic>
-               <FontIcon iconColor="WHITE" iconLiteral="mdi2p-plus-thick" iconSize="20" />
-            </graphic></Button>
+            </styleClass></Button>
 
-            <Button onAction="#irEstoque" text=" Estoque">
+            <Button onAction="#irEstoque" text="📦 Estoque">
             <styleClass>
                <String fx:value="sidebar-btn" />
                <String fx:value="dashboard-menu-item-border" />
-            </styleClass>
-            <graphic>
-               <FontIcon iconColor="WHITE" iconLiteral="mdi2c-cube" iconSize="20" />
-            </graphic></Button>
+            </styleClass></Button>
 
-            <Button onAction="#irRelatorios" text=" Relatórios">
+            <Button onAction="#irRelatorios" text="📊Relatórios">
             <styleClass>
                <String fx:value="sidebar-btn" />
                <String fx:value="dashboard-menu-item-border" />
-            </styleClass>
-            <graphic>
-               <FontIcon iconColor="WHITE" iconLiteral="mdi2c-chart-bar" iconSize="20" />
-            </graphic></Button>
+            </styleClass></Button>
 
             <Region prefHeight="250.0" prefWidth="170.0" styleClass="dashboard-menu-item-border" stylesheets="@../css/style.css" VBox.vgrow="ALWAYS" />
 

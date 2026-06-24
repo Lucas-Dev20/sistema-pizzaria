@@ -12,8 +12,8 @@ public class EstoqueService implements ObserverVenda {
     }
 
     @Override
-    public void atualizarEstoque(Pedido pedido) {
-        System.out.println("EstoqueService: Processando baixa de materiais...");
+    public void notificarVendaFinalizada(Pedido pedido) {
+        System.out.println("[EstoqueService] Processando baixa de materiais...");
         System.out.println("\n[EstoqueService] Notificação recebida! O pedido #" + pedido.getIdPedido() + " foi finalizado.");
         System.out.println("[EstoqueService] Buscando adicionais consumidos...");
 

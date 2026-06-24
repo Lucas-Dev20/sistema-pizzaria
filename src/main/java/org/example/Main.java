@@ -13,7 +13,7 @@ public class Main extends Application {
         br.edu.ufersa.poo.pizzaria.util.DatabaseInitializer.inicializarBanco();
 
         FXMLLoader loader = new FXMLLoader(
-                getClass().getResource("/br/edu/ufersa/pizzaria/views/RelatorioView.fxml")
+                getClass().getResource("/br/edu/ufersa/pizzaria/views/LoginView.fxml")
         );
 
         Scene scene = new Scene(loader.load());

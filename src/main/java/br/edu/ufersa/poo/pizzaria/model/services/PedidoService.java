@@ -162,7 +162,7 @@ public class PedidoService {
             throw new IllegalArgumentException("ID inválido.");
         }
 
-        // Correção: Usamos pedidoParametro para pegar o ID, e salvamos em pedidoCompleto
+        // usei pedidoParametro para pegar o ID e salva em pedidoCompleto
         Pedido pedidoCompleto = pedidoDAO.buscarPorId(pedidoParametro.getIdPedido());
 
         if (pedidoCompleto == null) {
@@ -172,7 +172,7 @@ public class PedidoService {
         pedidoDAO.atualizarEstado(pedidoCompleto.getIdPedido(), "FINALIZADO");
 
         if (this.observadorEstoque != null) {
-            this.observadorEstoque.atualizarEstoque(pedidoCompleto);
+            this.observadorEstoque.notificarVendaFinalizada(pedidoCompleto);
         }
     }
 }

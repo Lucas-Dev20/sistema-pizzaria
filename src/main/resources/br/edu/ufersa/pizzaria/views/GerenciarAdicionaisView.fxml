@@ -1,39 +1,68 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.image.*?>
+<?import java.lang.String?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="700.0" prefWidth="950.0"
-            stylesheets="@../css/style.css"
-            xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="br.edu.ufersa.poo.pizzaria.controllers.GerenciarAdicionaisController">
+<BorderPane prefHeight="700.0" prefWidth="950.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.edu.ufersa.poo.pizzaria.controllers.GerenciarAdicionaisController">
 
     <!-- MENU LATERAL ESQUERDO COM SÍMBOLS E METODOS DE NAVEGAÇÃO -->
     <left>
-        <VBox styleClass="sidebar" prefWidth="200" spacing="10">
+        <VBox prefWidth="200" spacing="10" styleClass="sidebar">
             <ImageView fitWidth="150" preserveRatio="true" style="-fx-padding: 0 0 20 0;">
                 <image>
-                    <Image url="@../images/logo.png"/>
+                    <Image url="@../images/logo.png" />
                 </image>
             </ImageView>
 
-            <Button text="📋 Pedidos" styleClass="sidebar-btn" onAction="#irPedidos"/>
+            <Button onAction="#irPedidos" text="📋 Pedidos">
+            <styleClass>
+               <String fx:value="sidebar-btn" />
+               <String fx:value="dashboard-menu-item-border" />
+            </styleClass></Button>
 
-            <Button text="👥 Clientes" styleClass="sidebar-btn" onAction="#irClientes"/>
+            <Button onAction="#irClientes" text="👥 Clientes">
+            <styleClass>
+               <String fx:value="sidebar-btn" />
+               <String fx:value="dashboard-menu-item-border" />
+            </styleClass></Button>
 
-            <Button text="🍕 Tipos de pizza" styleClass="sidebar-btn" onAction="#irTiposPizza"/>
+            <Button onAction="#irTiposPizza" text="🍕 Tipos de pizza">
+            <styleClass>
+               <String fx:value="sidebar-btn" />
+               <String fx:value="dashboard-menu-item-border" />
+            </styleClass></Button>
 
-            <Button text="💼 Adicionais" styleClass="sidebar-btn-active" onAction="#irAdicionais"/>
+            <Button onAction="#irAdicionais" text="💼 Adicionais">
+            <styleClass>
+               <String fx:value="sidebar-btn-active" />
+               <String fx:value="dashboard-menu-item-border" />
+            </styleClass></Button>
 
-            <Button text="📦 Estoque" styleClass="sidebar-btn" onAction="#irEstoque"/>
+            <Button onAction="#irEstoque" text="📦 Estoque">
+            <styleClass>
+               <String fx:value="sidebar-btn" />
+               <String fx:value="dashboard-menu-item-border" />
+            </styleClass></Button>
 
-            <Button text="📊 Relatórios" styleClass="sidebar-btn" onAction="#irRelatorios"/>
+            <Button onAction="#irRelatorios" text="📊 Relatórios">
+            <styleClass>
+               <String fx:value="sidebar-btn" />
+               <String fx:value="dashboard-menu-item-border" />
+            </styleClass></Button>
 
-            <Region VBox.vgrow="ALWAYS"/>
+            <Region styleClass="dashboard-menu-item-border" VBox.vgrow="ALWAYS" />
 
-            <Button text="🚪 Sair" styleClass="sidebar-btn-exit" onAction="#sair"/>
+            <Button onAction="#sair" styleClass="sidebar-btn-exit" text="🚪 Sair" />
         </VBox>
     </left>
 
@@ -42,29 +71,29 @@
         <VBox spacing="20" style="-fx-padding: 30; -fx-background-color: #F4F4F4;">
 
             <!-- CABEÇALHO-->
-            <VBox styleClass="header-banner" style="-fx-padding: 25 20 25 20;">
-                <Label text="Adicionais" style="-fx-text-fill: white; -fx-font-size: 28; -fx-font-weight: bold;"/>
+            <VBox style="-fx-padding: 25 20 25 20;" styleClass="header-banner">
+                <Label style="-fx-text-fill: white; -fx-font-size: 28; -fx-font-weight: bold;" text="Adicionais" />
             </VBox>
 
             <!-- CARD BRANCO PRINCIPAL -->
-            <VBox styleClass="content-card" style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 20;" VBox.vgrow="ALWAYS" spacing="15">
+            <VBox spacing="15" style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 20;" styleClass="content-card" VBox.vgrow="ALWAYS">
 
                 <!-- Barra de Busca e Botão Novo Adicional -->
-                <HBox spacing="20" alignment="CENTER_LEFT">
-                    <TextField fx:id="txtBusca" promptText="Buscar adicional..." styleClass="search-field" HBox.hgrow="ALWAYS"/>
-                    <Button fx:id="btnNovoAdicional" text="+ Novo Adicional" onAction="#handleNovoAdicional" styleClass="btn-success"/>
+                <HBox alignment="CENTER_LEFT" spacing="20">
+                    <TextField fx:id="txtBusca" promptText="Buscar adicional..." styleClass="search-field" HBox.hgrow="ALWAYS" />
+                    <Button fx:id="btnNovoAdicional" onAction="#handleNovoAdicional" styleClass="btn-success" text="+ Novo Adicional" />
                 </HBox>
 
                 <!-- TABELA DE ADICIONAIS CONFORME O FIGMA -->
                 <TableView fx:id="tabelaAdicionais" VBox.vgrow="ALWAYS">
                     <columns>
-                        <TableColumn fx:id="colNome" text="Nome" prefWidth="250"/>
-                        <TableColumn fx:id="colPreco" text="Valor" prefWidth="150"/>
-                        <TableColumn fx:id="colEstoque" text="Estoque" prefWidth="150"/>
-                        <TableColumn fx:id="colAcoes" text="Ações" prefWidth="150" style="-fx-alignment: CENTER;"/>
+                        <TableColumn fx:id="colNome" prefWidth="250" text="Nome" />
+                        <TableColumn fx:id="colPreco" prefWidth="150" text="Valor" />
+                        <TableColumn fx:id="colEstoque" prefWidth="150" text="Estoque" />
+                        <TableColumn fx:id="colAcoes" prefWidth="150" style="-fx-alignment: CENTER;" text="Ações" />
                     </columns>
                     <columnResizePolicy>
-                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                     </columnResizePolicy>
                 </TableView>
 
