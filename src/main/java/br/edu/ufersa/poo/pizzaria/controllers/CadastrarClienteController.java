@@ -6,7 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 
-public class NovoClienteController {
+public class CadastrarClienteController {
 
     @FXML private TextField txtNome;
     @FXML private TextField txtCpf;
@@ -25,16 +25,16 @@ public class NovoClienteController {
         String bairro = txtBairro.getText();
 
         try {
-            //chama a Service passando os dados capturados da tela
+            // Chama a Service passando os dados capturados da tela
             clienteService.cadastrarCliente(nome, endereco, cpf, telefone, bairro);
 
             mostrarMensagem(Alert.AlertType.INFORMATION, "Sucesso", "Cliente cadastrado com sucesso!");
 
-            //depois de salvar, volta para a tela de listagem de clientes
+            // Fecha o pop-up atual
             fecharFormulario(event);
 
         } catch (IllegalArgumentException e) {
-            //pega os "throws" de validação que estão na ClienteService (ex: nome em branco, CPF/telefone com menos de 11 digitos)
+            // Pega os "throws" de validação que estão na ClienteService
             mostrarMensagem(Alert.AlertType.WARNING, "Validação", e.getMessage());
         } catch (Exception e) {
             mostrarMensagem(Alert.AlertType.ERROR, "Erro", "Erro inesperado ao salvar no banco de dados.");
@@ -46,10 +46,10 @@ public class NovoClienteController {
     private void handleCancelar(ActionEvent event) {
         fecharFormulario(event);
     }
-
+//fecha o popup de cadastro que estava sobre a tela principal
     private void fecharFormulario(ActionEvent event) {
-        //usa o método estático do seu LoginController para alternar a Scene de volta
-        LoginController.trocarConteudo(event, "/br/edu/ufersa/pizzaria/views/GerenciarClientesView.fxml", "La Piazza - Gerenciar Clientes");
+        javafx.stage.Stage stage = (javafx.stage.Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
+        stage.close();
     }
 
     private void mostrarMensagem(Alert.AlertType tipo, String titulo, String msg) {

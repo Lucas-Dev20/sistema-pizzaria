@@ -2,12 +2,14 @@ package br.edu.ufersa.poo.pizzaria.model.services;
 
 import br.edu.ufersa.poo.pizzaria.DAO.AdicionalDAO;
 import br.edu.ufersa.poo.pizzaria.model.entities.Adicional;
+import br.edu.ufersa.poo.pizzaria.DAO.ReposicaoEstoqueDAO;
 import java.util.List;
 
 public class AdicionalService {
 
     //service precisa da dao
     private final AdicionalDAO adicionalDAO = new AdicionalDAO();
+    private final ReposicaoEstoqueDAO reposicaoDAO = new ReposicaoEstoqueDAO();
 
     //regra para cadastro de adicional: tem q haver nome, valor e quantia válidos
     public void cadastrarAdicional(String nome, double valor, int quantidade) {
@@ -56,21 +58,39 @@ public class AdicionalService {
 
     //regra para repor estoque -> checagem basica de id e quantidade validas logicamente
     public void creditarEstoque(int idAdicional, int quantidadeReposta) {
+
         if (idAdicional <= 0) {
-            throw new IllegalArgumentException("Erro no estoque: ID do adicional inválido.");
+            throw new IllegalArgumentException(
+                    "Erro no estoque: ID do adicional inválido."
+            );
         }
+
         if (quantidadeReposta <= 0) {
-            throw new IllegalArgumentException("Erro no estoque: A quantidade de reposição deve ser maior que zero.");
+            throw new IllegalArgumentException(
+                    "Erro no estoque: A quantidade de reposição deve ser maior que zero."
+            );
         }
 
-        //verifica a existencia do adicional
-        Adicional adicional = adicionalDAO.buscarPorId(idAdicional);
+        Adicional adicional =
+                adicionalDAO.buscarPorId(idAdicional);
+
         if (adicional == null) {
-            throw new IllegalArgumentException("Erro no estoque: Adicional não encontrado no sistema.");
+            throw new IllegalArgumentException(
+                    "Erro no estoque: Adicional não encontrado."
+            );
         }
 
-        //dao vai repor o estoque após tudo validar a permissão
-        adicionalDAO.reporEstoque(idAdicional, quantidadeReposta);
+        adicionalDAO.reporEstoque(
+                idAdicional,
+                quantidadeReposta
+        );
+
+
+        reposicaoDAO.registrarReposicao(
+                idAdicional,
+                quantidadeReposta,
+                adicional.getValor()
+        );
     }
 
     //regra para atualizar dados de um adicional já existente

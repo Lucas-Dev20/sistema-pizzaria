@@ -70,4 +70,31 @@ public class LoginController {
         alert.setContentText(msg);
         alert.showAndWait();
     }
+//popup de telas de editar e cadastrar, q abre a subtela
+    public static void abrirModal(String fxmlPath, String titulo) {
+        try {
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(LoginController.class.getResource(fxmlPath));
+            javafx.scene.Parent root = loader.load();
+
+            javafx.stage.Stage modalStage = new javafx.stage.Stage();
+            modalStage.setTitle(titulo);
+
+            // Deixa a janela sem a barra de título padrão do sistema operacional
+            modalStage.initStyle(javafx.stage.StageStyle.UNDECORATED);
+
+            // Bloqueia interações na tela de trás até fechar o pop-up
+            modalStage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+
+            javafx.scene.Scene scene = new javafx.scene.Scene(root);
+            modalStage.setScene(scene);
+
+            // Centraliza e exibe
+            modalStage.centerOnScreen();
+            modalStage.showAndWait();
+
+        } catch (java.io.IOException e) {
+            System.err.println("Erro ao carregar o modal: " + fxmlPath);
+            e.printStackTrace();
+        }
+    }
 }

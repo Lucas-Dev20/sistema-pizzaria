@@ -48,8 +48,8 @@
                 <!-- BOTÕES DE AÇÃO -->
                 <HBox spacing="20" alignment="CENTER" style="-fx-padding: 20 0 0 0;">
                     <Button text="Cancelar" onAction="#handleCancelar" styleClass="botao"/>
-                    <Button text="Salvar" onAction="#handleSalvar" styleClass="botao-primary"/>
-                </HBox>
+                    <Button text="Salvar" onAction="#handleSalvar"
+                            style="-fx-background-color: #5CB85C; -fx-background-radius: 20; -fx-padding: 10 35; -fx-text-fill: #FFFFFF; -fx-font-size: 14; -fx-font-weight: bold; -fx-cursor: hand;"/>                </HBox>
 
             </VBox>
         </Pane>

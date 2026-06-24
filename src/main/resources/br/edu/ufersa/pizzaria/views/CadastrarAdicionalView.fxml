@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="br.edu.ufersa.poo.pizzaria.controllers.CadastrarAdicionalController"
+      style="-fx-background-color: #EFEFEF; -fx-background-radius: 15;"
+      spacing="18" prefWidth="440" alignment="TOP_LEFT">
+
+    <padding>
+        <Insets top="30" right="35" bottom="30" left="35"/>
+    </padding>
+
+    <Label text="Novo Adicional" style="-fx-font-size: 24; -fx-font-family: 'Arial'; -fx-text-fill: #000000;" />
+
+    <VBox spacing="12" alignment="CENTER_LEFT" VBox.vgrow="ALWAYS">
+        <VBox spacing="6">
+            <Label text="Nome" style="-fx-font-size: 16; -fx-text-fill: #000000;" />
+            <TextField fx:id="txtNome" promptText="Parmesão"
+                       style="-fx-background-color: #D9D9D9; -fx-background-radius: 6; -fx-padding: 8; -fx-text-fill: #333333;"/>
+        </VBox>
+
+        <VBox spacing="6">
+            <Label text="Categoria" style="-fx-font-size: 16; -fx-text-fill: #000000;" />
+            <TextField fx:id="txtCategoria" promptText="Queijos"
+                       style="-fx-background-color: #D9D9D9; -fx-background-radius: 6; -fx-padding: 8; -fx-text-fill: #333333;"/>
+        </VBox>
+
+        <VBox spacing="6">
+            <Label text="Preço" style="-fx-font-size: 16; -fx-text-fill: #000000;" />
+            <TextField fx:id="txtValor" promptText="R$4"
+                       style="-fx-background-color: #D9D9D9; -fx-background-radius: 6; -fx-padding: 8; -fx-text-fill: #333333;"/>
+        </VBox>
+
+        <VBox spacing="6">
+            <Label text="Unidade" style="-fx-font-size: 16; -fx-text-fill: #000000;" />
+            <TextField fx:id="txtUnidade" promptText="Gramas (g), Unidade (u), Mililitro (ml)"
+                       style="-fx-background-color: #D9D9D9; -fx-background-radius: 6; -fx-padding: 8; -fx-text-fill: #333333;"/>
+        </VBox>
+
+        <VBox spacing="6">
+            <Label text="Quantidade" style="-fx-font-size: 16; -fx-text-fill: #000000;" />
+            <TextField fx:id="txtQuantidade" promptText="10"
+                       style="-fx-background-color: #D9D9D9; -fx-background-radius: 6; -fx-padding: 8; -fx-text-fill: #333333;"/>
+        </VBox>
+    </VBox>
+
+    <HBox spacing="15" alignment="CENTER_RIGHT" style="-fx-padding: 10 0 0 0;">
+        <Button text="Cancelar" onAction="#handleCancelar"
+                style="-fx-background-color: #FFFFFF; -fx-background-radius: 20; -fx-padding: 10 25; -fx-text-fill: #000000; -fx-font-size: 14; -fx-cursor: hand; -fx-border-color: transparent;"/>
+
+        <Button text="Salvar" onAction="#handleSalvar"
+                style="-fx-background-color: #C34215; -fx-background-radius: 20; -fx-padding: 10 35; -fx-text-fill: #FFFFFF; -fx-font-size: 14; -fx-font-weight: bold; -fx-cursor: hand;"/>
+    </HBox>
+</VBox>
