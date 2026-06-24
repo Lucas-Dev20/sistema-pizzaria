@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="700.0" prefWidth="950.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.edu.ufersa.poo.pizzaria.controllers.GerenciarPizzasController">
+<BorderPane prefHeight="700.0" prefWidth="950.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.edu.ufersa.poo.pizzaria.controllers.GerenciarPizzaController">
 
     <!-- MENU LATERAL ESQUERDO COM SÍMBOLOS E MÉTODOS DE NAVEGAÇÃO -->
     <left>
@@ -25,40 +25,48 @@
             </ImageView>
 
             <Button alignment="CENTER" maxWidth="1.7976931348623157E308" onAction="#irPedidos" prefHeight="31.0" prefWidth="198.0" text="📋 Pedidos" VBox.vgrow="ALWAYS">
-            <styleClass>
-               <String fx:value="sidebar-btn" />
-               <String fx:value="dashboard-menu-item-border" />
-            </styleClass></Button>
+                <styleClass>
+                    <String fx:value="sidebar-btn" />
+                    <String fx:value="dashboard-menu-item-border" />
+                </styleClass></Button>
 
             <Button onAction="#irClientes" text="👥 Clientes">
-            <styleClass>
-               <String fx:value="sidebar-btn" />
-               <String fx:value="dashboard-menu-item-border" />
-            </styleClass></Button>
+                <styleClass>
+                    <String fx:value="sidebar-btn" />
+                    <String fx:value="dashboard-menu-item-border" />
+                </styleClass></Button>
 
             <Button onAction="#irTiposPizza" text="🍕 Tipos de pizza">
-            <styleClass>
-               <String fx:value="sidebar-btn-active" />
-               <String fx:value="dashboard-menu-item-border" />
-            </styleClass></Button>
+                <styleClass>
+                    <String fx:value="sidebar-btn-active" />
+                    <String fx:value="dashboard-menu-item-border" />
+                </styleClass></Button>
 
             <Button onAction="#irAdicionais" text="💼 Adicionais">
-            <styleClass>
-               <String fx:value="sidebar-btn" />
-               <String fx:value="dashboard-menu-item-border" />
-            </styleClass></Button>
+                <styleClass>
+                    <String fx:value="sidebar-btn" />
+                    <String fx:value="dashboard-menu-item-border" />
+                </styleClass></Button>
 
             <Button onAction="#irEstoque" text="📦 Estoque">
-            <styleClass>
-               <String fx:value="sidebar-btn" />
-               <String fx:value="dashboard-menu-item-border" />
-            </styleClass></Button>
+                <styleClass>
+                    <String fx:value="sidebar-btn" />
+                    <String fx:value="dashboard-menu-item-border" />
+                </styleClass></Button>
 
             <Button onAction="#irRelatorios" text="📊Relatórios">
-            <styleClass>
-               <String fx:value="sidebar-btn" />
-               <String fx:value="dashboard-menu-item-border" />
-            </styleClass></Button>
+                <styleClass>
+                    <String fx:value="sidebar-btn" />
+                    <String fx:value="dashboard-menu-item-border" />
+                </styleClass></Button>
+
+
+            <Button onAction="#irFuncionarios" text="👤 Funcionários">
+                <styleClass>
+                    <String fx:value="sidebar-btn" />
+                    <String fx:value="dashboard-menu-item-border" />
+                </styleClass>
+            </Button>
 
             <Region prefHeight="250.0" prefWidth="170.0" styleClass="dashboard-menu-item-border" stylesheets="@../css/style.css" VBox.vgrow="ALWAYS" />
 

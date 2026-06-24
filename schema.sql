@@ -1,8 +1,12 @@
 CREATE TABLE IF NOT EXISTS usuario (
-    login varchar(255) NOT NULL,
-    senha varchar(255) NOT NULL,
-    cargo varchar(255) NOT NULL
-);
+    id_usuario int NOT NULL AUTO_INCREMENT,
+    nome       varchar(255) NOT NULL,
+    email      varchar(100) NOT NULL UNIQUE,
+    senha      varchar(255) NOT NULL,
+    perfil     varchar(255) NOT NULL DEFAULT 'FUNCIONARIO',
+    ativo      boolean NOT NULL DEFAULT TRUE,
+    PRIMARY KEY (id_usuario)
+    );
 
 CREATE TABLE IF NOT EXISTS cliente (
     id_cliente int NOT NULL AUTO_INCREMENT,

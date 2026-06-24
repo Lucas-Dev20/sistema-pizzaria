@@ -1,65 +1,90 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="700.0" prefWidth="700.0"
+<AnchorPane prefHeight="600.0" prefWidth="800.0"
+            style="-fx-background-color: #8B2318;"
             stylesheets="@../css/style.css"
-            styleClass="background"
-            xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
+            xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="br.edu.ufersa.poo.pizzaria.controllers.LoginController">
 
+    <!-- Card central -->
     <VBox alignment="CENTER"
-          AnchorPane.topAnchor="0.0"
-          AnchorPane.bottomAnchor="0.0"
-          AnchorPane.leftAnchor="0.0"
-          AnchorPane.rightAnchor="0.0">
+          AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0"
+          AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
 
-        <Pane styleClass="login-card" maxWidth="550">
+        <VBox maxWidth="430" spacing="14"
+              style="-fx-background-color: #EFEFEF;
+                     -fx-background-radius: 16;
+                     -fx-padding: 30 36 30 36;
+                     -fx-effect: dropshadow(gaussian,rgba(0,0,0,0.35),20,0,0,5);">
 
-            <VBox spacing="15" layoutX="30" layoutY="20" prefWidth="490">
+            <!-- Logo -->
+            <HBox alignment="CENTER">
+                <ImageView fitWidth="260" fitHeight="160" preserveRatio="true">
+                    <Image url="@../images/logo.png" />
+                </ImageView>
+            </HBox>
 
-                <HBox alignment="CENTER">
-                    <ImageView fitHeight="250" fitWidth="350" preserveRatio="true">
-                        <image>
-                            <Image url="@../images/logo.png"/>
-                        </image>
-                    </ImageView>
-                </HBox>
+            <!-- Botões de perfil DENTRO do card, lado a lado -->
+            <HBox spacing="20" alignment="CENTER">
+                <Button text="Administrador"
+                        onAction="#selecionarAdmin"
+                        fx:id="btnAdmin"
+                        styleClass="btn-perfil"
+                        prefWidth="160" />
+                <Button text="Funcionário"
+                        onAction="#selecionarFuncionario"
+                        fx:id="btnFuncionario"
+                        styleClass="btn-perfil"
+                        prefWidth="160" />
+            </HBox>
 
-                <Label text="Faça login" styleClass="titulo"/>
+            <!-- Título -->
+            <Label text="Faça login" styleClass="titulo" />
 
-                <Label text="Usuário"/>
-                <TextField fx:id="txtUsuario"
-                           promptText="joaosilva@email.com"
-                           styleClass="campo"/>
+            <!-- Usuário -->
+            <Label text="Usuário"
+                   style="-fx-font-size: 13px; -fx-text-fill: #1A1A1A;" />
+            <TextField fx:id="txtEmail"
+                       promptText="joaosilva@email.com"
+                       styleClass="campo" />
 
-                <Label text="Senha"/>
-                <PasswordField fx:id="txtSenha"
-                               promptText="Digite a senha"
-                               styleClass="campo"/>
+            <!-- Senha -->
+            <Label text="Senha"
+                   style="-fx-font-size: 13px; -fx-text-fill: #1A1A1A;" />
+            <PasswordField fx:id="txtSenha"
+                           promptText="Digite a senha"
+                           styleClass="campo" />
 
-                <HBox spacing="30" alignment="CENTER">
-                    <Button text="Criar conta"
-                            onAction="#abrirCadastro"
-                            styleClass="botao"/>
-                    <Button text="Entrar"
-                            onAction="#fazerLogin"
-                            styleClass="botao-primary"/>
-                </HBox>
+            <!-- Erro -->
+            <Label fx:id="lblErro" text="" visible="false"
+                   style="-fx-text-fill: #C0392B; -fx-font-size: 12px;" />
 
-                <HBox alignment="CENTER">
-                    <Hyperlink text="Esqueceu a senha?"
-                               onAction="#esqueceuSenha"
-                               styleClass="link"/>
-                </HBox>
+            <!-- Criar conta / Entrar -->
+            <HBox spacing="20" alignment="CENTER">
+                <Button text="Criar conta"
+                        onAction="#handleCriarConta"
+                        prefWidth="160"
+                        styleClass="botao" />
+                <Button text="Entrar"
+                        onAction="#handleEntrar"
+                        prefWidth="160"
+                        styleClass="botao" />
+            </HBox>
 
-            </VBox>
+            <!-- Esqueceu a senha -->
+            <HBox alignment="CENTER_LEFT">
+                <Hyperlink text="Esqueceu a senha?"
+                           onAction="#handleEsqueceuSenha"
+                           styleClass="link" />
+            </HBox>
 
-        </Pane>
-
+        </VBox>
     </VBox>
 
 </AnchorPane>

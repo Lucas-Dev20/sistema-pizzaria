@@ -1,74 +1,221 @@
 package br.edu.ufersa.poo.pizzaria.DAO;
 
+import br.edu.ufersa.poo.pizzaria.model.entities.PerfilUsuario;
 import br.edu.ufersa.poo.pizzaria.model.entities.Usuario;
-import java.sql.*;
 import br.edu.ufersa.poo.pizzaria.util.ConnectionFactory;
 
-public class UsuarioDAO {
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
-    public static boolean inserir(Usuario usuario) {
-        String sql = "INSERT INTO usuario(login, senha, cargo) VALUES (?, ?, ?)";
-        try {
-            Connection con = ConnectionFactory.getConnection();
-            PreparedStatement stmt = con.prepareStatement(sql);
-            stmt.setString(1, usuario.getLogin());
-            stmt.setString(2, usuario.getSenha());
-            stmt.setString(3, usuario.getCargo());
+/**
+ * DAO responsável por persistir e recuperar usuários do banco de dados.
+ *
+ * Implementa ICrudDAO<Usuario> → cumpre o requisito de interface do trabalho.
+ * (ICrudDAO é a interface genérica de CRUD definida separadamente.)
+ */
+public class UsuarioDAO implements ICrudDAO<Usuario> {
+
+    // ── SALVAR ────────────────────────────────────────────────────────────────
+    @Override
+    public void salvar(Usuario usuario) {
+        String sql = "INSERT INTO usuario (nome, email, senha, perfil, ativo) VALUES (?, ?, ?, ?, ?)";
+
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+            stmt.setString(1, usuario.getNome());
+            stmt.setString(2, usuario.getEmail());
+            stmt.setString(3, usuario.getSenhaHash());
+            stmt.setString(4, usuario.getPerfil().name());
+            stmt.setBoolean(5, usuario.isAtivo());
+
             stmt.executeUpdate();
-            stmt.close();
-            return true;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
 
-    public static boolean excluir(String login) {
-        String sql = "DELETE FROM usuario WHERE login = ?";
-        try {
-            Connection con = ConnectionFactory.getConnection();
-            PreparedStatement stmt = con.prepareStatement(sql);
-            stmt.setString(1, login);
-            int linhasAfetadas = stmt.executeUpdate();
-            stmt.close();
-            return linhasAfetadas > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    // ── NOVO MÉTODO ────────────────────────────────────────────────────────
-    // Busca no banco um usuário com o login E senha informados.
-    // SQL: SELECT * FROM usuario WHERE login = ? AND senha = ?
-    // Retorna o objeto Usuario completo (com o cargo) se encontrado,
-    // ou null se login/senha estiverem errados.
-    public static Usuario buscarPorLoginESenha(String login, String senha) {
-        String sql = "SELECT * FROM usuario WHERE login = ? AND senha = ?";
-        try {
-            Connection con = ConnectionFactory.getConnection();
-            PreparedStatement stmt = con.prepareStatement(sql);
-            stmt.setString(1, login);
-            stmt.setString(2, senha);
-            ResultSet rs = stmt.executeQuery();
-
-            if (rs.next()) {
-                // Usuário encontrado — lê o cargo da linha retornada
-                String loginBanco = rs.getString("login");
-                String senhaBanco = rs.getString("senha");
-                String cargo      = rs.getString("cargo");
-                rs.close();
-                stmt.close();
-                return new Usuario(loginBanco, senhaBanco, cargo);
+            // Recupera o id gerado pelo banco e seta no objeto
+            try (ResultSet keys = stmt.getGeneratedKeys()) {
+                if (keys.next()) {
+                    usuario.setIdUsuario(keys.getInt(1));
+                }
             }
 
-            rs.close();
-            stmt.close();
+        } catch (SQLException e) {
+            System.err.println("Erro ao salvar usuário: " + e.getMessage());
+            throw new RuntimeException("Erro ao salvar usuário no banco.", e);
+        }
+    }
+
+    // ── BUSCAR POR ID ─────────────────────────────────────────────────────────
+    @Override
+    public Usuario buscarPorId(int id) {
+        String sql = "SELECT * FROM usuario WHERE id_usuario = ?";
+
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, id);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return mapearResultSet(rs);
+                }
+            }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.err.println("Erro ao buscar usuário por ID: " + e.getMessage());
         }
+        return null;
+    }
 
-        return null; // login ou senha incorretos
+    // ── BUSCAR POR EMAIL (usado no login) ─────────────────────────────────────
+    /**
+     * Busca o usuário pelo e-mail — usado pela autenticação de login.
+     * @return Usuario encontrado, ou null se não existir.
+     */
+    public Usuario buscarPorEmail(String email) {
+        String sql = "SELECT * FROM usuario WHERE email = ? AND ativo = TRUE";
+
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, email);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return mapearResultSet(rs);
+                }
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Erro ao buscar usuário por email: " + e.getMessage());
+        }
+        return null;
+    }
+
+    // ── LISTAR TODOS ──────────────────────────────────────────────────────────
+    @Override
+    public List<Usuario> listarTodos() {
+        String sql = "SELECT * FROM usuario ORDER BY nome";
+        List<Usuario> lista = new ArrayList<>();
+
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                lista.add(mapearResultSet(rs));
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Erro ao listar usuários: " + e.getMessage());
+        }
+        return lista;
+    }
+
+    // ── LISTAR APENAS FUNCIONÁRIOS ────────────────────────────────────────────
+    public List<Usuario> listarFuncionarios() {
+        String sql = "SELECT * FROM usuario WHERE perfil = 'FUNCIONARIO' ORDER BY nome";
+        List<Usuario> lista = new ArrayList<>();
+
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                lista.add(mapearResultSet(rs));
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Erro ao listar funcionários: " + e.getMessage());
+        }
+        return lista;
+    }
+
+    // ── ATUALIZAR ─────────────────────────────────────────────────────────────
+    @Override
+    public void atualizar(Usuario usuario) {
+        String sql = "UPDATE usuario SET nome = ?, email = ?, perfil = ?, ativo = ? WHERE id_usuario = ?";
+
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, usuario.getNome());
+            stmt.setString(2, usuario.getEmail());
+            stmt.setString(3, usuario.getPerfil().name());
+            stmt.setBoolean(4, usuario.isAtivo());
+            stmt.setInt(5, usuario.getIdUsuario());
+
+            stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            System.err.println("Erro ao atualizar usuário: " + e.getMessage());
+            throw new RuntimeException("Erro ao atualizar usuário no banco.", e);
+        }
+    }
+
+    // ── ATUALIZAR SENHA ───────────────────────────────────────────────────────
+    public void atualizarSenha(int idUsuario, String novaSenhaHash) {
+        String sql = "UPDATE usuario SET senha = ? WHERE id_usuario = ?";
+
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, novaSenhaHash);
+            stmt.setInt(2, idUsuario);
+            stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            System.err.println("Erro ao atualizar senha: " + e.getMessage());
+        }
+    }
+
+    // ── REMOVER (desativa; não apaga fisicamente) ─────────────────────────────
+    @Override
+    public void remover(int id) {
+        // Soft delete: marca como inativo para preservar histórico de pedidos
+        String sql = "UPDATE usuario SET ativo = FALSE WHERE id_usuario = ?";
+
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            System.err.println("Erro ao desativar usuário: " + e.getMessage());
+        }
+    }
+
+    // ── VERIFICAR SE EMAIL JÁ EXISTE ──────────────────────────────────────────
+    public boolean emailJaExiste(String email) {
+        String sql = "SELECT COUNT(*) FROM usuario WHERE email = ?";
+
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, email);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Erro ao verificar email: " + e.getMessage());
+        }
+        return false;
+    }
+
+    // ── MAPEAMENTO ResultSet → Usuario ────────────────────────────────────────
+    private Usuario mapearResultSet(ResultSet rs) throws SQLException {
+        int    id      = rs.getInt("id_usuario");
+        String nome    = rs.getString("nome");
+        String email   = rs.getString("email");
+        String hash    = rs.getString("senha");
+        PerfilUsuario perfil = PerfilUsuario.valueOf(rs.getString("perfil"));
+        boolean ativo  = rs.getBoolean("ativo");
+
+        return new Usuario(id, nome, email, hash, perfil, ativo);
     }
 }
