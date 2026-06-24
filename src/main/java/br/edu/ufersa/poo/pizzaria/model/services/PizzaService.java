@@ -21,7 +21,7 @@ public class PizzaService {
             );
         }
 
-        if (!usuario.getCargo().equalsIgnoreCase("admin")) {
+        if (!usuario.getPerfil().equals("admin")) {
             throw new IllegalArgumentException(
                     "Apenas administradores podem cadastrar pizzas."
             );
