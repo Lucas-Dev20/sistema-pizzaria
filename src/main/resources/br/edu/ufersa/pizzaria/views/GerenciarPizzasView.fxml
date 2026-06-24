@@ -1,59 +1,107 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.image.*?>
+<?import java.lang.String?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.TilePane?>
+<?import javafx.scene.layout.VBox?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<BorderPane prefHeight="700.0" prefWidth="950.0"
-            stylesheets="@../css/style.css"
-            xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="br.edu.ufersa.poo.pizzaria.controllers.GerenciarPizzasController">
+<BorderPane prefHeight="700.0" prefWidth="950.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.edu.ufersa.poo.pizzaria.controllers.GerenciarPizzasController">
 
     <!-- MENU LATERAL ESQUERDO COM SÍMBOLOS E MÉTODOS DE NAVEGAÇÃO -->
     <left>
-        <VBox styleClass="sidebar" prefWidth="200" spacing="10">
+        <VBox maxWidth="-Infinity" prefHeight="400.0" prefWidth="116.0" spacing="10" styleClass="sidebar">
             <ImageView fitWidth="150" preserveRatio="true" style="-fx-padding: 0 0 20 0;">
                 <image>
-                    <Image url="@../images/logo.png"/>
+                    <Image url="@../images/logo.png" />
                 </image>
             </ImageView>
 
-            <Button text="📋 Pedidos" styleClass="sidebar-btn" onAction="#irPedidos"/>
+            <Button alignment="CENTER" maxWidth="1.7976931348623157E308" onAction="#irPedidos" prefHeight="31.0" prefWidth="198.0" text=" Pedidos" VBox.vgrow="ALWAYS">
+            <styleClass>
+               <String fx:value="sidebar-btn" />
+               <String fx:value="dashboard-menu-item-border" />
+            </styleClass>
+            <graphic>
+               <FontIcon iconColor="WHITE" iconLiteral="mdi2c-clipboard-check-multiple-outline" iconSize="20" />
+            </graphic></Button>
 
-            <Button text="👥 Clientes" styleClass="sidebar-btn" onAction="#irClientes"/>
+            <Button onAction="#irClientes" text=" Clientes">
+            <styleClass>
+               <String fx:value="sidebar-btn" />
+               <String fx:value="dashboard-menu-item-border" />
+            </styleClass>
+            <graphic>
+               <FontIcon iconColor="WHITE" iconLiteral="mdi2a-account-multiple" iconSize="20" />
+            </graphic></Button>
 
-            <Button text="🍕 Tipos de pizza" styleClass="sidebar-btn-active" onAction="#irTiposPizza"/>
+            <Button onAction="#irTiposPizza" text=" Tipos de pizza">
+            <styleClass>
+               <String fx:value="sidebar-btn-active" />
+               <String fx:value="dashboard-menu-item-border" />
+            </styleClass>
+            <graphic>
+               <FontIcon iconColor="WHITE" iconLiteral="mdi2p-pizza" iconSize="20" />
+            </graphic></Button>
 
-            <Button text="💼 Adicionais" styleClass="sidebar-btn" onAction="#irAdicionais"/>
+            <Button onAction="#irAdicionais" text=" Adicionais">
+            <styleClass>
+               <String fx:value="sidebar-btn" />
+               <String fx:value="dashboard-menu-item-border" />
+            </styleClass>
+            <graphic>
+               <FontIcon iconColor="WHITE" iconLiteral="mdi2p-plus-thick" iconSize="20" />
+            </graphic></Button>
 
-            <Button text="📦 Estoque" styleClass="sidebar-btn" onAction="#irEstoque"/>
+            <Button onAction="#irEstoque" text=" Estoque">
+            <styleClass>
+               <String fx:value="sidebar-btn" />
+               <String fx:value="dashboard-menu-item-border" />
+            </styleClass>
+            <graphic>
+               <FontIcon iconColor="WHITE" iconLiteral="mdi2c-cube" iconSize="20" />
+            </graphic></Button>
 
-            <Button text="📊 Relatórios" styleClass="sidebar-btn" onAction="#irRelatorios"/>
+            <Button onAction="#irRelatorios" text=" Relatórios">
+            <styleClass>
+               <String fx:value="sidebar-btn" />
+               <String fx:value="dashboard-menu-item-border" />
+            </styleClass>
+            <graphic>
+               <FontIcon iconColor="WHITE" iconLiteral="mdi2c-chart-bar" iconSize="20" />
+            </graphic></Button>
 
-            <Region VBox.vgrow="ALWAYS"/>
+            <Region prefHeight="250.0" prefWidth="170.0" styleClass="dashboard-menu-item-border" stylesheets="@../css/style.css" VBox.vgrow="ALWAYS" />
 
-            <Button text="🚪 Sair" styleClass="sidebar-btn-exit" onAction="#sair"/>
+            <Button onAction="#sair" styleClass="sidebar-btn-exit" text="🚪 Sair" />
         </VBox>
     </left>
 
     <center>
         <VBox spacing="20" style="-fx-padding: 30; -fx-background-color: #F4F4F4;">
 
-            <VBox styleClass="header-banner" style="-fx-padding: 20;">
-                <Label text="Tipos de pizza" style="-fx-text-fill: white; -fx-font-size: 28; -fx-font-weight: bold;"/>
-                <Label fx:id="lblTipoUsuario" text="" style="-fx-text-fill: white; -fx-font-size: 14;"/>
+            <VBox style="-fx-padding: 20;" styleClass="header-banner">
+                <Label style="-fx-text-fill: white; -fx-font-size: 28; -fx-font-weight: bold;" text="Tipos de pizza" />
+                <Label fx:id="lblTipoUsuario" style="-fx-text-fill: white; -fx-font-size: 14;" text="" />
             </VBox>
 
-            <VBox styleClass="content-card" style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 20;" VBox.vgrow="ALWAYS" spacing="15">
+            <VBox spacing="15" style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 20;" styleClass="content-card" VBox.vgrow="ALWAYS">
 
-                <HBox spacing="20" alignment="CENTER_LEFT">
-                    <TextField fx:id="txtBusca" promptText="Buscar sabor..." styleClass="search-field" HBox.hgrow="ALWAYS"/>
-                    <Button fx:id="btnNovoSabor" text="+ Novo Sabor" onAction="#handleNovoSabor" styleClass="btn-success"/>
+                <HBox alignment="CENTER_LEFT" spacing="20">
+                    <TextField fx:id="txtBusca" promptText="Buscar sabor..." styleClass="search-field" HBox.hgrow="ALWAYS" />
+                    <Button fx:id="btnNovoSabor" onAction="#handleNovoSabor" styleClass="btn-success" text="+ Novo Sabor" />
                 </HBox>
 
                 <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-background-insets: 0; -fx-padding: 5;" VBox.vgrow="ALWAYS">
-                    <TilePane fx:id="containerPizzas" hgap="20" vgap="20" prefColumns="2" style="-fx-background-color: white;" />
+                    <TilePane fx:id="containerPizzas" hgap="20" prefColumns="2" style="-fx-background-color: white;" vgap="20" />
                 </ScrollPane>
 
             </VBox>

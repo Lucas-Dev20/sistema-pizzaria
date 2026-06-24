@@ -7,11 +7,20 @@ import br.edu.ufersa.poo.pizzaria.model.entities.Pedido;
 import java.util.List;
 
 public class PedidoService {
-
+    private ObserverVenda observadorEstoque;
     private final PedidoDAO pedidoDAO = new PedidoDAO();
 
     private final AdicionalService adicionalService =
             new AdicionalService();
+
+    // construtor para o observer
+    public PedidoService(ObserverVenda observadorEstoque) {
+        this.observadorEstoque = observadorEstoque;
+    }
+
+    // construtor vazio
+    public PedidoService() {
+    }
 
     // CADASTRAR PEDIDO
     public void cadastrarPedido(Pedido pedido) {
@@ -148,18 +157,22 @@ public class PedidoService {
     }
 
     // FINALIZAR PEDIDO
-    public void finalizarPedido(int idPedido) {
-
-        if (idPedido <= 0) {
+    public void finalizarPedido(Pedido pedidoParametro) {
+        if (pedidoParametro.getIdPedido() <= 0) {
             throw new IllegalArgumentException("ID inválido.");
         }
 
-        Pedido pedido = pedidoDAO.buscarPorId(idPedido);
+        // Correção: Usamos pedidoParametro para pegar o ID, e salvamos em pedidoCompleto
+        Pedido pedidoCompleto = pedidoDAO.buscarPorId(pedidoParametro.getIdPedido());
 
-        if (pedido == null) {
+        if (pedidoCompleto == null) {
             throw new IllegalArgumentException("Pedido não encontrado.");
         }
 
-        pedidoDAO.atualizarEstado(idPedido, "FINALIZADO");
+        pedidoDAO.atualizarEstado(pedidoCompleto.getIdPedido(), "FINALIZADO");
+
+        if (this.observadorEstoque != null) {
+            this.observadorEstoque.atualizarEstoque(pedidoCompleto);
+        }
     }
 }
