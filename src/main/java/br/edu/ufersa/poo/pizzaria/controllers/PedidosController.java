@@ -7,7 +7,6 @@ import br.edu.ufersa.poo.pizzaria.model.entities.Pizza;
 import br.edu.ufersa.poo.pizzaria.model.services.AdicionalService;
 import br.edu.ufersa.poo.pizzaria.model.services.ClienteService;
 import br.edu.ufersa.poo.pizzaria.model.services.PedidoService;
-import br.edu.ufersa.poo.pizzaria.model.services.PizzaService;
 
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;

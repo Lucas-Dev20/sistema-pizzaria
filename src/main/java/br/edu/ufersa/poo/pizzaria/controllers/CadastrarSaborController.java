@@ -1,7 +1,6 @@
 package br.edu.ufersa.poo.pizzaria.controllers;
 
 import br.edu.ufersa.poo.pizzaria.model.entities.Usuario;
-import br.edu.ufersa.poo.pizzaria.model.services.PizzaService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
