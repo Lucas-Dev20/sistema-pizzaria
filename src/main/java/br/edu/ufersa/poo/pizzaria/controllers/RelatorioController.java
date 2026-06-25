@@ -4,6 +4,7 @@ import br.edu.ufersa.poo.pizzaria.DAO.ReposicaoEstoqueDAO;
 import br.edu.ufersa.poo.pizzaria.model.entities.Cliente;
 import br.edu.ufersa.poo.pizzaria.model.entities.Pedido;
 import br.edu.ufersa.poo.pizzaria.model.entities.Pizza;
+import br.edu.ufersa.poo.pizzaria.model.services.PizzaService;
 import br.edu.ufersa.poo.pizzaria.model.services.ClienteService;
 import br.edu.ufersa.poo.pizzaria.model.services.PedidoService;
 

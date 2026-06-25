@@ -4,6 +4,7 @@ import br.edu.ufersa.poo.pizzaria.model.entities.Adicional;
 import br.edu.ufersa.poo.pizzaria.model.entities.Cliente;
 import br.edu.ufersa.poo.pizzaria.model.entities.Pedido;
 import br.edu.ufersa.poo.pizzaria.model.entities.Pizza;
+import br.edu.ufersa.poo.pizzaria.model.services.PizzaService;
 import br.edu.ufersa.poo.pizzaria.model.services.AdicionalService;
 import br.edu.ufersa.poo.pizzaria.model.services.ClienteService;
 import br.edu.ufersa.poo.pizzaria.model.services.PedidoService;
@@ -440,6 +441,6 @@ public class PedidosController {
     @FXML private void irTiposPizza(ActionEvent e) { LoginController.trocarConteudo(e, "/br/edu/ufersa/pizzaria/views/GerenciarPizzasView.fxml",  "Tipos de pizza"); }
     @FXML private void irAdicionais(ActionEvent e) { LoginController.trocarConteudo(e, "/br/edu/ufersa/pizzaria/views/GerenciarAdicionaisView.fxml",  "Adicionais"); }
     @FXML private void irEstoque(ActionEvent e)    { LoginController.trocarConteudo(e, "/br/edu/ufersa/pizzaria/views/EstoqueView.fxml",     "Estoque"); }
-    @FXML private void irRelatorios(ActionEvent e) { LoginController.trocarConteudo(e, "/br/edu/ufersa/pizzaria/views/Relatorios.fxml",  "Relatórios"); }
+    @FXML private void irRelatorios(ActionEvent e) { LoginController.trocarConteudo(e, "/br/edu/ufersa/pizzaria/views/RelatorioView.fxml",  "Relatórios"); }
     @FXML private void sair(ActionEvent e)         { LoginController.trocarConteudo(e, "/br/edu/ufersa/pizzaria/views/LoginView.fxml",   "La Piazza Pizzaria"); }
 }

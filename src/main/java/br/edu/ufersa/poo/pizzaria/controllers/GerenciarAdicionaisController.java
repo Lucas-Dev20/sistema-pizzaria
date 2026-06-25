@@ -111,7 +111,7 @@ public class GerenciarAdicionaisController {
     //METODOS DE NAVEGAÇÃO ORIGINAIS
     @FXML
     private void irPedidos(ActionEvent event) {
-        LoginController.trocarConteudo(event, "/br/edu/ufersa/pizzaria/views/GerenciarPedidosView.fxml", "La Piazza - Pedidos");
+        LoginController.trocarConteudo(event, "/br/edu/ufersa/pizzaria/views/Pedidos.fxml", "La Piazza - Pedidos");
     }
 
     @FXML
@@ -131,12 +131,12 @@ public class GerenciarAdicionaisController {
 
     @FXML
     private void irEstoque(ActionEvent event) {
-        LoginController.trocarConteudo(event, "/br/edu/ufersa/pizzaria/views/GerenciarEstoqueView.fxml", "La Piazza - Estoque");
+        LoginController.trocarConteudo(event, "/br/edu/ufersa/pizzaria/views/EstoqueView.fxml", "La Piazza - Estoque");
     }
 
     @FXML
     private void irRelatorios(ActionEvent event) {
-        LoginController.trocarConteudo(event, "/br/edu/ufersa/pizzaria/views/GerenciarRelatoriosView.fxml", "La Piazza - Relatórios");
+        LoginController.trocarConteudo(event, "/br/edu/ufersa/pizzaria/views/RelatorioView.fxml", "La Piazza - Relatórios");
     }
 
     @FXML
