@@ -86,27 +86,81 @@ public class AdicionalDAO {
 
     //metodo para remover um adicional do bd a partir do nome
     public void remover(String nomeAdicional) {
-        String sql = "DELETE FROM adicional WHERE nome = ?";
 
-        try (Connection conn = ConnectionFactory.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        // Primeiro busca o id pelo nome — precisamos do id para limpar as tabelas filhas
+        String sqlBuscaId = "SELECT id_adicional FROM adicional WHERE nome = ?";
 
-            stmt.setString(1, nomeAdicional); // substituição das '?' do comando sql
+        // Deleta referências em pedido_adicional (pedidos que usaram este adicional)
+        String sqlPedidoAdicional = "DELETE FROM pedido_adicional WHERE id_adicional = ?";
 
-            int linhasAfetadas = stmt.executeUpdate();
-            if (linhasAfetadas > 0) {
-                System.out.println("Adicional '" + nomeAdicional + "' removido com sucesso!");
-            } else {
-                System.out.println("Nenhum adicional encontrado com o nome informado.");
+        // Deleta o histórico de reposição de estoque deste adicional
+        String sqlReposicao = "DELETE FROM reposicao_estoque WHERE id_adicional = ?";
+
+        // Por fim deleta o próprio adicional
+        String sqlAdicional = "DELETE FROM adicional WHERE id_adicional = ?";
+
+        try (Connection conn = ConnectionFactory.getConnection()) {
+
+            // Desativa autocommit para fazer tudo em uma transação só
+            conn.setAutoCommit(false);
+
+            try {
+                // 1. Busca o id
+                int idAdicional = -1;
+                try (PreparedStatement stmt = conn.prepareStatement(sqlBuscaId)) {
+                    stmt.setString(1, nomeAdicional);
+                    try (ResultSet rs = stmt.executeQuery()) {
+                        if (rs.next()) {
+                            idAdicional = rs.getInt("id_adicional");
+                        }
+                    }
+                }
+
+                if (idAdicional == -1) {
+                    System.out.println("Nenhum adicional encontrado com o nome: " + nomeAdicional);
+                    conn.rollback();
+                    return;
+                }
+
+                // 2. Remove de pedido_adicional
+                try (PreparedStatement stmt = conn.prepareStatement(sqlPedidoAdicional)) {
+                    stmt.setInt(1, idAdicional);
+                    stmt.executeUpdate();
+                }
+
+                // 3. Remove de reposicao_estoque
+                try (PreparedStatement stmt = conn.prepareStatement(sqlReposicao)) {
+                    stmt.setInt(1, idAdicional);
+                    stmt.executeUpdate();
+                }
+
+                // 4. Remove o adicional
+                try (PreparedStatement stmt = conn.prepareStatement(sqlAdicional)) {
+                    stmt.setInt(1, idAdicional);
+                    int linhasAfetadas = stmt.executeUpdate();
+                    if (linhasAfetadas > 0) {
+                        System.out.println("Adicional '" + nomeAdicional + "' removido com sucesso!");
+                    }
+                }
+
+                conn.commit();
+
+            } catch (SQLException e) {
+                conn.rollback();
+                System.out.println("Erro no DELETE de Adicional — rollback executado:");
+                e.printStackTrace();
+                throw e; // repassa para o controller mostrar o erro na tela
+            } finally {
+                conn.setAutoCommit(true);
             }
 
         } catch (SQLException e) {
-            System.out.println("Erro no DELETE de Adicional:");
+            System.out.println("Erro ao conectar para remover adicional:");
             e.printStackTrace();
         }
     }
 
-// busca o adicional por id
+    // busca o adicional por id
     public Adicional buscarPorId(int idBusca) {
         String sql = "SELECT * FROM adicional WHERE id_adicional = ?";
         Adicional adicionalEncontrado = null;
