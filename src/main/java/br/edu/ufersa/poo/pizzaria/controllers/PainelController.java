@@ -40,6 +40,7 @@ public class PainelController implements Initializable {
     @FXML void menuAdicionais(ActionEvent event) { LoginController.trocarConteudo(event, "/br/edu/ufersa/pizzaria/views/GerenciarAdicionaisView.fxml", "La Piazza - Adicionais"); }
     @FXML void menuEstoque(ActionEvent event) { LoginController.trocarConteudo(event, "/br/edu/ufersa/pizzaria/views/EstoqueView.fxml", "La Piazza - Estoque"); }
     @FXML void menuRelatorio(ActionEvent event) { LoginController.trocarConteudo(event, "/br/edu/ufersa/pizzaria/views/RelatorioView.fxml", "La Piazza - Relatório"); }
+    @FXML void menuFuncionarios(ActionEvent event) { LoginController.trocarConteudo(event, "/br/edu/ufersa/pizzaria/views/GerenciarFuncionariosView.fxml", "La Piazza - Funcionários"); }
     @FXML void logout(ActionEvent event) { LoginController.trocarConteudo(event, "/br/edu/ufersa/pizzaria/views/LoginView.fxml", "La Piazza - Login"); }
 
     @Override
