@@ -1,6 +1,7 @@
 package br.edu.ufersa.poo.pizzaria.model.services;
 
 import br.edu.ufersa.poo.pizzaria.DAO.PizzaDAO;
+import br.edu.ufersa.poo.pizzaria.exceptions.AcessoNegadoException;
 import br.edu.ufersa.poo.pizzaria.model.entities.Pizza;
 import br.edu.ufersa.poo.pizzaria.model.entities.Usuario;
 
@@ -21,10 +22,9 @@ public class PizzaService {
             );
         }
 
-        if (!usuario.getPerfil().equals("admin")) {
-            throw new IllegalArgumentException(
-                    "Apenas administradores podem cadastrar pizzas."
-            );
+
+        if (!usuario.isAdmin()) {
+            throw new AcessoNegadoException("cadastrar tipo de pizza", usuario.getPerfil().name());
         }
 
         if (tipo == null || tipo.trim().isEmpty()) {

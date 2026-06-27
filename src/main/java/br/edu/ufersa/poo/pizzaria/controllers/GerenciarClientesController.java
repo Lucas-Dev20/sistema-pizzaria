@@ -104,20 +104,24 @@ public class GerenciarClientesController {
 
     private void handleEditarCliente(Cliente cliente) {
         try {
-            //carrega o arquivo FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/br/edu/ufersa/pizzaria/views/EditarClienteView.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(
+                    "/br/edu/ufersa/pizzaria/views/EditarClienteView.fxml"));
             Parent root = loader.load();
 
-            //pega o controller da tela de edição que acabou de nascer na memória
+            // passa o cliente para o controller ANTES de exibir o modal
             EditarClienteController controllerEdicao = loader.getController();
-
-            //PASSA O CLIENTE DA LINHA SELECIONADA PARA DENTRO DELE!
             controllerEdicao.preencherCampos(cliente);
 
-            //exibe a tela
-            javafx.stage.Stage stage = (javafx.stage.Stage) tabelaClientes.getScene().getWindow();
-            stage.getScene().setRoot(root);
-            stage.setTitle("La Piazza - Editar Cliente");
+            // abre como modal (Stage filho) — igual ao CadastrarClienteView
+            javafx.stage.Stage modal = new javafx.stage.Stage();
+            modal.setTitle("La Piazza - Editar Cliente");
+            modal.setScene(new javafx.scene.Scene(root));
+            modal.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+            modal.initOwner(tabelaClientes.getScene().getWindow());
+            modal.showAndWait(); // bloqueia até fechar
+
+            // após fechar, atualiza a tabela automaticamente
+            atualizarTabela();
 
         } catch (java.io.IOException e) {
             e.printStackTrace();

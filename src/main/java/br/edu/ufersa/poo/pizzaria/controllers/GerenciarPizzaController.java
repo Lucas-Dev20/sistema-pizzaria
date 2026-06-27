@@ -1,83 +1,196 @@
 package br.edu.ufersa.poo.pizzaria.controllers;
 
 import br.edu.ufersa.poo.pizzaria.exceptions.AcessoNegadoException;
+import br.edu.ufersa.poo.pizzaria.model.entities.Pizza;
+import br.edu.ufersa.poo.pizzaria.model.services.PizzaService;
 import br.edu.ufersa.poo.pizzaria.session.SessaoUsuario;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.layout.*;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
-/**
- * Controller da tela "Tipos de Pizza".
- *
- * REGRA DE ACESSO:
- *   - Todos os usuários podem VER os tipos de pizza.
- *   - APENAS o ADMIN pode cadastrar, editar ou excluir tipos de pizza.
- *
- * O controle é feito de duas formas:
- *   1. Na inicialização: oculta/desativa o botão "Novo Sabor" para funcionários.
- *   2. Nas ações: relança AcessoNegadoException se um funcionário tentar mesmo assim.
- */
+import java.io.IOException;
+import java.util.List;
+
 public class GerenciarPizzaController {
 
-    @FXML private Button btnNovoSabor;
+    // ── FXML ─────────────────────────────────────────────────────────────────
+    @FXML private Button    btnNovoSabor;
+    @FXML private TextField txtBusca;
+    @FXML private TilePane  containerPizzas;
 
-    // ── Inicialização: configura visibilidade dos botões por perfil ───────────
+    private final PizzaService pizzaService = new PizzaService();
+    private List<Pizza> todasPizzas;
+
+    // ── INICIALIZAÇÃO ─────────────────────────────────────────────────────────
     @FXML
     public void initialize() {
         boolean ehAdmin = SessaoUsuario.getInstance().usuarioEhAdmin();
-
-        // Oculta o botão "Novo Sabor" para funcionários
         btnNovoSabor.setVisible(ehAdmin);
-        btnNovoSabor.setManaged(ehAdmin); // não ocupa espaço se invisível
+        btnNovoSabor.setManaged(ehAdmin);
+
+        // filtra enquanto digita
+        txtBusca.textProperty().addListener((obs, antigo, novo) -> filtrarPizzas(novo));
 
         carregarPizzas();
     }
 
+    // ── CARREGAR E EXIBIR ─────────────────────────────────────────────────────
     private void carregarPizzas() {
-        // TODO: carregar lista de pizzas do PizzaService e exibir na tela
-        // Exemplo: listaPizzas.setAll(pizzaService.listarTodas());
+        todasPizzas = pizzaService.listarTodasPizzas();
+        renderizarCards(todasPizzas);
     }
 
-    // ── Ações restritas ao ADMIN ──────────────────────────────────────────────
+    private void filtrarPizzas(String busca) {
+        if (busca == null || busca.isBlank()) {
+            renderizarCards(todasPizzas);
+            return;
+        }
+        String lower = busca.toLowerCase();
+        List<Pizza> filtradas = todasPizzas.stream()
+                .filter(p -> p.getTipo().toLowerCase().contains(lower))
+                .toList();
+        renderizarCards(filtradas);
+    }
 
+    /**
+     * Gera um card visual para cada pizza — igual ao design do PDF:
+     *   ┌─────────────────────────────────┐
+     *   │  Margherita              ✏ 🗑   │
+     *   │  Molho de tomate, ...           │
+     *   │ ─────────────────────────────   │
+     *   │  Preços por Tamanho             │
+     *   │  [Pequena  R$35] [Média R$44]   │
+     *   │  [Grande   R$52]                │
+     *   └─────────────────────────────────┘
+     */
+    private void renderizarCards(List<Pizza> pizzas) {
+        containerPizzas.getChildren().clear();
+        boolean ehAdmin = SessaoUsuario.getInstance().usuarioEhAdmin();
+
+        for (Pizza pizza : pizzas) {
+            // ── linha do título + botões ──
+            Label lblNome = new Label(pizza.getTipo());
+            lblNome.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+            HBox.setHgrow(lblNome, Priority.ALWAYS);
+
+            HBox cabecalho = new HBox(8, lblNome);
+            cabecalho.setStyle("-fx-alignment: CENTER_LEFT;");
+
+            // botões só aparecem para admin
+            if (ehAdmin) {
+                Button btnEditar = new Button("✏");
+                btnEditar.setStyle("-fx-background-color: transparent; -fx-cursor: hand; -fx-font-size: 14px;");
+                btnEditar.setOnAction(e -> abrirEdicao(pizza));
+
+                Button btnExcluir = new Button("🗑");
+                btnExcluir.setStyle("-fx-background-color: transparent; -fx-cursor: hand; -fx-font-size: 14px; -fx-text-fill: #B03A2A;");
+                btnExcluir.setOnAction(e -> confirmarExclusao(pizza));
+
+                cabecalho.getChildren().addAll(btnEditar, btnExcluir);
+            }
+
+            // ── separador ──
+            Separator sep = new Separator();
+            sep.setStyle("-fx-padding: 2 0 2 0;");
+
+            // ── preços por tamanho ──
+            Label lblPrecoTitulo = new Label("Preço por tamanho");
+            lblPrecoTitulo.setStyle("-fx-font-size: 12px; -fx-text-fill: #555;");
+
+            // o banco tem apenas um valor — exibe as 3 faixas com multiplicadores comuns
+            Label lblPeq  = rotuloBadge("Pequena",  pizza.getValor() * 0.75);
+            Label lblMed  = rotuloBadge("Média",    pizza.getValor());
+            Label lblGra  = rotuloBadge("Grande",   pizza.getValor() * 1.25);
+
+            HBox precos = new HBox(8, lblPeq, lblMed, lblGra);
+            precos.setStyle("-fx-alignment: CENTER_LEFT;");
+
+            // ── card ──
+            VBox card = new VBox(8, cabecalho, sep, lblPrecoTitulo, precos);
+            card.setStyle("""
+                    -fx-background-color: #F2F0EB;
+                    -fx-background-radius: 12;
+                    -fx-padding: 14 16 14 16;
+                    -fx-pref-width: 340;
+                    """);
+
+            containerPizzas.getChildren().add(card);
+        }
+
+        if (pizzas.isEmpty()) {
+            Label vazio = new Label("Nenhum sabor cadastrado.");
+            vazio.setStyle("-fx-text-fill: #888; -fx-font-size: 14px;");
+            containerPizzas.getChildren().add(vazio);
+        }
+    }
+
+    /** Badge cinza com texto "Tamanho  R$ valor" */
+    private Label rotuloBadge(String tamanho, double valor) {
+        Label l = new Label(String.format("%s  R$%.2f", tamanho, valor));
+        l.setStyle("""
+                -fx-background-color: #DEDAD4;
+                -fx-background-radius: 20;
+                -fx-padding: 4 10 4 10;
+                -fx-font-size: 12px;
+                """);
+        return l;
+    }
+
+    // ── AÇÕES RESTRITAS AO ADMIN ──────────────────────────────────────────────
     @FXML
     private void handleNovoSabor(ActionEvent event) {
         try {
             verificarAdmin("cadastrar novo tipo de pizza");
-            LoginController.abrirModal(
-                    "/br/edu/ufersa/pizzaria/views/CadastrarSaborView.fxml",
+            abrirModal("/br/edu/ufersa/pizzaria/views/CadastrarSaborView.fxml",
                     "Cadastrar Novo Sabor");
             carregarPizzas();
-
         } catch (AcessoNegadoException e) {
             mostrarAcessoNegado(e.getMessage());
         }
     }
 
-    @FXML
-    private void handleEditarPizza(/* Pizza pizza */ ActionEvent event) {
+    private void abrirEdicao(Pizza pizza) {
         try {
             verificarAdmin("editar tipo de pizza");
-            // TODO: abrir modal de edição passando a pizza selecionada
-            LoginController.abrirModal(
-                    "/br/edu/ufersa/pizzaria/views/EditarSaborView.fxml",
-                    "Editar Sabor");
-            carregarPizzas();
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(
+                    "/br/edu/ufersa/pizzaria/views/EditarSaborView.fxml"));
+            Parent root = loader.load();
+
+            // passa a pizza para o controller de edição
+            EditarSaborController ctrl = loader.getController();
+            ctrl.preencherCampos(pizza);
+
+            Stage modal = new Stage();
+            modal.setTitle("Editar Sabor");
+            modal.setScene(new javafx.scene.Scene(root));
+            modal.initModality(Modality.APPLICATION_MODAL);
+            modal.initOwner(containerPizzas.getScene().getWindow());
+            modal.showAndWait();
+
+            carregarPizzas(); // atualiza após fechar
 
         } catch (AcessoNegadoException e) {
             mostrarAcessoNegado(e.getMessage());
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
-    @FXML
-    private void handleExcluirPizza(ActionEvent event) {
+    private void confirmarExclusao(Pizza pizza) {
         try {
             verificarAdmin("excluir tipo de pizza");
 
             Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION);
             confirmacao.setTitle("Deseja excluir?");
             confirmacao.setHeaderText(null);
-            confirmacao.setContentText("Tem certeza que deseja excluir este sabor?");
+            confirmacao.setContentText("Excluir o sabor \"" + pizza.getTipo() + "\"?");
 
             ButtonType btnExcluir  = new ButtonType("Excluir",  ButtonBar.ButtonData.OK_DONE);
             ButtonType btnCancelar = new ButtonType("Cancelar", ButtonBar.ButtonData.CANCEL_CLOSE);
@@ -85,7 +198,7 @@ public class GerenciarPizzaController {
 
             confirmacao.showAndWait().ifPresent(btn -> {
                 if (btn == btnExcluir) {
-                    // TODO: pizzaService.removerPizza(pizzaSelecionada.getId());
+                    pizzaService.removerPizza(pizza.getIdPizza());
                     carregarPizzas();
                 }
             });
@@ -95,22 +208,11 @@ public class GerenciarPizzaController {
         }
     }
 
-    // ── Navegação (mesmo padrão dos outros controllers) ───────────────────────
+    // ── HELPERS ───────────────────────────────────────────────────────────────
+    private void abrirModal(String fxmlPath, String titulo) {
+        LoginController.abrirModal(fxmlPath, titulo);
+    }
 
-    @FXML private void irPedidos(ActionEvent e)   { LoginController.trocarConteudo(e, "/br/edu/ufersa/pizzaria/views/Pedidos.fxml",   "La Piazza - Pedidos"); }
-    @FXML private void irClientes(ActionEvent e)  { LoginController.trocarConteudo(e, "/br/edu/ufersa/pizzaria/views/GerenciarClientesView.fxml",  "La Piazza - Clientes"); }
-    @FXML private void irTiposPizza(ActionEvent e){ carregarPizzas(); }
-    @FXML private void irAdicionais(ActionEvent e){ LoginController.trocarConteudo(e, "/br/edu/ufersa/pizzaria/views/GerenciarAdicionaisView.fxml","La Piazza - Adicionais"); }
-    @FXML private void irEstoque(ActionEvent e)   { LoginController.trocarConteudo(e, "/br/edu/ufersa/pizzaria/views/EstoqueView.fxml",   "La Piazza - Estoque"); }
-    @FXML private void irRelatorios(ActionEvent e){ LoginController.trocarConteudo(e, "/br/edu/ufersa/pizzaria/views/RelatorioView.fxml","La Piazza - Relatórios"); }
-    @FXML private void irFuncionarios(ActionEvent e){ LoginController.trocarConteudo(e, "/br/edu/ufersa/pizzaria/views/GerenciarFuncionariosView.fxml", "La Piazza - Funcionários"); }
-    @FXML private void sair(ActionEvent e)        { LoginController.trocarConteudo(e, "/br/edu/ufersa/pizzaria/views/LoginView.fxml",               "La Piazza Pizzaria"); }
-
-    // ── Helpers ───────────────────────────────────────────────────────────────
-
-    /**
-     * Verifica se o usuário logado é ADMIN. Lança AcessoNegadoException se não for.
-     */
     private void verificarAdmin(String operacao) {
         if (!SessaoUsuario.getInstance().usuarioEhAdmin()) {
             String perfil = SessaoUsuario.getInstance()
@@ -126,4 +228,14 @@ public class GerenciarPizzaController {
         alert.setContentText(mensagem);
         alert.showAndWait();
     }
+
+    // ── NAVEGAÇÃO ─────────────────────────────────────────────────────────────
+    @FXML private void irPedidos(ActionEvent e)    { LoginController.trocarConteudo(e, "/br/edu/ufersa/pizzaria/views/Pedidos.fxml",                  "La Piazza - Pedidos"); }
+    @FXML private void irClientes(ActionEvent e)   { LoginController.trocarConteudo(e, "/br/edu/ufersa/pizzaria/views/GerenciarClientesView.fxml",    "La Piazza - Clientes"); }
+    @FXML private void irTiposPizza(ActionEvent e) { carregarPizzas(); }
+    @FXML private void irAdicionais(ActionEvent e) { LoginController.trocarConteudo(e, "/br/edu/ufersa/pizzaria/views/GerenciarAdicionaisView.fxml",  "La Piazza - Adicionais"); }
+    @FXML private void irEstoque(ActionEvent e)    { LoginController.trocarConteudo(e, "/br/edu/ufersa/pizzaria/views/EstoqueView.fxml",              "La Piazza - Estoque"); }
+    @FXML private void irRelatorios(ActionEvent e) { LoginController.trocarConteudo(e, "/br/edu/ufersa/pizzaria/views/RelatorioView.fxml",            "La Piazza - Relatórios"); }
+    @FXML private void irFuncionarios(ActionEvent e){ LoginController.trocarConteudo(e, "/br/edu/ufersa/pizzaria/views/GerenciarFuncionariosView.fxml","La Piazza - Funcionários"); }
+    @FXML private void sair(ActionEvent e)         { LoginController.trocarConteudo(e, "/br/edu/ufersa/pizzaria/views/LoginView.fxml",                "La Piazza Pizzaria"); }
 }

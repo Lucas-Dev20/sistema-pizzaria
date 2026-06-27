@@ -32,17 +32,15 @@ public class EditarClienteController {
     @FXML
     private void handleSalvar(ActionEvent event) {
         try {
-            //atualiza os dados do objeto temporário com o que o usuário alterou na tela
             clienteEmEdicao.setNome(txtNome.getText());
             clienteEmEdicao.setTelefone(txtTelefone.getText());
             clienteEmEdicao.setEndereco(txtEndereco.getText());
             clienteEmEdicao.setBairro(txtBairro.getText());
 
-            //manda para a service rodar o UPDATE na DAO
             clienteService.atualizarCliente(clienteEmEdicao);
 
             mostrarMensagem(Alert.AlertType.INFORMATION, "Sucesso", "Dados do cliente atualizados!");
-            fecharFormulario(event);
+            fecharModal(event);
 
         } catch (IllegalArgumentException e) {
             mostrarMensagem(Alert.AlertType.WARNING, "Validação", e.getMessage());
@@ -54,13 +52,14 @@ public class EditarClienteController {
 
     @FXML
     private void handleCancelar(ActionEvent event) {
-        // Apenas fecha o pop-up de forma limpa, sem carregar nenhum FXML
-        javafx.stage.Stage stage = (javafx.stage.Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
-        stage.close();
+        fecharModal(event);
     }
 
-    private void fecharFormulario(ActionEvent event) {
-        LoginController.trocarConteudo(event, "/br/edu/ufersa/pizzaria/views/GerenciarClientesView.fxml", "La Piazza - Gerenciar Clientes");
+    // fecha apenas o Stage modal — a tela de Clientes atrás continua aberta
+    private void fecharModal(ActionEvent event) {
+        javafx.stage.Stage stage = (javafx.stage.Stage)
+                ((javafx.scene.Node) event.getSource()).getScene().getWindow();
+        stage.close();
     }
 
     private void mostrarMensagem(Alert.AlertType tipo, String titulo, String msg) {

@@ -1,6 +1,6 @@
 package br.edu.ufersa.poo.pizzaria.model.entities;
 
-public class Cliente 
+public class Cliente
 {
     private int idCliente = -1; //novo cliente ao cadastrar
     private String nome;
@@ -11,7 +11,7 @@ public class Cliente
 
     // CONSTRUTOR NOVO que inclui o id
     public Cliente(int id, String nome, String endereco, String cpf, String telefone, String bairro) {
-        this.idCliente = -1;
+        this.idCliente = id;   // ← usa o id recebido (antes estava hardcoded como -1)
         this.nome = nome;
         this.endereco = endereco;
         this.cpf = cpf;
@@ -48,7 +48,7 @@ public class Cliente
         {
             this.nome = nome;
         }
-        else 
+        else
         {
             throw new IllegalArgumentException("O nome não pode estar vazio.");
         }
@@ -59,19 +59,19 @@ public class Cliente
         return endereco;
     }
 
-    public void setEndereco(String endereco) 
+    public void setEndereco(String endereco)
     {
         if (endereco != null && !endereco.trim().isEmpty()) //caso não esteja vazio, tendo desconsiderado espaços nos extremos da string, valida o endereço
         {
             this.endereco = endereco;
-        } 
-        else 
+        }
+        else
         {
             throw new IllegalArgumentException("O endereço não pode estar vazio.");
         }
     }
 
-    public String getCpf() 
+    public String getCpf()
     {
         return cpf;
     }
@@ -81,42 +81,42 @@ public class Cliente
         if (cpf != null && cpf.trim().length() >= 11) //cpf tem 11 digitos, está minimo 11 pois pode ter pontos e traços casualmente
         {                                                   //ex.: 111.222.333-40
             this.cpf = cpf;
-        } 
-        else 
+        }
+        else
         {
             throw new IllegalArgumentException("O CPF deve ter no mínimo 11 caracteres.");
         }
     }
 
-    public String getTelefone() 
+    public String getTelefone()
     {
         return telefone;
     }
 
-    public void setTelefone(String telefone) 
+    public void setTelefone(String telefone)
     {
         if (telefone != null && telefone.trim().length() >= 11) //numero de telefone tem 11 digitos, está minimo 11 pois pode ter () no ddd e traços casualmente
         {
             this.telefone = telefone;
-        } 
-        else 
+        }
+        else
         {
             throw new IllegalArgumentException("O telefone deve ter no mínimo 11 caracteres.");
         }
     }
 
-    public String getBairro() 
+    public String getBairro()
     {
         return bairro;
     }
 
-    public void setBairro(String bairro) 
+    public void setBairro(String bairro)
     {
         if (bairro != null && !bairro.trim().isEmpty()) //caso não esteja vazio, tendo desconsiderado espaços nos extremos da string, valida o bairro
         {
             this.bairro = bairro;
-        } 
-        else 
+        }
+        else
         {
             throw new IllegalArgumentException("O bairro não pode estar vazio.");
         }

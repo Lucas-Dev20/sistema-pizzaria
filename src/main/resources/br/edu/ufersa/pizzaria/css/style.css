@@ -251,8 +251,8 @@
 /* Tela pedidos */
 .linha-tabela {
        -fx-background-color: #FFFFFF;
-       -fx-border-color: transparent transparent #F5F5F5 transparent;
-       -fx-border-width: 0 0 1px 0;
+       -fx-border-color: transparent transparent #E4E1DB transparent;
+       -fx-border-width: 0 0 1 0;
    }
 
    .linha-tabela:hover {

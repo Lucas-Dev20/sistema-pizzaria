@@ -2,147 +2,191 @@ package br.edu.ufersa.poo.pizzaria.controllers;
 
 import br.edu.ufersa.poo.pizzaria.model.entities.Adicional;
 import br.edu.ufersa.poo.pizzaria.model.services.AdicionalService;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 public class GerenciarAdicionaisController {
 
-    @FXML private TextField txtBusca;
-    @FXML private Button btnNovoAdicional;
-    @FXML private TableView<?> tabelaAdicionais; // Mantido o original <?>
-    @FXML private TableColumn<?, String> colNome;
-    @FXML private TableColumn<?, Double> colPreco;
-    @FXML private TableColumn<?, String> colEstoque;
-    @FXML private TableColumn<?, Void> colAcoes;
+    // ── FXML ──────────────────────────────────────────────────────────────
+    @FXML private TextField                        txtBusca;
+    @FXML private Button                           btnNovoAdicional;
+    @FXML private TableView<Adicional>             tabelaAdicionais;
+    @FXML private TableColumn<Adicional, String>   colNome;
+    @FXML private TableColumn<Adicional, String>   colPreco;
+    @FXML private TableColumn<Adicional, String>   colEstoque;
+    @FXML private TableColumn<Adicional, String>   colAcoes;
+
     private final AdicionalService adicionalService = new AdicionalService();
-    private ObservableList<Adicional> listaAdicionaisOb = FXCollections.observableArrayList();
+    private final ObservableList<Adicional> listaAdicionaisOb = FXCollections.observableArrayList();
+
+    // ── INICIALIZAÇÃO ──────────────────────────────────────────────────────
     @FXML
     public void initialize() {
-        // carrega o bd
+        configurarColunas();
         atualizarTabela();
     }
 
-    private void atualizarTabela() {
-        // ENVOLVIDO EM TRY/CATCH PARA GARANTIR QUE ERROS NO BANCO NÃO TRAVEM A INTERFACE
+    // ── CONFIGURAÇÃO DAS COLUNAS ───────────────────────────────────────────
+    private void configurarColunas() {
+
+        // Nome → adicional.nome
+        colNome.setCellValueFactory(data ->
+                new SimpleStringProperty(data.getValue().getNome()));
+
+        // Valor → adicional.valor formatado como "R$ 5,00"
+        colPreco.setCellValueFactory(data ->
+                new SimpleStringProperty(
+                        String.format("R$ %.2f", data.getValue().getValor())
+                                .replace(".", ",")));
+
+        // Estoque → adicional.quantidade
+        colEstoque.setCellValueFactory(data ->
+                new SimpleStringProperty(data.getValue().getQtd() + " un."));
+
+        // Ações → botão ✏ (editar) + 🗑 (excluir) por linha
+        colAcoes.setCellFactory(col -> new TableCell<>() {
+
+            private final Button btnEditar  = new Button("✏");
+            private final Button btnExcluir = new Button("🗑");
+
+            {
+                // Estilo do botão editar
+                btnEditar.getStyleClass().add("btn-icone");
+                btnEditar.setOnAction(e -> {
+                    Adicional a = getTableView().getItems().get(getIndex());
+                    abrirEdicaoAdicional(a);
+                });
+
+                // Estilo do botão excluir
+                btnExcluir.getStyleClass().addAll("btn-icone", "btn-icone-excluir");
+                btnExcluir.setOnAction(e -> {
+                    Adicional a = getTableView().getItems().get(getIndex());
+                    handleExcluirAdicional(a);
+                });
+            }
+
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    HBox box = new HBox(8, btnEditar, btnExcluir);
+                    box.setAlignment(Pos.CENTER);
+                    setGraphic(box);
+                }
+            }
+        });
+    }
+
+    // ── ABRIR MODAL DE EDIÇÃO ──────────────────────────────────────────────
+    // Carrega o EditarAdicionalView.fxml que já existe no projeto,
+    // passa o Adicional selecionado para o EditarAdicionalController
+    // via preencherCampos(), e espera o modal fechar para atualizar a tabela.
+    private void abrirEdicaoAdicional(Adicional adicional) {
         try {
-            listaAdicionaisOb.clear();
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/br/edu/ufersa/pizzaria/views/EditarAdicionalView.fxml")
+            );
+            Parent root = loader.load();
 
-            // MENSAGEM EM CAPS LOCK: BUSCANDO OS DADOS REAIS DO BANCO ATRAVÉS DA SERVICE
-            listaAdicionaisOb.addAll(adicionalService.listarTodosAdicionais());
+            // Passa os dados do adicional selecionado para o controller do modal
+            EditarAdicionalController controller = loader.getController();
+            controller.preencherCampos(adicional);
 
-            // JOGA OS DADOS DENTRO DA TABELA DA TELA
-            tabelaAdicionais.setItems((ObservableList) listaAdicionaisOb);
+            Stage modal = new Stage();
+            modal.setTitle("Editar Adicional");
+            modal.initStyle(StageStyle.UNDECORATED);
+            modal.initModality(Modality.APPLICATION_MODAL); // bloqueia a janela de fundo
+            modal.setScene(new Scene(root));
+            modal.centerOnScreen();
+            modal.showAndWait(); // espera fechar antes de continuar
+
+            // Recarrega a tabela após fechar o modal
+            atualizarTabela();
+
         } catch (Exception e) {
-            System.err.println("MENSAGEM EM CAPS LOCK: ERRO AO CARREGAR DADOS DE ADICIONAIS DO BANCO DE DADOS.");
             e.printStackTrace();
-
-            // ALERTA PARA AVISAR O USUÁRIO SEM DERRUBAR A NAVEGAÇÃO DA TELA
-            Alert erro = new Alert(Alert.AlertType.ERROR);
-            erro.setTitle("Erro de Carregamento");
-            erro.setHeaderText(null);
-            erro.setContentText("Não foi possível carregar os adicionais do banco de dados.");
-            erro.showAndWait();
+            new Alert(Alert.AlertType.ERROR,
+                    "Não foi possível abrir a tela de edição.", ButtonType.OK).showAndWait();
         }
     }
 
+    // ── ATUALIZAR TABELA DO BANCO ──────────────────────────────────────────
+    private void atualizarTabela() {
+        try {
+            listaAdicionaisOb.clear();
+            // AdicionalService → AdicionalDAO → SELECT * FROM adicional
+            listaAdicionaisOb.addAll(adicionalService.listarTodosAdicionais());
+            tabelaAdicionais.setItems(listaAdicionaisOb);
+        } catch (Exception e) {
+            System.err.println("Erro ao carregar adicionais do banco.");
+            e.printStackTrace();
+            new Alert(Alert.AlertType.ERROR,
+                    "Não foi possível carregar os adicionais do banco de dados.",
+                    ButtonType.OK).showAndWait();
+        }
+    }
+
+    // ── AÇÕES ──────────────────────────────────────────────────────────────
     @FXML
     private void handleNovoAdicional(ActionEvent event) {
-        LoginController.abrirModal("/br/edu/ufersa/pizzaria/views/CadastrarAdicionalView.fxml", "Novo Adicional");
+        LoginController.abrirModal(
+                "/br/edu/ufersa/pizzaria/views/CadastrarAdicionalView.fxml",
+                "Novo Adicional"
+        );
         atualizarTabela();
     }
 
     private void handleExcluirAdicional(Adicional adicionalSelecionado) {
-        // PROTEÇÃO: Adicionada aqui no topo de forma segura
-        if (adicionalSelecionado == null) {
-            Alert avisoSelection = new Alert(Alert.AlertType.WARNING);
-            avisoSelection.setTitle("Aviso");
-            avisoSelection.setHeaderText(null);
-            avisoSelection.setContentText("Por favor, selecione um adicional na tabela para poder excluir.");
-            avisoSelection.showAndWait();
-            return;
-        }
+        if (adicionalSelecionado == null) return;
 
-        // Cria o alerta de confirmação customizado para o pop-up
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Deseja excluir?");
         alert.setHeaderText(null);
-        alert.setContentText("Você tem certeza que deseja deletar o adicional \"" + adicionalSelecionado.getNome() + "\"?");
+        alert.setContentText("Você tem certeza que deseja excluir o adicional \""
+                + adicionalSelecionado.getNome() + "\"?");
 
-        // Define os botões de opção corretamente com ButtonData
         ButtonType btnCancelar = new ButtonType("Cancelar", ButtonBar.ButtonData.CANCEL_CLOSE);
-        ButtonType btnExcluir = new ButtonType("Excluir", ButtonBar.ButtonData.OK_DONE);
+        ButtonType btnExcluir  = new ButtonType("Excluir",  ButtonBar.ButtonData.OK_DONE);
         alert.getButtonTypes().setAll(btnCancelar, btnExcluir);
 
-        // Abre o pop-up na tela e espera o clique
-        java.util.Optional<ButtonType> resultado = alert.showAndWait();
-
-        if (resultado.isPresent() && resultado.get() == btnExcluir) {
-            try {
-                adicionalService.removerAdicional(adicionalSelecionado.getNome());
-
-                Alert sucesso = new Alert(Alert.AlertType.INFORMATION);
-                sucesso.setTitle("Sucesso");
-                sucesso.setHeaderText(null);
-                sucesso.setContentText("Adicional removido com sucesso!");
-                sucesso.showAndWait();
-
-                atualizarTabela();
-
-            } catch (IllegalArgumentException e) {
-                Alert aviso = new Alert(Alert.AlertType.WARNING);
-                aviso.setTitle("Aviso de Validação");
-                aviso.setHeaderText(null);
-                aviso.setContentText(e.getMessage());
-                aviso.showAndWait();
-            } catch (Exception e) {
-                Alert erro = new Alert(Alert.AlertType.ERROR);
-                erro.setTitle("Erro");
-                erro.setHeaderText(null);
-                erro.setContentText("Não foi possível excluir o adicional do banco de dados.");
-                erro.showAndWait();
-                e.printStackTrace();
+        alert.showAndWait().ifPresent(resultado -> {
+            if (resultado == btnExcluir) {
+                try {
+                    // AdicionalService → AdicionalDAO → DELETE FROM adicional WHERE nome = ?
+                    adicionalService.removerAdicional(adicionalSelecionado.getNome());
+                    atualizarTabela();
+                } catch (IllegalArgumentException e) {
+                    new Alert(Alert.AlertType.WARNING, e.getMessage(), ButtonType.OK).showAndWait();
+                } catch (Exception e) {
+                    new Alert(Alert.AlertType.ERROR,
+                            "Não foi possível excluir o adicional.", ButtonType.OK).showAndWait();
+                    e.printStackTrace();
+                }
             }
-        }
+        });
     }
 
-    //METODOS DE NAVEGAÇÃO ORIGINAIS
-    @FXML
-    private void irPedidos(ActionEvent event) {
-        LoginController.trocarConteudo(event, "/br/edu/ufersa/pizzaria/views/Pedidos.fxml", "La Piazza - Pedidos");
-    }
-
-    @FXML
-    private void irClientes(ActionEvent event) {
-        LoginController.trocarConteudo(event, "/br/edu/ufersa/pizzaria/views/GerenciarClientesView.fxml", "La Piazza - Clientes");
-    }
-
-    @FXML
-    private void irTiposPizza(ActionEvent event) {
-        LoginController.trocarConteudo(event, "/br/edu/ufersa/pizzaria/views/GerenciarPizzasView.fxml", "La Piazza - Tipos de Pizza");
-    }
-
-    @FXML
-    private void irAdicionais(ActionEvent event) {
-        atualizarTabela();
-    }
-
-    @FXML
-    private void irEstoque(ActionEvent event) {
-        LoginController.trocarConteudo(event, "/br/edu/ufersa/pizzaria/views/EstoqueView.fxml", "La Piazza - Estoque");
-    }
-
-
-    @FXML private void irFuncionarios(ActionEvent e) { LoginController.trocarConteudo(e, "/br/edu/ufersa/pizzaria/views/GerenciarFuncionariosView.fxml", "La Piazza - Funcionários"); }
-    @FXML
-    private void irRelatorios(ActionEvent event) {
-        LoginController.trocarConteudo(event, "/br/edu/ufersa/pizzaria/views/RelatorioView.fxml", "La Piazza - Relatórios");
-    }
-
-    @FXML
-    private void sair(ActionEvent event) {
-        LoginController.trocarConteudo(event, "/br/edu/ufersa/pizzaria/views/LoginView.fxml", "La Piazza Pizzaria");
-    }
+    // ── NAVEGAÇÃO ──────────────────────────────────────────────────────────
+    @FXML private void irPedidos(ActionEvent e)     { LoginController.trocarConteudo(e, "/br/edu/ufersa/pizzaria/views/Pedidos.fxml",                   "La Piazza - Pedidos"); }
+    @FXML private void irClientes(ActionEvent e)    { LoginController.trocarConteudo(e, "/br/edu/ufersa/pizzaria/views/GerenciarClientesView.fxml",     "La Piazza - Clientes"); }
+    @FXML private void irTiposPizza(ActionEvent e)  { LoginController.trocarConteudo(e, "/br/edu/ufersa/pizzaria/views/GerenciarPizzasView.fxml",       "La Piazza - Tipos de Pizza"); }
+    @FXML private void irAdicionais(ActionEvent e)  { atualizarTabela(); }
+    @FXML private void irEstoque(ActionEvent e)     { LoginController.trocarConteudo(e, "/br/edu/ufersa/pizzaria/views/EstoqueView.fxml",               "La Piazza - Estoque"); }
+    @FXML private void irRelatorios(ActionEvent e)  { LoginController.trocarConteudo(e, "/br/edu/ufersa/pizzaria/views/RelatorioView.fxml",             "La Piazza - Relatórios"); }
+    @FXML private void irFuncionarios(ActionEvent e){ LoginController.trocarConteudo(e, "/br/edu/ufersa/pizzaria/views/GerenciarFuncionariosView.fxml", "La Piazza - Funcionários"); }
+    @FXML private void sair(ActionEvent e)          { LoginController.trocarConteudo(e, "/br/edu/ufersa/pizzaria/views/LoginView.fxml",                 "La Piazza Pizzaria"); }
 }
