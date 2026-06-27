@@ -57,7 +57,6 @@ public class GerenciarAdicionaisController {
 
         // Ações → botão ✏ (editar) + 🗑 (excluir) por linha
         colAcoes.setCellFactory(col -> new TableCell<>() {
-
             private final Button btnEditar  = new Button("✏");
             private final Button btnExcluir = new Button("🗑");
 

@@ -2,44 +2,57 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
 
-<AnchorPane prefHeight="650.0" prefWidth="600.0"
-            stylesheets="@../css/style.css"
-            style="-fx-background-color: rgba(0, 0, 0, 0.4);"
-            xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="br.edu.ufersa.poo.pizzaria.controllers.EditarClienteController">
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="br.edu.ufersa.poo.pizzaria.controllers.EditarClienteController"
+      style="-fx-background-color: #EFEFEF; -fx-background-radius: 15;"
+      spacing="18" prefWidth="440" alignment="TOP_LEFT">
 
-    <VBox alignment="CENTER" AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
-          AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+    <padding>
+        <Insets top="30" right="35" bottom="30" left="35"/>
+    </padding>
 
-        <Pane styleClass="login-card" maxWidth="480" prefHeight="580">
-            <VBox spacing="12" layoutX="35" layoutY="25" prefWidth="410">
+    <Label text="Editar Cliente" style="-fx-font-size: 24; -fx-font-family: 'Arial'; -fx-text-fill: #000000;" />
 
-                <Label text="Editar Cliente" styleClass="titulo" style="-fx-font-size: 24;"/>
-                <Separator style="-fx-padding: 0 0 5 0;"/>
+    <VBox spacing="12" alignment="CENTER_LEFT" VBox.vgrow="ALWAYS">
+        <VBox spacing="6">
+            <Label text="Nome completo" style="-fx-font-size: 16; -fx-text-fill: #000000;" />
+            <TextField fx:id="txtNome"
+                       style="-fx-background-color: #D9D9D9; -fx-background-radius: 6; -fx-padding: 8; -fx-text-fill: #333333;"/>
+        </VBox>
 
-                <Label text="Nome completo" style="-fx-font-weight: bold;"/>
-                <TextField fx:id="txtNome" styleClass="campo"/>
+        <VBox spacing="6">
+            <Label text="CPF" style="-fx-font-size: 16; -fx-text-fill: #000000;" />
+            <TextField fx:id="txtCpf" editable="false"
+                       style="-fx-background-color: #D9D9D9; -fx-background-radius: 6; -fx-padding: 8; -fx-text-fill: #333333; -fx-opacity: 0.7;"/>
+        </VBox>
 
-                <Label text="CPF" style="-fx-font-weight: bold;"/>
-                <TextField fx:id="txtCpf" styleClass="campo" editable="false" style="-fx-opacity: 0.7;"/>
+        <VBox spacing="6">
+            <Label text="Telefone" style="-fx-font-size: 16; -fx-text-fill: #000000;" />
+            <TextField fx:id="txtTelefone"
+                       style="-fx-background-color: #D9D9D9; -fx-background-radius: 6; -fx-padding: 8; -fx-text-fill: #333333;"/>
+        </VBox>
 
-                <Label text="Telefone" style="-fx-font-weight: bold;"/>
-                <TextField fx:id="txtTelefone" styleClass="campo"/>
+        <VBox spacing="6">
+            <Label text="Endereço" style="-fx-font-size: 16; -fx-text-fill: #000000;" />
+            <TextField fx:id="txtEndereco"
+                       style="-fx-background-color: #D9D9D9; -fx-background-radius: 6; -fx-padding: 8; -fx-text-fill: #333333;"/>
+        </VBox>
 
-                <Label text="Endereço" style="-fx-font-weight: bold;"/>
-                <TextField fx:id="txtEndereco" styleClass="campo"/>
-
-                <Label text="Bairro" style="-fx-font-weight: bold;"/>
-                <TextField fx:id="txtBairro" styleClass="campo"/>
-
-                <HBox spacing="20" alignment="CENTER" style="-fx-padding: 15 0 0 0;">
-                    <Button text="Cancelar" onAction="#handleCancelar" styleClass="botao"/>
-                    <Button text="Salvar" onAction="#handleSalvar" styleClass="botao-primary"/>
-                </HBox>
-
-            </VBox>
-        </Pane>
+        <VBox spacing="6">
+            <Label text="Bairro" style="-fx-font-size: 16; -fx-text-fill: #000000;" />
+            <TextField fx:id="txtBairro"
+                       style="-fx-background-color: #D9D9D9; -fx-background-radius: 6; -fx-padding: 8; -fx-text-fill: #333333;"/>
+        </VBox>
     </VBox>
-</AnchorPane>
+
+    <HBox spacing="15" alignment="CENTER_RIGHT" style="-fx-padding: 10 0 0 0;">
+        <Button text="Cancelar" onAction="#handleCancelar"
+                style="-fx-background-color: #FFFFFF; -fx-background-radius: 20; -fx-padding: 10 25; -fx-text-fill: #000000; -fx-font-size: 14; -fx-cursor: hand; -fx-border-color: transparent;"/>
+
+        <Button text="Salvar" onAction="#handleSalvar"
+                style="-fx-background-color: #5CB85C; -fx-background-radius: 20; -fx-padding: 10 35; -fx-text-fill: #FFFFFF; -fx-font-size: 14; -fx-font-weight: bold; -fx-cursor: hand;"/>
+    </HBox>
+</VBox>

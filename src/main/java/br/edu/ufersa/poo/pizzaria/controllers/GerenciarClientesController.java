@@ -57,27 +57,26 @@ public class GerenciarClientesController {
             @Override
             public TableCell<Cliente, Void> call(final TableColumn<Cliente, Void> param) {
                 return new TableCell<>() {
-                    private final Button btnEditar = new Button("✏️");
-                    private final Button btnExcluir = new Button("🗑️");
-                    private final HBox container = new HBox(10, btnEditar, btnExcluir);
+                    private final Button btnEditar = new Button("✏");
+                    private final Button btnExcluir = new Button("🗑");
+                    private final HBox container = new HBox(8, btnEditar, btnExcluir);
 
                     {
-                        //estilização
-                        btnEditar.setStyle("-fx-cursor: hand; -fx-background-color: transparent; -fx-text-fill: #333333;");
-                        btnExcluir.setStyle("-fx-cursor: hand; -fx-background-color: transparent; -fx-text-fill: #B03A2A;");
-                        container.setStyle("-fx-alignment: center;");
-
-                        // AÇÃO DO BOTÃO EDITAR
+                        // Estilo do botão editar
+                        btnEditar.getStyleClass().add("btn-icone");
                         btnEditar.setOnAction(event -> {
                             Cliente clienteSelecionado = getTableView().getItems().get(getIndex());
                             handleEditarCliente(clienteSelecionado);
                         });
 
-                        // AÇÃO DO BOTÃO EXCLUIR
+                        // Estilo do botão excluir
+                        btnExcluir.getStyleClass().addAll("btn-icone", "btn-icone-excluir");
                         btnExcluir.setOnAction(event -> {
                             Cliente clienteSelecionado = getTableView().getItems().get(getIndex());
                             handleExcluirCliente(clienteSelecionado);
                         });
+
+                        container.setStyle("-fx-alignment: center;");
                     }
 
                     @Override

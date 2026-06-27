@@ -198,6 +198,12 @@
     -fx-border-color: transparent;
 }
 
+.table-view .virtual-flow,
+.table-view .clipped-container,
+.table-view .filler {
+    -fx-background-color: transparent;
+}
+
 /* Remove os fundos cinzas padrões dos cabeçalhos da tabela */
 .table-view .column-header-background {
     -fx-background-color: transparent;
