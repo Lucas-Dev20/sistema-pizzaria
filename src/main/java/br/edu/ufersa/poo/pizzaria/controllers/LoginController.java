@@ -132,24 +132,20 @@ public class LoginController {
     public static void trocarConteudo(ActionEvent event, String fxmlPath, String titulo) {
         try {
             FXMLLoader loader = new FXMLLoader(LoginController.class.getResource(fxmlPath));
-            Parent root = loader.load();
+            Parent novoRoot = loader.load();
 
+            // pega o Stage e a Scene atuais
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            Scene cenaAtual = stage.getScene();
 
-            // Preserva maximizado e dimensões para que a tela não encolha ao navegar
-            boolean eraMaximizado = stage.isMaximized();
-            double largura = stage.getWidth();
-            double altura  = stage.getHeight();
+            // substitui o conteúdo da janela instantaneamente
+            cenaAtual.setRoot(novoRoot);
 
-            stage.setScene(new Scene(root, largura, altura));
+            // atualiza o título
             stage.setTitle(titulo);
 
-            if (eraMaximizado) {
-                stage.setMaximized(false); // força recálculo
-                stage.setMaximized(true);
-            }
-            stage.show();
-
+            // garante que o foco vá para o novo painel
+            novoRoot.requestFocus();
         } catch (IOException e) {
             System.err.println("Erro ao carregar tela: " + fxmlPath);
             e.printStackTrace();
