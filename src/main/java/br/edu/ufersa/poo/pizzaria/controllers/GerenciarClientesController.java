@@ -143,8 +143,8 @@ public class GerenciarClientesController {
         alert.showAndWait().ifPresent(resposta -> {
             if (resposta == btnExcluir) {
                 try {
-                    //caso clique em excluir, chama a service para fazer o DELETE no MySQL pelo telefone
-                    clienteService.removerCliente(cliente.getTelefone());
+                    //chama a service para fazer o DELETE no MySQL pelo id do cliente
+                    clienteService.removerCliente(cliente.getIdCliente());
                     mostrarAvisoInformativo("Sucesso", "Cliente excluído com sucesso!");
 
                     atualizarTabela(); //excluido e atualizado

@@ -88,11 +88,64 @@ public class ClienteDAO implements ICrudDAO<Cliente> {
         }
     }
     // remove o cliente do bd pelo telefone, deletando registros filhos primeiro (foreign key)
-    // Implementação do ICrudDAO<Cliente> — remove por id
+    // Implementação do ICrudDAO<Cliente> — remove por id com cascata
     @Override
     public void remover(int id) {
-        Cliente c = buscarPorId(id);
-        if (c != null) remover(c.getTelefone());
+
+        String sqlGetPedidos      = "SELECT id_pedido FROM pedido WHERE id_cliente = ?";
+        String sqlPedidoAdicional = "DELETE FROM pedido_adicional WHERE id_pedido = ?";
+        String sqlPedido          = "DELETE FROM pedido WHERE id_cliente = ?";
+        String sqlCliente         = "DELETE FROM cliente WHERE id_cliente = ?";
+
+        try (Connection conn = ConnectionFactory.getConnection()) {
+            conn.setAutoCommit(false);
+
+            try {
+                // 1. Busca ids dos pedidos e deleta pedido_adicional de cada um
+                try (PreparedStatement stmtPedidos = conn.prepareStatement(sqlGetPedidos)) {
+                    stmtPedidos.setInt(1, id);
+                    try (ResultSet rsPedidos = stmtPedidos.executeQuery()) {
+                        while (rsPedidos.next()) {
+                            int idPedido = rsPedidos.getInt("id_pedido");
+                            try (PreparedStatement stmtPA = conn.prepareStatement(sqlPedidoAdicional)) {
+                                stmtPA.setInt(1, idPedido);
+                                stmtPA.executeUpdate();
+                            }
+                        }
+                    }
+                }
+
+                // 2. Deleta os pedidos do cliente
+                try (PreparedStatement stmt = conn.prepareStatement(sqlPedido)) {
+                    stmt.setInt(1, id);
+                    stmt.executeUpdate();
+                }
+
+                // 3. Deleta o cliente
+                try (PreparedStatement stmt = conn.prepareStatement(sqlCliente)) {
+                    stmt.setInt(1, id);
+                    int linhas = stmt.executeUpdate();
+                    if (linhas > 0) {
+                        System.out.println("Cliente id=" + id + " removido com sucesso!");
+                    }
+                }
+
+                conn.commit();
+
+            } catch (SQLException e) {
+                conn.rollback();
+                System.out.println("Erro no DELETE de Cliente — rollback executado:");
+                e.printStackTrace();
+                throw new RuntimeException("Falha ao excluir cliente: " + e.getMessage(), e);
+            } finally {
+                conn.setAutoCommit(true);
+            }
+
+        } catch (RuntimeException e) {
+            throw e;
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro de conexão ao excluir cliente: " + e.getMessage(), e);
+        }
     }
 
     // Remove por telefone (método original mantido)
