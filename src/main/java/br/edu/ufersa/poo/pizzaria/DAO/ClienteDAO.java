@@ -84,24 +84,76 @@ public class ClienteDAO {
             e.printStackTrace();
         }
     }
-    //remove o cliente do bd pelo celular
+    // remove o cliente do bd pelo telefone, deletando registros filhos primeiro (foreign key)
     public void remover(String telefone) {
-        String sql = "DELETE FROM cliente WHERE telefone = ?";
 
-        try (Connection conn = ConnectionFactory.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        String sqlGetId           = "SELECT id_cliente FROM cliente WHERE telefone = ?";
+        String sqlGetPedidos      = "SELECT id_pedido FROM pedido WHERE id_cliente = ?";
+        String sqlPedidoAdicional = "DELETE FROM pedido_adicional WHERE id_pedido = ?";
+        String sqlPedido          = "DELETE FROM pedido WHERE id_cliente = ?";
+        String sqlCliente         = "DELETE FROM cliente WHERE telefone = ?";
 
-            stmt.setString(1, telefone);
+        try (Connection conn = ConnectionFactory.getConnection()) {
+            conn.setAutoCommit(false);
 
-            int linhasAfetadas = stmt.executeUpdate();
-            if (linhasAfetadas > 0) {
-                System.out.println("Cliente com telefone " + telefone + " removido com sucesso!");
-            } else {
-                System.out.println("Nenhum cliente encontrado com o telefone informado.");
+            try {
+                // 1. Busca o id_cliente pelo telefone
+                int idCliente = -1;
+                try (PreparedStatement stmt = conn.prepareStatement(sqlGetId)) {
+                    stmt.setString(1, telefone);
+                    try (ResultSet rs = stmt.executeQuery()) {
+                        if (rs.next()) idCliente = rs.getInt("id_cliente");
+                    }
+                }
+
+                if (idCliente == -1) {
+                    System.out.println("Nenhum cliente encontrado com o telefone: " + telefone);
+                    conn.rollback();
+                    return;
+                }
+
+                // 2. Busca ids dos pedidos e deleta pedido_adicional de cada um
+                try (PreparedStatement stmtPedidos = conn.prepareStatement(sqlGetPedidos)) {
+                    stmtPedidos.setInt(1, idCliente);
+                    try (ResultSet rsPedidos = stmtPedidos.executeQuery()) {
+                        while (rsPedidos.next()) {
+                            int idPedido = rsPedidos.getInt("id_pedido");
+                            try (PreparedStatement stmtPA = conn.prepareStatement(sqlPedidoAdicional)) {
+                                stmtPA.setInt(1, idPedido);
+                                stmtPA.executeUpdate();
+                            }
+                        }
+                    }
+                }
+
+                // 3. Deleta os pedidos do cliente
+                try (PreparedStatement stmt = conn.prepareStatement(sqlPedido)) {
+                    stmt.setInt(1, idCliente);
+                    stmt.executeUpdate();
+                }
+
+                // 4. Deleta o cliente
+                try (PreparedStatement stmt = conn.prepareStatement(sqlCliente)) {
+                    stmt.setString(1, telefone);
+                    int linhasAfetadas = stmt.executeUpdate();
+                    if (linhasAfetadas > 0) {
+                        System.out.println("Cliente com telefone " + telefone + " removido com sucesso!");
+                    }
+                }
+
+                conn.commit();
+
+            } catch (SQLException e) {
+                conn.rollback();
+                System.out.println("Erro no DELETE de Cliente — rollback executado:");
+                e.printStackTrace();
+                throw e;
+            } finally {
+                conn.setAutoCommit(true);
             }
 
         } catch (SQLException e) {
-            System.out.println("Erro no DELETE por Telefone:");
+            System.out.println("Erro ao conectar para remover cliente:");
             e.printStackTrace();
         }
     }
@@ -135,7 +187,7 @@ public class ClienteDAO {
         }
         return lista;
     }
-//metodo para buscar o cliente a partir do seu id
+    //metodo para buscar o cliente a partir do seu id
     public Cliente buscarPorId(int idBusca) {
         String sql = "SELECT * FROM cliente WHERE id_cliente = ?";
         Cliente clienteEncontrado = null;
