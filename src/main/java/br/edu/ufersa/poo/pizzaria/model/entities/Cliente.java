@@ -1,9 +1,10 @@
 package br.edu.ufersa.poo.pizzaria.model.entities;
 
-public class Cliente
+// Cliente herda de Pessoa (requisito de herança e polimorfismo)
+
+public class Cliente extends Pessoa
 {
     private int idCliente = -1; //novo cliente ao cadastrar
-    private String nome;
     private String endereco;
     private String cpf;
     private String telefone;
@@ -11,8 +12,8 @@ public class Cliente
 
     // CONSTRUTOR NOVO que inclui o id
     public Cliente(int id, String nome, String endereco, String cpf, String telefone, String bairro) {
-        this.idCliente = id;   // ← usa o id recebido (antes estava hardcoded como -1)
-        this.nome = nome;
+        super(nome);           // passa nome para a classe abstrata Pessoa
+        this.idCliente = id;
         this.endereco = endereco;
         this.cpf = cpf;
         this.telefone = telefone;
@@ -21,11 +22,17 @@ public class Cliente
 
     public Cliente(String nome, String endereco, String cpf, String telefone, String bairro)
     {
-        setNome(nome);
+        super(nome);           // passa nome para a classe abstrata Pessoa
         setEndereco(endereco);
         setCpf(cpf);
         setTelefone(telefone);
         setBairro(bairro);
+    }
+
+    // ── Polimorfismo: implementa método abstrato de Pessoa ────────────────────
+    @Override
+    public String getDescricao() {
+        return "Cliente: " + getNome() + " | CPF: " + cpf + " | Tel: " + telefone;
     }
 
     // gets e sets para restrições
@@ -37,16 +44,14 @@ public class Cliente
             this.idCliente = idCliente;}
     }
 
-    public String getNome()
-    {
-        return nome;
-    }
-
+    // getNome() e setNome() herdados de Pessoa
+    // Sobrescreve setNome() para manter validação
+    @Override
     public void setNome(String nome)
     {
-        if (nome != null && !nome.trim().isEmpty()) //caso não esteja vazio, tendo desconsiderado espaços nos extremos da string, valida o nome
+        if (nome != null && !nome.trim().isEmpty())
         {
-            this.nome = nome;
+            super.setNome(nome);
         }
         else
         {

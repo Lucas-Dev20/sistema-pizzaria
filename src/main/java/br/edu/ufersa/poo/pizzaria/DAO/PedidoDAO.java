@@ -10,12 +10,13 @@ import java.sql.*;
 import java.util.List;
 import java.util.ArrayList;
 
-public class PedidoDAO {
+public class PedidoDAO implements ICrudDAO<Pedido> {
 
     private ClienteDAO clienteDAO = new ClienteDAO();
     private PizzaDAO pizzaDAO = new PizzaDAO();
     private AdicionalDAO adicionalDAO = new AdicionalDAO();
 
+    @Override
     public void salvar(Pedido pedido) {
 
         String sqlPedido =
@@ -105,6 +106,7 @@ public class PedidoDAO {
         return adicionais;
     }
 
+    @Override
     public List<Pedido> listarTodos() {
 
         List<Pedido> pedidos = new ArrayList<>();
@@ -113,9 +115,9 @@ public class PedidoDAO {
 
         try (Connection conn = ConnectionFactory.getConnection();
 
-                PreparedStatement stmt = conn.prepareStatement(sql);
+             PreparedStatement stmt = conn.prepareStatement(sql);
 
-                ResultSet rs = stmt.executeQuery()) {
+             ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
 
@@ -132,14 +134,14 @@ public class PedidoDAO {
                 List<Adicional> adicionais = carregarAdicionais(idPedido);
 
                 Pedido pedido = new Pedido(
-                                idPedido,
-                                cliente,
-                                pizza,
-                                adicionais,
-                                rs.getString("tamanho"),
-                                rs.getString("estado"),
-                                rs.getDate("data_pedido")
-                                        .toLocalDate());
+                        idPedido,
+                        cliente,
+                        pizza,
+                        adicionais,
+                        rs.getString("tamanho"),
+                        rs.getString("estado"),
+                        rs.getDate("data_pedido")
+                                .toLocalDate());
 
                 pedidos.add(pedido);
             }
@@ -152,6 +154,7 @@ public class PedidoDAO {
         return pedidos;
     }
 
+    @Override
     public Pedido buscarPorId(int id) {
 
         String sql = "SELECT * FROM pedido WHERE id_pedido = ?";
@@ -340,6 +343,7 @@ public class PedidoDAO {
         return pedidos;
     }
 
+    @Override
     public void remover(int idPedido) {
 
         String sqlPedidoAdicional = "DELETE FROM pedido_adicional " + "WHERE id_pedido = ?";
@@ -376,15 +380,16 @@ public class PedidoDAO {
         }
     }
 
+    @Override
     public void atualizar(Pedido pedido) {
 
         String sqlPedido = "UPDATE pedido " + "SET id_cliente = ?, " +
-                        "id_pizza = ?, " +
-                        "tamanho = ?, " +
-                        "estado = ?, " +
-                        "data_pedido = ?, " +
-                        "valor_total = ? " +
-                        "WHERE id_pedido = ?";
+                "id_pizza = ?, " +
+                "tamanho = ?, " +
+                "estado = ?, " +
+                "data_pedido = ?, " +
+                "valor_total = ? " +
+                "WHERE id_pedido = ?";
 
         try (Connection conn = ConnectionFactory.getConnection();
 

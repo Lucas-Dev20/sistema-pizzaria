@@ -101,10 +101,12 @@ public class GerenciarPizzaController {
             Label lblPrecoTitulo = new Label("Preço por tamanho");
             lblPrecoTitulo.setStyle("-fx-font-size: 12px; -fx-text-fill: #555;");
 
-            // o banco tem apenas um valor — exibe as 3 faixas com multiplicadores comuns
-            Label lblPeq  = rotuloBadge("Pequena",  pizza.getValor() * 0.75);
-            Label lblMed  = rotuloBadge("Média",    pizza.getValor());
-            Label lblGra  = rotuloBadge("Grande",   pizza.getValor() * 1.25);
+            // O banco armazena o preço da Média como valor base.
+            // Pequena = 80% do preço médio | Grande = 125% do preço médio
+            double valorMedio = pizza.getValor();
+            Label lblPeq  = rotuloBadge("Pequena", valorMedio * 0.80);
+            Label lblMed  = rotuloBadge("Média",   valorMedio);
+            Label lblGra  = rotuloBadge("Grande",  valorMedio * 1.25);
 
             HBox precos = new HBox(8, lblPeq, lblMed, lblGra);
             precos.setStyle("-fx-alignment: CENTER_LEFT;");

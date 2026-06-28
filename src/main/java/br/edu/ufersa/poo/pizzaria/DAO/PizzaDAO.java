@@ -7,58 +7,41 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PizzaDAO {
+/* PizzaDAO estende AbstractDAO<Pizza> — padrão Template Method (GoF, pág. 325). */
 
-    // CREATE
-    public void salvar(Pizza pizza) {
+public class PizzaDAO extends AbstractDAO<Pizza> {
 
-        String sql = "INSERT INTO pizzas(tipo, valor) VALUES (?, ?)";
+    // ── Implementação dos hooks do Template Method ────────────────────────────
 
-        try (Connection con = ConnectionFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(sql)) {
-
-            stmt.setString(1, pizza.getTipo());
-            stmt.setDouble(2, pizza.getValor());
-
-            stmt.executeUpdate();
-
-            System.out.println("Pizza salva com sucesso!");
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    @Override
+    protected String getInsertSQL() {
+        return "INSERT INTO pizzas(tipo, valor) VALUES (?, ?)";
     }
 
-    // READ - LISTAR TODAS
-    public List<Pizza> listarTodas() {
-
-        List<Pizza> pizzas = new ArrayList<>();
-
-        String sql = "SELECT * FROM pizzas";
-
-        try (Connection con = ConnectionFactory.getConnection();
-             PreparedStatement stmt = con.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
-
-            while (rs.next()) {
-
-                Pizza pizza = new Pizza(
-                        rs.getInt("id_pizza"),
-                        rs.getString("tipo"),
-                        rs.getDouble("valor")
-                );
-
-                pizzas.add(pizza);
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return pizzas;
+    @Override
+    protected void preencherInsert(PreparedStatement ps, Pizza pizza) throws SQLException {
+        ps.setString(1, pizza.getTipo());
+        ps.setDouble(2, pizza.getValor());
     }
+
+    @Override
+    protected String getTabela() {
+        return "pizzas";
+    }
+
+    @Override
+    protected Pizza mapear(ResultSet rs) throws SQLException {
+        return new Pizza(
+                rs.getInt("id_pizza"),
+                rs.getString("tipo"),
+                rs.getDouble("valor")
+        );
+    }
+
+    // ── Métodos específicos de Pizza (não cobertos pelo template) ─────────────
 
     // READ - BUSCAR POR ID
+    @Override
     public Pizza buscarPorId(int id) {
 
         String sql = "SELECT * FROM pizzas WHERE id_pizza = ?";
@@ -69,14 +52,8 @@ public class PizzaDAO {
             stmt.setInt(1, id);
 
             try (ResultSet rs = stmt.executeQuery()) {
-
                 if (rs.next()) {
-
-                    return new Pizza(
-                            rs.getInt("id_pizza"),
-                            rs.getString("tipo"),
-                            rs.getDouble("valor")
-                    );
+                    return mapear(rs);
                 }
             }
 
@@ -100,16 +77,8 @@ public class PizzaDAO {
             stmt.setString(1, tipo);
 
             try (ResultSet rs = stmt.executeQuery()) {
-
                 while (rs.next()) {
-
-                    pizzas.add(
-                            new Pizza(
-                                    rs.getInt("id_pizza"),
-                                    rs.getString("tipo"),
-                                    rs.getDouble("valor")
-                            )
-                    );
+                    pizzas.add(mapear(rs));
                 }
             }
 
@@ -120,11 +89,16 @@ public class PizzaDAO {
         return pizzas;
     }
 
+    // READ - LISTAR TODAS (alias mantido para compatibilidade com PizzaService)
+    public List<Pizza> listarTodas() {
+        return listarTodos();  // delega ao template de AbstractDAO
+    }
+
     // UPDATE
+    @Override
     public void atualizar(Pizza pizza) {
 
-        String sql =
-                "UPDATE pizzas SET tipo = ?, valor = ? WHERE id_pizza = ?";
+        String sql = "UPDATE pizzas SET tipo = ?, valor = ? WHERE id_pizza = ?";
 
         try (Connection con = ConnectionFactory.getConnection();
              PreparedStatement stmt = con.prepareStatement(sql)) {
@@ -147,6 +121,7 @@ public class PizzaDAO {
     }
 
     // DELETE
+    @Override
     public void remover(int id) {
 
         String sql = "DELETE FROM pizzas WHERE id_pizza = ?";

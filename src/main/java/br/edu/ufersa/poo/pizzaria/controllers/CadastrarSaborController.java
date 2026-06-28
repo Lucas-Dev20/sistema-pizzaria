@@ -1,6 +1,7 @@
 package br.edu.ufersa.poo.pizzaria.controllers;
 
 import br.edu.ufersa.poo.pizzaria.model.entities.Usuario;
+import br.edu.ufersa.poo.pizzaria.session.SessaoUsuario;
 import br.edu.ufersa.poo.pizzaria.model.services.PizzaService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -39,15 +40,25 @@ public class CadastrarSaborController {
             double precoMedia = Double.parseDouble(txtPrecoMedia.getText().replace(",", "."));
             double precoGrande = Double.parseDouble(txtPrecoGrande.getText().replace(",", "."));
 
-            // Validação estrita: se a tela principal esquecer de mandar o usuário, o sistema barra
+            // Usa o usuário do operador recebido, ou busca direto da sessão ativa
             if (usuarioOperador == null) {
-                throw new IllegalArgumentException("Sessão inválida: Nenhum usuário operando o formulário.");
+                usuarioOperador = SessaoUsuario.getInstance().getUsuarioLogado();
+            }
+            if (usuarioOperador == null) {
+                throw new IllegalArgumentException("Sessão inválida: faça login novamente.");
             }
 
-            // 3. Envia o operador correto do sistema para a Service validar as permissões
-            pizzaService.cadastrarPizza(sabor + " (Pequena)", precoPequena, usuarioOperador);
-            pizzaService.cadastrarPizza(sabor + " (Média)", precoMedia, usuarioOperador);
-            pizzaService.cadastrarPizza(sabor + " (Grande)", precoGrande, usuarioOperador);
+            // Validação dos preços
+            if (precoPequena <= 0 || precoMedia <= 0 || precoGrande <= 0) {
+                throw new IllegalArgumentException("Os preços devem ser maiores que zero.");
+            }
+            if (precoPequena >= precoMedia || precoMedia >= precoGrande) {
+                throw new IllegalArgumentException("Os preços devem ser: Pequena < Média < Grande.");
+            }
+
+            // Salva UM único registro com o preço da Média como valor base.
+            // Na tela de listagem, os outros tamanhos são calculados proporcionalmente.
+            pizzaService.cadastrarPizza(sabor, precoMedia, usuarioOperador);
 
             mostrarMensagem(Alert.AlertType.INFORMATION, "Sucesso", "Novo sabor cadastrado com êxito!");
 

@@ -10,8 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 // crud de cliente...
-public class ClienteDAO {
+public class ClienteDAO implements ICrudDAO<Cliente> {
     //metodo salva clientes no banco após devida inserção
+    @Override
     public void salvar(Cliente cliente) {
         String sql = "INSERT INTO cliente (nome, endereco, cpf, telefone, bairro) VALUES (?, ?, ?, ?, ?)";
 
@@ -33,6 +34,7 @@ public class ClienteDAO {
         }
     }
     // seleciona todos os clientes *
+    @Override
     public List<Cliente> listarTodos() {
         String sql = "SELECT * FROM cliente";
         List<Cliente> lista = new ArrayList<>();
@@ -59,6 +61,7 @@ public class ClienteDAO {
         return lista;
     }
     //att o cliente já existente a partir do que for ser alterado
+    @Override
     public void atualizar(Cliente cliente) {
         String sql = "UPDATE cliente SET nome = ?, endereco = ?, cpf = ?, telefone = ?, bairro = ? WHERE id_cliente = ?";
 
@@ -85,6 +88,14 @@ public class ClienteDAO {
         }
     }
     // remove o cliente do bd pelo telefone, deletando registros filhos primeiro (foreign key)
+    // Implementação do ICrudDAO<Cliente> — remove por id
+    @Override
+    public void remover(int id) {
+        Cliente c = buscarPorId(id);
+        if (c != null) remover(c.getTelefone());
+    }
+
+    // Remove por telefone (método original mantido)
     public void remover(String telefone) {
 
         String sqlGetId           = "SELECT id_cliente FROM cliente WHERE telefone = ?";
@@ -188,6 +199,7 @@ public class ClienteDAO {
         return lista;
     }
     //metodo para buscar o cliente a partir do seu id
+    @Override
     public Cliente buscarPorId(int idBusca) {
         String sql = "SELECT * FROM cliente WHERE id_cliente = ?";
         Cliente clienteEncontrado = null;

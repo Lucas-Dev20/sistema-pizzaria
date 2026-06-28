@@ -10,9 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 // crud de adicional...
-public class AdicionalDAO {
+public class AdicionalDAO implements ICrudDAO<Adicional> {
 
     //METODO SALVA OS ADICIONAIS APÓS INSERÇÃO DE DADOS
+    @Override
     public void salvar(Adicional adicional) {
         String sql = "INSERT INTO adicional (nome, valor, quantidade) VALUES (?, ?, ?)";
 
@@ -34,6 +35,7 @@ public class AdicionalDAO {
     }
 
     // seleciona todos os adicionais para listar (*)
+    @Override
     public List<Adicional> listarTodos() {
         String sql = "SELECT * FROM adicional";
         List<Adicional> lista = new ArrayList<>();
@@ -59,6 +61,12 @@ public class AdicionalDAO {
     }
 
     //atualiza os dados de um adicional ja existente
+    // Implementação ICrudDAO — delega para o método com nomeAntigo
+    @Override
+    public void atualizar(Adicional adicional) {
+        atualizar(adicional, adicional.getNome());
+    }
+
     public void atualizar(Adicional adicional, String nomeAntigo) {
         String sql = "UPDATE adicional SET nome = ?, valor = ?, quantidade = ? WHERE nome = ?";
 // recebe o nome antigo para o sql achar a devida linha do adicional
@@ -85,6 +93,13 @@ public class AdicionalDAO {
     }
 
     //metodo para remover um adicional do bd a partir do nome
+    // Implementação ICrudDAO — remove por id
+    @Override
+    public void remover(int id) {
+        Adicional a = buscarPorId(id);
+        if (a != null) remover(a.getNome());
+    }
+
     public void remover(String nomeAdicional) {
 
         // Primeiro busca o id pelo nome — precisamos do id para limpar as tabelas filhas
@@ -161,6 +176,7 @@ public class AdicionalDAO {
     }
 
     // busca o adicional por id
+    @Override
     public Adicional buscarPorId(int idBusca) {
         String sql = "SELECT * FROM adicional WHERE id_adicional = ?";
         Adicional adicionalEncontrado = null;
