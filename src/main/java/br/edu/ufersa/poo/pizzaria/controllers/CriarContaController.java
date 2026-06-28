@@ -2,9 +2,11 @@ package br.edu.ufersa.poo.pizzaria.controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 public class CriarContaController {
 
@@ -34,11 +36,11 @@ public class CriarContaController {
 
     @FXML
     private void cancelar(ActionEvent event) {
-        LoginController.trocarConteudo(
-                event,
-                "/br/edu/ufersa/pizzaria/views/LoginView.fxml",
-                "La Piazza Pizzaria"
-        );
+        // usa o 'event' para descobrir qual componente foi clicado e pegar o Stage dele
+        Stage stageAtual = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+        // fecha apenas essa janela
+        stageAtual.close();
     }
 
     private void mostrarAviso(String msg) {
