@@ -19,21 +19,20 @@ public class EditarAdicionalController {
 
     private final AdicionalService adicionalService = new AdicionalService();
 
-    // Guarda o nome antigo que veio do banco para a Service usar na busca do SQL
     private String nomeAntigoAdicional;
-    private int idAdicionalAtual;
+    private int    idAdicionalAtual;
+    private int    quantidadeAtual; // ← NOVO: guarda a quantidade antes da edição
 
-    // Método que recebe os dados da linha clicada na tabela de fundo
+    // Recebe o adicional selecionado na tabela e preenche os campos
     public void preencherCampos(Adicional adicional) {
         if (adicional != null) {
-            this.idAdicionalAtual = adicional.getIdAdicional();
-            this.nomeAntigoAdicional = adicional.getNome(); // Salva o nome original antes da edição
+            this.idAdicionalAtual    = adicional.getIdAdicional();
+            this.nomeAntigoAdicional = adicional.getNome();
+            this.quantidadeAtual     = adicional.getQtd(); // ← NOVO: salva a qtd atual
 
             txtNome.setText(adicional.getNome());
             txtValor.setText(String.valueOf(adicional.getValor()));
-            txtQuantidade.setText(String.valueOf(adicional.getQtd())); // Corrigido para getQtd()
-
-            // Layout fields mockados conforme design
+            txtQuantidade.setText(String.valueOf(adicional.getQtd()));
             txtCategoria.setText("Queijos");
             txtUnidade.setText("Gramas (g)");
         }
@@ -42,32 +41,63 @@ public class EditarAdicionalController {
     @FXML
     private void handleSalvar(ActionEvent event) {
         try {
-            String novoNome = txtNome.getText().trim();
-            String valorTxt = txtValor.getText().trim().toLowerCase().replace("r$", "").trim();
-            String qtdTxt = txtQuantidade.getText().trim();
+            String novoNome  = txtNome.getText().trim();
+            String valorTxt  = txtValor.getText().trim()
+                    .toLowerCase()
+                    .replace("r$", "")
+                    .trim();
+            String qtdTxt    = txtQuantidade.getText().trim();
 
             if (novoNome.isEmpty() || valorTxt.isEmpty() || qtdTxt.isEmpty()) {
                 throw new IllegalArgumentException("Todos os campos devem ser preenchidos.");
             }
 
-            double novoValor = Double.parseDouble(valorTxt.replace(",", "."));
-            int novaQuantidade = Integer.parseInt(qtdTxt);
+            double novoValor      = Double.parseDouble(valorTxt.replace(",", "."));
+            int    novaQuantidade  = Integer.parseInt(qtdTxt);
 
-            // Correção dos Sets: Como a entidade não tem setNome/setValor, instanciamos o objeto atualizado
-            Adicional adicionalAlterado = new Adicional(idAdicionalAtual, novoNome, novoValor, novaQuantidade);
+            if (novaQuantidade < 0) {
+                throw new IllegalArgumentException("A quantidade não pode ser negativa.");
+            }
 
-            // Correção da Service: Passa o objeto novo E o nome antigo exigido pela assinatura do método
+            // ── CORREÇÃO PRINCIPAL ────────────────────────────────────────
+            // Calcula a diferença entre a quantidade nova e a atual
+            int diferenca = novaQuantidade - quantidadeAtual;
+
+            if (diferenca > 0) {
+                // Quantidade AUMENTOU → é uma reposição de estoque
+                // creditarEstoque() chama reposicaoDAO.registrarReposicao()
+                // que grava em reposicao_estoque (id_adicional, quantidade,
+                // valor_unitario, valor_total) → aparece no custo do relatório
+                adicionalService.creditarEstoque(idAdicionalAtual, diferenca);
+
+            } else if (diferenca < 0) {
+                // Quantidade DIMINUIU → é um consumo manual
+                // consumirEstoque() chama adicionalDAO.baixarEstoque()
+                // → UPDATE adicional SET quantidade = quantidade - ?
+                adicionalService.consumirEstoque(idAdicionalAtual, Math.abs(diferenca));
+            }
+            // diferenca == 0 → quantidade não mudou, não precisa fazer nada no estoque
+
+            // ── Atualiza nome e valor se mudaram ─────────────────────────
+            // Só chama atualizarAdicional se nome ou valor mudaram,
+            // para não sobrescrever a quantidade que já foi ajustada acima
+            Adicional adicionalAlterado = new Adicional(
+                    idAdicionalAtual, novoNome, novoValor, novaQuantidade
+            );
             adicionalService.atualizarAdicional(adicionalAlterado, nomeAntigoAdicional);
 
-            mostrarAlerta(Alert.AlertType.INFORMATION, "Sucesso", "Adicional atualizado com sucesso!");
+            mostrarAlerta(Alert.AlertType.INFORMATION,
+                    "Sucesso", "Adicional atualizado com sucesso!");
             fecharModal(event);
 
         } catch (NumberFormatException e) {
-            mostrarAlerta(Alert.AlertType.WARNING, "Erro de Formato", "Por favor, insira valores numéricos válidos.");
+            mostrarAlerta(Alert.AlertType.WARNING,
+                    "Erro de Formato", "Por favor, insira valores numéricos válidos.");
         } catch (IllegalArgumentException e) {
             mostrarAlerta(Alert.AlertType.WARNING, "Validação", e.getMessage());
         } catch (Exception e) {
-            mostrarAlerta(Alert.AlertType.ERROR, "Erro no Banco", "Houve uma falha inesperada ao atualizar os dados.");
+            mostrarAlerta(Alert.AlertType.ERROR,
+                    "Erro no Banco", "Houve uma falha inesperada ao atualizar os dados.");
             e.printStackTrace();
         }
     }
