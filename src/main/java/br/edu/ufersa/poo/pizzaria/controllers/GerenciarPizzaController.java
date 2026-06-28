@@ -71,7 +71,6 @@ public class GerenciarPizzaController {
      */
     private void renderizarCards(List<Pizza> pizzas) {
         containerPizzas.getChildren().clear();
-        boolean ehAdmin = SessaoUsuario.getInstance().usuarioEhAdmin();
 
         for (Pizza pizza : pizzas) {
             // ── linha do título + botões ──
@@ -82,18 +81,17 @@ public class GerenciarPizzaController {
             HBox cabecalho = new HBox(8, lblNome);
             cabecalho.setStyle("-fx-alignment: CENTER_LEFT;");
 
-            // botões só aparecem para admin
-            if (ehAdmin) {
-                Button btnEditar = new Button("✏");
-                btnEditar.setStyle("-fx-background-color: transparent; -fx-cursor: hand; -fx-font-size: 14px;");
-                btnEditar.setOnAction(e -> abrirEdicao(pizza));
+            // botões visíveis para todos (admin e funcionário)
+            // apenas o botão "+ Novo Sabor" é restrito ao admin (controlado no initialize)
+            Button btnEditar = new Button("✏");
+            btnEditar.setStyle("-fx-background-color: transparent; -fx-cursor: hand; -fx-font-size: 14px;");
+            btnEditar.setOnAction(e -> abrirEdicao(pizza));
 
-                Button btnExcluir = new Button("🗑");
-                btnExcluir.setStyle("-fx-background-color: transparent; -fx-cursor: hand; -fx-font-size: 14px; -fx-text-fill: #B03A2A;");
-                btnExcluir.setOnAction(e -> confirmarExclusao(pizza));
+            Button btnExcluir = new Button("🗑");
+            btnExcluir.setStyle("-fx-background-color: transparent; -fx-cursor: hand; -fx-font-size: 14px; -fx-text-fill: #B03A2A;");
+            btnExcluir.setOnAction(e -> confirmarExclusao(pizza));
 
-                cabecalho.getChildren().addAll(btnEditar, btnExcluir);
-            }
+            cabecalho.getChildren().addAll(btnEditar, btnExcluir);
 
             // ── separador ──
             Separator sep = new Separator();
@@ -157,13 +155,10 @@ public class GerenciarPizzaController {
 
     private void abrirEdicao(Pizza pizza) {
         try {
-            verificarAdmin("editar tipo de pizza");
-
             FXMLLoader loader = new FXMLLoader(getClass().getResource(
                     "/br/edu/ufersa/pizzaria/views/EditarSaborView.fxml"));
             Parent root = loader.load();
 
-            // passa a pizza para o controller de edição
             EditarSaborController ctrl = loader.getController();
             ctrl.preencherCampos(pizza);
 
@@ -174,38 +169,29 @@ public class GerenciarPizzaController {
             modal.initOwner(containerPizzas.getScene().getWindow());
             modal.showAndWait();
 
-            carregarPizzas(); // atualiza após fechar
+            carregarPizzas();
 
-        } catch (AcessoNegadoException e) {
-            mostrarAcessoNegado(e.getMessage());
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     private void confirmarExclusao(Pizza pizza) {
-        try {
-            verificarAdmin("excluir tipo de pizza");
+        Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmacao.setTitle("Deseja excluir?");
+        confirmacao.setHeaderText(null);
+        confirmacao.setContentText("Excluir o sabor \"" + pizza.getTipo() + "\"?");
 
-            Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION);
-            confirmacao.setTitle("Deseja excluir?");
-            confirmacao.setHeaderText(null);
-            confirmacao.setContentText("Excluir o sabor \"" + pizza.getTipo() + "\"?");
+        ButtonType btnExcluir  = new ButtonType("Excluir",  ButtonBar.ButtonData.OK_DONE);
+        ButtonType btnCancelar = new ButtonType("Cancelar", ButtonBar.ButtonData.CANCEL_CLOSE);
+        confirmacao.getButtonTypes().setAll(btnCancelar, btnExcluir);
 
-            ButtonType btnExcluir  = new ButtonType("Excluir",  ButtonBar.ButtonData.OK_DONE);
-            ButtonType btnCancelar = new ButtonType("Cancelar", ButtonBar.ButtonData.CANCEL_CLOSE);
-            confirmacao.getButtonTypes().setAll(btnCancelar, btnExcluir);
-
-            confirmacao.showAndWait().ifPresent(btn -> {
-                if (btn == btnExcluir) {
-                    pizzaService.removerPizza(pizza.getIdPizza());
-                    carregarPizzas();
-                }
-            });
-
-        } catch (AcessoNegadoException e) {
-            mostrarAcessoNegado(e.getMessage());
-        }
+        confirmacao.showAndWait().ifPresent(btn -> {
+            if (btn == btnExcluir) {
+                pizzaService.removerPizza(pizza.getIdPizza());
+                carregarPizzas();
+            }
+        });
     }
 
     // ── HELPERS ───────────────────────────────────────────────────────────────
