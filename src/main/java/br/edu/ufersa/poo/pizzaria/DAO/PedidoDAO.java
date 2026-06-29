@@ -21,8 +21,8 @@ public class PedidoDAO implements ICrudDAO<Pedido> {
 
         String sqlPedido =
                 "INSERT INTO pedido " +
-                        "(id_cliente, id_pizza, tamanho, estado, data_pedido, valor_total) " +
-                        "VALUES (?, ?, ?, ?, ?, ?)";
+                        "(id_cliente, id_pizza, tamanho, estado, data_pedido, valor_total, forma_pagamento) " +
+                        "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sqlPedido, Statement.RETURN_GENERATED_KEYS)
@@ -39,6 +39,8 @@ public class PedidoDAO implements ICrudDAO<Pedido> {
             stmt.setDate(5, Date.valueOf(pedido.getData()));
 
             stmt.setDouble(6, pedido.getValorTotal());
+
+            stmt.setString(7, pedido.getFormaPagamento());
 
             stmt.executeUpdate();
 
@@ -140,9 +142,8 @@ public class PedidoDAO implements ICrudDAO<Pedido> {
                         adicionais,
                         rs.getString("tamanho"),
                         rs.getString("estado"),
-                        rs.getDate("data_pedido")
-                                .toLocalDate());
-
+                        rs.getDate("data_pedido").toLocalDate());
+                        pedido.setFormaPagamento(rs.getString("forma_pagamento"));
                 pedidos.add(pedido);
             }
 
@@ -388,7 +389,8 @@ public class PedidoDAO implements ICrudDAO<Pedido> {
                 "tamanho = ?, " +
                 "estado = ?, " +
                 "data_pedido = ?, " +
-                "valor_total = ? " +
+                "valor_total = ?, " +
+                "forma_pagamento = ?" +
                 "WHERE id_pedido = ?";
 
         try (Connection conn = ConnectionFactory.getConnection();
@@ -407,7 +409,9 @@ public class PedidoDAO implements ICrudDAO<Pedido> {
 
             stmt.setDouble(6, pedido.getValorTotal());
 
-            stmt.setInt(7,pedido.getIdPedido());
+            stmt.setString(7, pedido.getFormaPagamento());
+
+            stmt.setInt(8,pedido.getIdPedido());
 
             int linhas = stmt.executeUpdate();
 

@@ -105,6 +105,10 @@ public class PedidosController {
         // ── Coluna Estado (colorido) ──
         Label lEstado = criarLabelEstado(p.getEstado());
 
+        // ── Forma de Pagamento ──
+        String pagto = p.getFormaPagamento() != null ? p.getFormaPagamento() : "—";
+        Label lPagamento = celula(pagto, 130, false);
+
         // ── Coluna Valor (valor_total do banco) ──
         String valorFormatado = String.format("R$ %.2f", p.getValorTotal())
                 .replace(".", ",");
@@ -123,7 +127,7 @@ public class PedidosController {
         acoes.setAlignment(Pos.CENTER);
         acoes.setPrefWidth(70);
 
-        linha.getChildren().addAll(lCliente, lPizza, lTamanho, lAdicionais, lEstado, lValor, acoes);
+        linha.getChildren().addAll(lCliente, lPizza, lTamanho, lAdicionais, lEstado, lValor, lPagamento, acoes);
         return linha;
     }
 
@@ -237,9 +241,20 @@ public class PedidosController {
         comboEstado.setPrefWidth(Double.MAX_VALUE);
         comboEstado.getStyleClass().add("combo-filtro");
         if (editando) comboEstado.setValue(pedido.getEstado());
-        else comboEstado.setPromptText("Selecione o estado");
+        else comboEstado.setPromptText("Selecione");
 
-        // ── Layout: adicionais e estado lado a lado ──
+        // ── NOVA SELEÇÃO: Forma de Pagamento ──
+        ComboBox<String> comboPagamento = new ComboBox<>();
+        comboPagamento.setItems(FXCollections.observableArrayList(
+                "Pix", "Cartão de Crédito", "Dinheiro"
+        ));
+        comboPagamento.setPrefWidth(Double.MAX_VALUE);
+        comboPagamento.getStyleClass().add("combo-filtro");
+        if (editando) comboPagamento.setValue(pedido.getFormaPagamento()); // Certifique-se de criar getFormaPagamento() na classe Pedido
+        else comboPagamento.setPromptText("Selecione");
+
+
+        // ── Layout adaptado: Adicionais na esquerda, Estado e Pagamento empilhados na direita ──
         ScrollPane scrollAdic = new ScrollPane(boxAdicionais);
         scrollAdic.setFitToWidth(true);
         scrollAdic.setPrefHeight(130);
@@ -247,14 +262,20 @@ public class PedidosController {
         scrollAdic.setStyle("-fx-background-color: transparent; -fx-border-color: #DEDBD4; "
                 + "-fx-border-radius: 8px; -fx-background: white;");
 
-        VBox colAdic   = new VBox(6, new Label("Adicionais"), scrollAdic);
+        VBox colAdic = new VBox(6, new Label("Adicionais"), scrollAdic);
         colAdic.setMinWidth(260);
         colAdic.setPrefWidth(280);
-        VBox colEstado = new VBox(6, new Label("Estado"), comboEstado);
-        colEstado.setPrefWidth(160);
-        HBox linhaAE   = new HBox(24, colAdic, colEstado);
-        HBox.setHgrow(colAdic,   Priority.ALWAYS);
-        HBox.setHgrow(colEstado, Priority.NEVER);
+
+        // Caixa vertical para agrupar Estado e Forma de Pagamento no lado direito
+        VBox colDireitaOpcoes = new VBox(12,
+                new VBox(6, new Label("Estado"), comboEstado),
+                new VBox(6, new Label("Forma de Pagamento"), comboPagamento)
+        );
+        colDireitaOpcoes.setPrefWidth(200);
+
+        HBox linhaAE = new HBox(24, colAdic, colDireitaOpcoes);
+        HBox.setHgrow(colAdic, Priority.ALWAYS);
+        HBox.setHgrow(colDireitaOpcoes, Priority.NEVER);
 
         // ── Botões ──
         Button btnCancelar = new Button("Cancelar");
@@ -297,7 +318,7 @@ public class PedidosController {
         btnCancelar.setOnAction(e -> fechar.run());
 
         btnSalvar.setOnAction(e -> {
-            // ── Validação dos campos obrigatórios ──
+            // ── Validações dos campos obrigatórios ──
             if (comboCliente.getValue() == null) {
                 mostrarAviso("Selecione um cliente.");
                 return;
@@ -314,6 +335,10 @@ public class PedidosController {
                 mostrarAviso("Selecione o estado do pedido.");
                 return;
             }
+            if (comboPagamento.getValue() == null) {
+                mostrarAviso("Selecione a forma de pagamento.");
+                return;
+            }
 
             // ── Coleta adicionais marcados ──
             List<Adicional> adicionaisSelecionados = new ArrayList<>();
@@ -325,18 +350,17 @@ public class PedidosController {
 
             try {
                 if (editando) {
-                    // Atualiza pedido existente via PedidoService → PedidoDAO
+                    // Atualiza pedido existente
                     pedido.setCliente(comboCliente.getValue());
                     pedido.setPizza(comboPizza.getValue());
                     pedido.setTamanho(comboTamanho.getValue());
                     pedido.setEstado(comboEstado.getValue());
+                    pedido.setFormaPagamento(comboPagamento.getValue()); // Set da forma de pagamento
                     pedido.setAdicionais(adicionaisSelecionados);
                     pedido.calcularTotal();
                     pedidoService.atualizarPedido(pedido);
                 } else {
-                    // Cria novo pedido via PedidoService → PedidoDAO
-                    // PedidoService.cadastrarPedido também baixa o estoque
-                    // dos adicionais automaticamente (regra de negócio)
+                    // Cria novo pedido
                     Pedido novo = new Pedido(
                             comboCliente.getValue(),
                             comboPizza.getValue(),
@@ -345,6 +369,7 @@ public class PedidosController {
                             comboEstado.getValue(),
                             LocalDate.now()
                     );
+                    novo.setFormaPagamento(comboPagamento.getValue()); // Certifique-se de repassar o valor ao novo objeto
                     pedidoService.cadastrarPedido(novo);
                 }
 

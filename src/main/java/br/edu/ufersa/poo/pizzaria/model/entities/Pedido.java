@@ -14,7 +14,7 @@ public class Pedido {
     private String estado;
     private LocalDate data;
     private double valorTotal;
-
+    private String formaPagamento;
 
     // Construtor completo
     public Pedido(int idPedido, Cliente cliente, Pizza pizza, List<Adicional> adicionais,
@@ -88,6 +88,7 @@ public class Pedido {
         return valorTotal;
     }
 
+    public String getFormaPagamento() { return formaPagamento; }
 
     // Setters
 
@@ -142,6 +143,7 @@ public class Pedido {
         }
     }
 
+    public void setFormaPagamento(String formaPagamento) { this.formaPagamento = formaPagamento; }
 
     // Para calcular
 

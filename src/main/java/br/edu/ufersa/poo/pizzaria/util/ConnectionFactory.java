@@ -14,7 +14,7 @@ public class ConnectionFactory {
             "root";
 
     private static final String PASS =
-            "Rian333nc!";
+            "12345";
 
     public static Connection getConnection() {
         try {
