@@ -26,7 +26,7 @@ Se for usar o terminal basta executar o codigo para ser criado o banco de dados.
 Se for usar o MYSQL WORKBENCH faça os seguintes passos:
 1 - Abra o MySQL Workbench.
 2 - Conecte-se ao seu servidor MySQL.
-3 - Clique em File → Open SQL Script....
+3 - Clique em File → Open SQL Script.
 4 - Selecione o arquivo schema.sql.
 Por fim o conteúdo será aberto em uma nova aba.
 
