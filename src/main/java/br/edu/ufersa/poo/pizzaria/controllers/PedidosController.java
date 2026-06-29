@@ -1,11 +1,13 @@
 package br.edu.ufersa.poo.pizzaria.controllers;
 
+import br.edu.ufersa.poo.pizzaria.DAO.EstoqueDAO;
 import br.edu.ufersa.poo.pizzaria.model.entities.Adicional;
 import br.edu.ufersa.poo.pizzaria.model.entities.Cliente;
 import br.edu.ufersa.poo.pizzaria.model.entities.Pedido;
 import br.edu.ufersa.poo.pizzaria.model.entities.Pizza;
 import br.edu.ufersa.poo.pizzaria.model.services.AdicionalService;
 import br.edu.ufersa.poo.pizzaria.model.services.ClienteService;
+import br.edu.ufersa.poo.pizzaria.model.services.EstoqueService;
 import br.edu.ufersa.poo.pizzaria.model.services.PedidoService;
 import br.edu.ufersa.poo.pizzaria.model.services.PizzaService;
 
@@ -23,29 +25,28 @@ import java.util.List;
 
 public class PedidosController {
 
-    // ── FXML ──────────────────────────────────────────────────────────────
+    // ── FXML
     @FXML private TextField campoBusca;
     @FXML private ComboBox<String> filtroEstado;
     @FXML private VBox listaPedidos;
 
-    // ── SERVICES (camada de negócio do projeto) ────────────────────────────
-    private final PedidoService   pedidoService   = new PedidoService();
-    private final ClienteService  clienteService  = new ClienteService();
-    private final PizzaService    pizzaService    = new PizzaService();
+    // ── SERVICES
+    // Observer: EstoqueService recebe notificação ao cadastrar pedido
+    private final EstoqueService   estoqueService  = new EstoqueService(new EstoqueDAO());
+    private final PedidoService    pedidoService   = new PedidoService(estoqueService);
+    private final ClienteService   clienteService  = new ClienteService();
+    private final PizzaService     pizzaService    = new PizzaService();
     private final AdicionalService adicionalService = new AdicionalService();
 
     // Cache local — recarregado a cada operação
-    private List<Pedido>   todosPedidos  = new ArrayList<>();
-    private List<Cliente>  todosClientes = new ArrayList<>();
-    private List<Pizza>    todasPizzas   = new ArrayList<>();
+    private List<Pedido>    todosPedidos    = new ArrayList<>();
+    private List<Cliente>   todosClientes   = new ArrayList<>();
+    private List<Pizza>     todasPizzas     = new ArrayList<>();
     private List<Adicional> todosAdicionais = new ArrayList<>();
 
-    // ── INICIALIZAÇÃO ──────────────────────────────────────────────────────
-    // Chamado automaticamente pelo FXMLLoader após injetar os campos @FXML
+    // ── INICIALIZAÇÃO
     @FXML
     public void initialize() {
-
-        // Estados disponíveis no banco (campo "estado" da tabela pedido)
         filtroEstado.setItems(FXCollections.observableArrayList(
                 "Todos os estados", "Pendente", "Em preparo", "Pronto", "Entregue", "Cancelado"
         ));
@@ -55,7 +56,6 @@ public class PedidosController {
         renderizarLista(todosPedidos);
     }
 
-    /** Busca todos os dados necessários via Service → DAO → banco */
     private void carregarDadosDoBanco() {
         try {
             todosPedidos    = pedidoService.listarTodosPedidos();
@@ -67,7 +67,7 @@ public class PedidosController {
         }
     }
 
-    // ── RENDERIZAÇÃO ───────────────────────────────────────────────────────
+    // ── RENDERIZAÇÃO
     private void renderizarLista(List<Pedido> pedidos) {
         listaPedidos.getChildren().clear();
         for (Pedido p : pedidos) {
@@ -82,39 +82,26 @@ public class PedidosController {
         linha.setPadding(new Insets(14, 20, 14, 20));
         linha.getStyleClass().add("linha-tabela");
 
-        // ── Coluna Cliente ──
         Label lCliente = celula(
-                p.getCliente() != null ? p.getCliente().getNome() : "—",
-                185, false
-        );
+                p.getCliente() != null ? p.getCliente().getNome() : "—", 185, false);
 
-        // ── Coluna Pizza (tipo) ──
         Label lPizza = celula(
-                p.getPizza() != null ? p.getPizza().getTipo() : "—",
-                130, false
-        );
+                p.getPizza() != null ? p.getPizza().getTipo() : "—", 130, false);
 
-        // ── Coluna Tamanho ──
         Label lTamanho = celula(p.getTamanho(), 100, false);
 
-        // ── Coluna Adicionais (contagem) ──
         int qtdAdicionais = p.getAdicionais() != null ? p.getAdicionais().size() : 0;
         String textoAdic = qtdAdicionais + (qtdAdicionais == 1 ? " item" : " itens");
         Label lAdicionais = celula(textoAdic, 110, false);
 
-        // ── Coluna Estado (colorido) ──
         Label lEstado = criarLabelEstado(p.getEstado());
 
-        // ── Forma de Pagamento ──
         String pagto = p.getFormaPagamento() != null ? p.getFormaPagamento() : "—";
         Label lPagamento = celula(pagto, 130, false);
 
-        // ── Coluna Valor (valor_total do banco) ──
-        String valorFormatado = String.format("R$ %.2f", p.getValorTotal())
-                .replace(".", ",");
+        String valorFormatado = String.format("R$ %.2f", p.getValorTotal()).replace(".", ",");
         Label lValor = celula(valorFormatado, 100, true);
 
-        // ── Botões de ação ──
         Button btnEditar = new Button("✏");
         btnEditar.getStyleClass().add("btn-icone");
         btnEditar.setOnAction(e -> abrirEdicaoPedido(p));
@@ -127,7 +114,7 @@ public class PedidosController {
         acoes.setAlignment(Pos.CENTER);
         acoes.setPrefWidth(70);
 
-        linha.getChildren().addAll(lCliente, lPizza, lTamanho, lAdicionais, lEstado, lValor, lPagamento, acoes);
+        linha.getChildren().addAll(lCliente, lPizza, lTamanho, lAdicionais, lEstado, lPagamento, lValor, acoes);
         return linha;
     }
 
@@ -153,7 +140,7 @@ public class PedidosController {
         return l;
     }
 
-    // ── FILTRO / BUSCA ─────────────────────────────────────────────────────
+    // ── FILTRO / BUSCA
     @FXML
     private void filtrar() {
         String busca  = campoBusca.getText().trim().toLowerCase();
@@ -173,7 +160,7 @@ public class PedidosController {
         renderizarLista(filtrados);
     }
 
-    // ── MODAL: NOVO PEDIDO ─────────────────────────────────────────────────
+    // ── MODAL: NOVO / EDITAR PEDIDO
     @FXML
     private void abrirNovoPedido(ActionEvent event) {
         mostrarModalPedido(null);
@@ -183,12 +170,10 @@ public class PedidosController {
         mostrarModalPedido(pedido);
     }
 
-    /* Modal de Novo / Editar Pedido.*/
-
     private void mostrarModalPedido(Pedido pedido) {
         boolean editando = pedido != null;
 
-        // ── Seleção de Cliente (ComboBox com nomes do banco) ──
+        // ── Cliente ──
         ComboBox<Cliente> comboCliente = new ComboBox<>();
         comboCliente.setItems(FXCollections.observableArrayList(todosClientes));
         comboCliente.setConverter(new javafx.util.StringConverter<>() {
@@ -199,7 +184,7 @@ public class PedidosController {
         comboCliente.getStyleClass().add("combo-filtro");
         if (editando) comboCliente.setValue(pedido.getCliente());
 
-        // ── Seleção de Pizza (ComboBox com tipos do banco) ──
+        // ── Pizza ──
         ComboBox<Pizza> comboPizza = new ComboBox<>();
         comboPizza.setItems(FXCollections.observableArrayList(todasPizzas));
         comboPizza.setConverter(new javafx.util.StringConverter<>() {
@@ -218,13 +203,13 @@ public class PedidosController {
         if (editando) comboTamanho.setValue(pedido.getTamanho());
         else comboTamanho.setPromptText("Selecione");
 
-        // ── Adicionais (checkboxes com os do banco) ──
+        // ── Adicionais ──
         VBox boxAdicionais = new VBox(6);
         List<CheckBox> checks = new ArrayList<>();
         for (Adicional a : todosAdicionais) {
             CheckBox cb = new CheckBox(a.getNome() + "  (R$ " +
                     String.format("%.2f", a.getValor()).replace(".", ",") + ")");
-            cb.setUserData(a); // guarda o objeto Adicional no checkbox
+            cb.setUserData(a);
             if (editando && pedido.getAdicionais() != null) {
                 cb.setSelected(pedido.getAdicionais().stream()
                         .anyMatch(ad -> ad.getIdAdicional() == a.getIdAdicional()));
@@ -236,25 +221,22 @@ public class PedidosController {
         // ── Estado ──
         ComboBox<String> comboEstado = new ComboBox<>();
         comboEstado.setItems(FXCollections.observableArrayList(
-                "Pendente", "Em preparo", "Pronto", "Entregue", "Cancelado"
-        ));
+                "Pendente", "Em preparo", "Pronto", "Entregue", "Cancelado"));
         comboEstado.setPrefWidth(Double.MAX_VALUE);
         comboEstado.getStyleClass().add("combo-filtro");
         if (editando) comboEstado.setValue(pedido.getEstado());
         else comboEstado.setPromptText("Selecione");
 
-        // ── NOVA SELEÇÃO: Forma de Pagamento ──
+        // ── Forma de Pagamento ──
         ComboBox<String> comboPagamento = new ComboBox<>();
         comboPagamento.setItems(FXCollections.observableArrayList(
-                "Pix", "Cartão de Crédito", "Dinheiro"
-        ));
+                "Pix", "Cartão de Crédito", "Dinheiro"));
         comboPagamento.setPrefWidth(Double.MAX_VALUE);
         comboPagamento.getStyleClass().add("combo-filtro");
-        if (editando) comboPagamento.setValue(pedido.getFormaPagamento()); // Certifique-se de criar getFormaPagamento() na classe Pedido
+        if (editando) comboPagamento.setValue(pedido.getFormaPagamento());
         else comboPagamento.setPromptText("Selecione");
 
-
-        // ── Layout adaptado: Adicionais na esquerda, Estado e Pagamento empilhados na direita ──
+        // ── Layout ──
         ScrollPane scrollAdic = new ScrollPane(boxAdicionais);
         scrollAdic.setFitToWidth(true);
         scrollAdic.setPrefHeight(130);
@@ -266,7 +248,6 @@ public class PedidosController {
         colAdic.setMinWidth(260);
         colAdic.setPrefWidth(280);
 
-        // Caixa vertical para agrupar Estado e Forma de Pagamento no lado direito
         VBox colDireitaOpcoes = new VBox(12,
                 new VBox(6, new Label("Estado"), comboEstado),
                 new VBox(6, new Label("Forma de Pagamento"), comboPagamento)
@@ -274,10 +255,9 @@ public class PedidosController {
         colDireitaOpcoes.setPrefWidth(200);
 
         HBox linhaAE = new HBox(24, colAdic, colDireitaOpcoes);
-        HBox.setHgrow(colAdic, Priority.ALWAYS);
-        HBox.setHgrow(colDireitaOpcoes, Priority.NEVER);
+        HBox.setHgrow(colAdic,           Priority.ALWAYS);
+        HBox.setHgrow(colDireitaOpcoes,  Priority.NEVER);
 
-        // ── Botões ──
         Button btnCancelar = new Button("Cancelar");
         btnCancelar.getStyleClass().add("botao");
         Button btnSalvar = new Button("Salvar");
@@ -286,11 +266,10 @@ public class PedidosController {
         rodape.setAlignment(Pos.CENTER);
         VBox.setMargin(rodape, new Insets(10, 0, 0, 0));
 
-        // ── Corpo do modal ──
         VBox corpo = new VBox(12,
-                new Label("Cliente"),    comboCliente,
-                new Label("Sabor"),      comboPizza,
-                new Label("Tamanho"),    comboTamanho,
+                new Label("Cliente"),  comboCliente,
+                new Label("Sabor"),    comboPizza,
+                new Label("Tamanho"),  comboTamanho,
                 linhaAE,
                 rodape
         );
@@ -318,49 +297,39 @@ public class PedidosController {
         btnCancelar.setOnAction(e -> fechar.run());
 
         btnSalvar.setOnAction(e -> {
-            // ── Validações dos campos obrigatórios ──
+            // ── Validações ──
             if (comboCliente.getValue() == null) {
-                mostrarAviso("Selecione um cliente.");
-                return;
+                mostrarAviso("Selecione um cliente."); return;
             }
             if (comboPizza.getValue() == null) {
-                mostrarAviso("Selecione um sabor de pizza.");
-                return;
+                mostrarAviso("Selecione um sabor de pizza."); return;
             }
             if (comboTamanho.getValue() == null) {
-                mostrarAviso("Selecione o tamanho.");
-                return;
+                mostrarAviso("Selecione o tamanho."); return;
             }
             if (comboEstado.getValue() == null) {
-                mostrarAviso("Selecione o estado do pedido.");
-                return;
+                mostrarAviso("Selecione o estado do pedido."); return;
             }
             if (comboPagamento.getValue() == null) {
-                mostrarAviso("Selecione a forma de pagamento.");
-                return;
+                mostrarAviso("Selecione a forma de pagamento."); return;
             }
 
-            // ── Coleta adicionais marcados ──
             List<Adicional> adicionaisSelecionados = new ArrayList<>();
             for (CheckBox cb : checks) {
-                if (cb.isSelected()) {
-                    adicionaisSelecionados.add((Adicional) cb.getUserData());
-                }
+                if (cb.isSelected()) adicionaisSelecionados.add((Adicional) cb.getUserData());
             }
 
             try {
                 if (editando) {
-                    // Atualiza pedido existente
                     pedido.setCliente(comboCliente.getValue());
                     pedido.setPizza(comboPizza.getValue());
                     pedido.setTamanho(comboTamanho.getValue());
                     pedido.setEstado(comboEstado.getValue());
-                    pedido.setFormaPagamento(comboPagamento.getValue()); // Set da forma de pagamento
+                    pedido.setFormaPagamento(comboPagamento.getValue());
                     pedido.setAdicionais(adicionaisSelecionados);
                     pedido.calcularTotal();
                     pedidoService.atualizarPedido(pedido);
                 } else {
-                    // Cria novo pedido
                     Pedido novo = new Pedido(
                             comboCliente.getValue(),
                             comboPizza.getValue(),
@@ -369,11 +338,10 @@ public class PedidosController {
                             comboEstado.getValue(),
                             LocalDate.now()
                     );
-                    novo.setFormaPagamento(comboPagamento.getValue()); // Certifique-se de repassar o valor ao novo objeto
+                    novo.setFormaPagamento(comboPagamento.getValue());
                     pedidoService.cadastrarPedido(novo);
                 }
 
-                // Recarrega lista do banco e fecha modal
                 carregarDadosDoBanco();
                 fechar.run();
                 renderizarLista(todosPedidos);
@@ -386,7 +354,7 @@ public class PedidosController {
         });
     }
 
-    // ── MODAL: CONFIRMAR EXCLUSÃO ──────────────────────────────────────────
+    // ── MODAL: CONFIRMAR EXCLUSÃO
     private void confirmarExclusao(Pedido pedido) {
         Label pergunta = new Label("Deseja excluir?");
         pergunta.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
@@ -421,7 +389,6 @@ public class PedidosController {
 
         btnExcluir.setOnAction(e -> {
             try {
-                // Remove via PedidoService → PedidoDAO (deleta pedido + pedido_adicional)
                 pedidoService.removerPedido(pedido.getIdPedido());
                 carregarDadosDoBanco();
                 fechar.run();
@@ -434,7 +401,7 @@ public class PedidosController {
         });
     }
 
-    // ── HELPERS ────────────────────────────────────────────────────────────
+    // ── HELPERS
     private void mostrarAviso(String msg) {
         Alert a = new Alert(Alert.AlertType.WARNING);
         a.setTitle("Aviso"); a.setHeaderText(null); a.setContentText(msg);
@@ -447,13 +414,13 @@ public class PedidosController {
         a.showAndWait();
     }
 
-    // ── NAVEGAÇÃO ──────────────────────────────────────────────────────────
-    @FXML private void irPedidos(ActionEvent e)    { /* já está aqui */ }
-    @FXML private void irClientes(ActionEvent e)   { LoginController.trocarConteudo(e, "/br/edu/ufersa/pizzaria/views/GerenciarClientesView.fxml",    "Clientes"); }
-    @FXML private void irTiposPizza(ActionEvent e) { LoginController.trocarConteudo(e, "/br/edu/ufersa/pizzaria/views/GerenciarPizzasView.fxml",  "Tipos de pizza"); }
-    @FXML private void irAdicionais(ActionEvent e) { LoginController.trocarConteudo(e, "/br/edu/ufersa/pizzaria/views/GerenciarAdicionaisView.fxml",  "Adicionais"); }
-    @FXML private void irEstoque(ActionEvent e)    { LoginController.trocarConteudo(e, "/br/edu/ufersa/pizzaria/views/EstoqueView.fxml",     "Estoque"); }
-    @FXML private void irRelatorios(ActionEvent e) { LoginController.trocarConteudo(e, "/br/edu/ufersa/pizzaria/views/RelatorioView.fxml",  "Relatórios"); }
-    @FXML private void irFuncionarios(ActionEvent e) { LoginController.trocarConteudo(e, "/br/edu/ufersa/pizzaria/views/GerenciarFuncionariosView.fxml", "La Piazza - Funcionários"); }
-    @FXML private void sair(ActionEvent e)         { LoginController.trocarConteudo(e, "/br/edu/ufersa/pizzaria/views/LoginView.fxml",   "La Piazza Pizzaria"); }
+    // ── NAVEGAÇÃO
+    @FXML private void irPedidos(ActionEvent e)      { /* já está aqui */ }
+    @FXML private void irClientes(ActionEvent e)     { LoginController.trocarConteudo(e, "/br/edu/ufersa/pizzaria/views/GerenciarClientesView.fxml",   "Clientes"); }
+    @FXML private void irTiposPizza(ActionEvent e)   { LoginController.trocarConteudo(e, "/br/edu/ufersa/pizzaria/views/GerenciarPizzasView.fxml",     "Tipos de pizza"); }
+    @FXML private void irAdicionais(ActionEvent e)   { LoginController.trocarConteudo(e, "/br/edu/ufersa/pizzaria/views/GerenciarAdicionaisView.fxml", "Adicionais"); }
+    @FXML private void irEstoque(ActionEvent e)      { LoginController.trocarConteudo(e, "/br/edu/ufersa/pizzaria/views/EstoqueView.fxml",             "Estoque"); }
+    @FXML private void irRelatorios(ActionEvent e)   { LoginController.trocarConteudo(e, "/br/edu/ufersa/pizzaria/views/RelatorioView.fxml",           "Relatórios"); }
+    @FXML private void irFuncionarios(ActionEvent e) { LoginController.trocarConteudo(e, "/br/edu/ufersa/pizzaria/views/GerenciarFuncionariosView.fxml","La Piazza - Funcionários"); }
+    @FXML private void sair(ActionEvent e)           { LoginController.trocarConteudo(e, "/br/edu/ufersa/pizzaria/views/LoginView.fxml",               "La Piazza Pizzaria"); }
 }
