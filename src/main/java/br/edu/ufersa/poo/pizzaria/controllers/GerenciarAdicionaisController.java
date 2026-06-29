@@ -19,7 +19,7 @@ import javafx.stage.StageStyle;
 
 public class GerenciarAdicionaisController {
 
-    // ── FXML ──────────────────────────────────────────────────────────────
+    // ── FXML
     @FXML private TextField                        txtBusca;
     @FXML private Button                           btnNovoAdicional;
     @FXML private TableView<Adicional>             tabelaAdicionais;
@@ -31,14 +31,14 @@ public class GerenciarAdicionaisController {
     private final AdicionalService adicionalService = new AdicionalService();
     private final ObservableList<Adicional> listaAdicionaisOb = FXCollections.observableArrayList();
 
-    // ── INICIALIZAÇÃO ──────────────────────────────────────────────────────
+    // ── INICIALIZAÇÃO
     @FXML
     public void initialize() {
         configurarColunas();
         atualizarTabela();
     }
 
-    // ── CONFIGURAÇÃO DAS COLUNAS ───────────────────────────────────────────
+    // ── CONFIGURAÇÃO DAS COLUNAS
     private void configurarColunas() {
 
         // Nome → adicional.nome
@@ -90,7 +90,7 @@ public class GerenciarAdicionaisController {
         });
     }
 
-    // ── ABRIR MODAL DE EDIÇÃO ──────────────────────────────────────────────
+    // ── ABRIR MODAL DE EDIÇÃO
 
     private void abrirEdicaoAdicional(Adicional adicional) {
         try {
@@ -121,7 +121,7 @@ public class GerenciarAdicionaisController {
         }
     }
 
-    // ── ATUALIZAR TABELA DO BANCO ──────────────────────────────────────────
+    // ── ATUALIZAR TABELA DO BANCO
     private void atualizarTabela() {
         try {
             listaAdicionaisOb.clear();
@@ -137,7 +137,7 @@ public class GerenciarAdicionaisController {
         }
     }
 
-    // ── AÇÕES ──────────────────────────────────────────────────────────────
+    // ── AÇÕES
     @FXML
     private void handleNovoAdicional(ActionEvent event) {
         LoginController.abrirModal(
@@ -177,7 +177,7 @@ public class GerenciarAdicionaisController {
         });
     }
 
-    // ── NAVEGAÇÃO ──────────────────────────────────────────────────────────
+    // ── NAVEGAÇÃO
     @FXML private void irPedidos(ActionEvent e)     { LoginController.trocarConteudo(e, "/br/edu/ufersa/pizzaria/views/Pedidos.fxml",                   "La Piazza - Pedidos"); }
     @FXML private void irClientes(ActionEvent e)    { LoginController.trocarConteudo(e, "/br/edu/ufersa/pizzaria/views/GerenciarClientesView.fxml",     "La Piazza - Clientes"); }
     @FXML private void irTiposPizza(ActionEvent e)  { LoginController.trocarConteudo(e, "/br/edu/ufersa/pizzaria/views/GerenciarPizzasView.fxml",       "La Piazza - Tipos de Pizza"); }

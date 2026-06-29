@@ -22,8 +22,6 @@ public class EditarSaborController {
     @FXML
     public void initialize() {}
 
-
-
     public void preencherCampos(Pizza pizza) {
         this.pizzaEmEdicao = pizza;
         txtSabor.setText(pizza.getTipo());

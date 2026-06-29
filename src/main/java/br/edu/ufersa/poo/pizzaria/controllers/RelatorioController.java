@@ -116,7 +116,7 @@ public class RelatorioController {
         filtroCliente.getSelectionModel().selectFirst();
     }
 
-    // ── FILTROS ───────────────────────────────────────────────────────────
+    // ── FILTROS
     @FXML
     public void aplicarFiltros() {
         LocalDate hoje    = LocalDate.now();
@@ -199,7 +199,7 @@ public class RelatorioController {
         });
     }
 
-    // ── RENDERIZAÇÃO COMPLETA ─────────────────────────────────────────────
+    // ── RENDERIZAÇÃO COMPLETA
     private void renderizarTudo() {
         renderizarMetricas();
         renderizarSaboresMaisVendidos();
@@ -207,7 +207,7 @@ public class RelatorioController {
         renderizarVendasPorCliente();
     }
 
-    /** Cards superiores: Faturamento, Custo de reposição, Lucro e Total */
+    /* Cards superiores: Faturamento, Custo de reposição, Lucro e Total */
     private void renderizarMetricas() {
         double faturamento = pedidosFiltrados.stream()
                 .mapToDouble(Pedido::getValorTotal)
@@ -231,7 +231,7 @@ public class RelatorioController {
                 : "-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #C0392B;");
     }
 
-    /** Top-3 sabores mais pedidos dentro dos filtros */
+    /* Top-3 sabores mais pedidos dentro dos filtros */
     private void renderizarSaboresMaisVendidos() {
         boxSaboresMaisVendidos.getChildren().clear();
 
@@ -262,7 +262,7 @@ public class RelatorioController {
         }
     }
 
-    /** Mini-card por estado com cor igual a criarLabelEstado do PedidosController */
+    /* Mini-card por estado com cor igual a criarLabelEstado do PedidosController */
     private void renderizarPedidosPorEstado() {
         boxEstados.getChildren().clear();
 
@@ -293,7 +293,7 @@ public class RelatorioController {
         }
     }
 
-    /** Tabela de vendas agrupadas por cliente, ordenada por valor total */
+    /* Tabela de vendas agrupadas por cliente, ordenada por valor total */
     private void renderizarVendasPorCliente() {
         listaVendasCliente.getChildren().clear();
 
@@ -339,8 +339,7 @@ public class RelatorioController {
         }
     }
 
-    // ── EXPORTAR CSV ──────────────────────────────────────────────────────
-
+    // ── EXPORTAR CSV
     @FXML
     private void exportarRelatorio(ActionEvent event) {
         FileChooser chooser = new FileChooser();
@@ -366,7 +365,7 @@ public class RelatorioController {
     }
 
     private void escreverCsv(PrintWriter pw) {
-        // ── Cabeçalho ────────────────────────────────────────────────────
+        // ── Cabeçalho
         pw.println("LA PIAZZA PIZZARIA - RELATÓRIO GERENCIAL");
         pw.println("Gerado em:," + LocalDate.now().format(FMT));
         pw.println();
@@ -377,7 +376,7 @@ public class RelatorioController {
         pw.println("Cliente:,"   + filtroCliente.getValue());
         pw.println();
 
-        // ── Resumo financeiro ─────────────────────────────────────────────
+        // ── Resumo financeiro
         double faturamento = pedidosFiltrados.stream()
                 .mapToDouble(Pedido::getValorTotal).sum();
         double custo = 0;
@@ -391,7 +390,7 @@ public class RelatorioController {
         pw.println("Total de pedidos:," + pedidosFiltrados.size());
         pw.println();
 
-        // ── Pedidos por estado ────────────────────────────────────────────
+        // ── Pedidos por estado
         pw.println("PEDIDOS POR ESTADO");
         pw.println("Estado,Quantidade");
         for (String est : new String[]{"Pendente","Em preparo","Pronto","Entregue","Cancelado"}) {
@@ -401,7 +400,7 @@ public class RelatorioController {
         }
         pw.println();
 
-        // ── Sabores mais vendidos ─────────────────────────────────────────
+        // ── Sabores mais vendidos
         pw.println("SABORES MAIS VENDIDOS");
         pw.println("Posição,Sabor,Quantidade de pedidos");
         Map<String, Long> contagem = pedidosFiltrados.stream()
@@ -415,7 +414,7 @@ public class RelatorioController {
         }
         pw.println();
 
-        // ── Vendas por cliente ────────────────────────────────────────────
+        // ── Vendas por cliente
         pw.println("VENDAS POR CLIENTE");
         pw.println("Cliente,Quantidade de pedidos,Valor total");
         Map<String, long[]> agrupado = new LinkedHashMap<>();
@@ -433,7 +432,7 @@ public class RelatorioController {
                                 + formatarReais(e.getValue()[1] / 100.0)));
         pw.println();
 
-        // ── Detalhamento dos pedidos ──────────────────────────────────────
+        // ── Detalhamento dos pedidos
         pw.println("DETALHAMENTO DOS PEDIDOS");
         pw.println("ID,Cliente,Pizza,Tamanho,Adicionais,Estado,Data,Valor Total");
         for (Pedido p : pedidosFiltrados) {
@@ -452,12 +451,12 @@ public class RelatorioController {
         }
     }
 
-    // ── UTILITÁRIOS ───────────────────────────────────────────────────────
+    // ── UTILITÁRIOS
     private String formatarReais(double valor) {
         return String.format("R$ %.2f", valor).replace(".", ",");
     }
 
-    /** Escapa campo CSV: envolve em aspas se tiver vírgula, aspas ou quebra de linha */
+    /* Escapa campo CSV: envolve em aspas se tiver vírgula, aspas ou quebra de linha */
     private String csv(String s) {
         if (s == null) return "";
         if (s.contains(",") || s.contains("\"") || s.contains("\n")) {
@@ -478,7 +477,7 @@ public class RelatorioController {
         a.showAndWait();
     }
 
-    // ── NAVEGAÇÃO (mesmo padrão exato de PedidosController) ──────────────
+    // ── NAVEGAÇÃO (mesmo padrão exato de PedidosController)
     @FXML private void irPedidos(ActionEvent e)    { LoginController.trocarConteudo(e, "/br/edu/ufersa/pizzaria/views/Pedidos.fxml",                  "Pedidos"); }
     @FXML private void irClientes(ActionEvent e)   { LoginController.trocarConteudo(e, "/br/edu/ufersa/pizzaria/views/GerenciarClientesView.fxml",    "Clientes"); }
     @FXML private void irTiposPizza(ActionEvent e) { LoginController.trocarConteudo(e, "/br/edu/ufersa/pizzaria/views/GerenciarPizzasView.fxml",      "Tipos de pizza"); }
