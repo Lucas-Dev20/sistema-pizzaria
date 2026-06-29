@@ -37,7 +37,7 @@ Por fim o conteúdo será aberto em uma nova aba.
 Usuário administrador:
 
 Email:
-admin@lapizzaria.com
+admin@lapiazza.com
 
 Senha:
-admin
+admin123
