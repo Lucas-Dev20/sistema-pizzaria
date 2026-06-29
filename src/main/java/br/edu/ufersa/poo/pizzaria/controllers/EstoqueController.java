@@ -19,12 +19,12 @@ import java.util.List;
 
 public class EstoqueController {
 
-    // ── FXML ───────────────────────────────────────────────────────────────
+    // ── FXML
     @FXML private TextField     campoBusca;
     @FXML private ComboBox<String> filtroStatus;
     @FXML private VBox          listaEstoque;
 
-    // ── SERVICE ────────────────────────────────────────────────────────────
+    // ── SERVICE
     private final AdicionalService adicionalService = new AdicionalService();
 
     // Cache local
@@ -34,7 +34,7 @@ public class EstoqueController {
     private static final DateTimeFormatter FMT =
             DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-    // ── INICIALIZAÇÃO ──────────────────────────────────────────────────────
+    // ── INICIALIZAÇÃO
     @FXML
     public void initialize() {
         filtroStatus.setItems(FXCollections.observableArrayList(
@@ -54,7 +54,7 @@ public class EstoqueController {
         }
     }
 
-    // ── RENDERIZAÇÃO ───────────────────────────────────────────────────────
+    // ── RENDERIZAÇÃO
     private void renderizarLista(List<Adicional> itens) {
         listaEstoque.getChildren().clear();
         for (Adicional a : itens) {
@@ -63,15 +63,6 @@ public class EstoqueController {
         }
     }
 
-    /**
-     * Monta uma linha da tabela para o Adicional informado.
-     *
-     * Colunas:
-     *  - Nome             → adicional.getNome()
-     *  - Quantidade       → adicional.getQtd() + unidade (g / L / un.)
-     *  - Status           → Disponível (qtd > 0) | Esgotado (qtd == 0)
-     *  - Última atualização → data atual formatada (dd/MM/yyyy)
-     */
     private HBox criarLinha(Adicional a) {
         HBox linha = new HBox();
         linha.setAlignment(Pos.CENTER_LEFT);
@@ -132,7 +123,7 @@ public class EstoqueController {
         return l;
     }
 
-    // ── FILTRO / BUSCA ─────────────────────────────────────────────────────
+    // ── FILTRO / BUSCA
     @FXML
     private void filtrar() {
         String busca  = campoBusca.getText().trim().toLowerCase();
@@ -150,7 +141,7 @@ public class EstoqueController {
         renderizarLista(filtrados);
     }
 
-    // ── MODAL: NOVO ITEM ───────────────────────────────────────────────────
+    // ── MODAL: NOVO ITEM
     @FXML
     private void abrirNovoItem(ActionEvent event) {
         mostrarModalItem(null);
@@ -160,40 +151,15 @@ public class EstoqueController {
         mostrarModalItem(item);
     }
 
-    /**
-     * Modal unificado de Estoque com dois comportamentos:
-     *
-     * ┌─ NOVO ITEM (item == null) ─────────────────────────────────────────────┐
-     * │  Campos: Nome | Custo unitário de compra (R$) | Quantidade inicial      │
-     * │  Ação:   cadastrarAdicional(nome, custoCompra, qtd)                     │
-     * │          + registrarReposicao() para registrar o gasto inicial no       │
-     * │            histórico de reposição — alimenta o relatório de custo.      │
-     * └────────────────────────────────────────────────────────────────────────┘
-     *
-     * ┌─ EDITAR / REPOR (item != null) ───────────────────────────────────────┐
-     * │  Campos: Nome (editável) | Qtd a ADICIONAR ao estoque | Custo atual    │
-     * │          da reposição (pode diferir do custo original)                 │
-     * │  Ação:   atualizarAdicional() para nome                                │
-     * │          + creditarEstoque() → que já chama registrarReposicao()       │
-     * │            gravando valor_unitario e valor_total no banco.              │
-     * └────────────────────────────────────────────────────────────────────────┘
-     *
-     * Por que separar custo de compra do preço de venda?
-     *  - adicional.getValor()  → preço cobrado do cliente ao pedir (receita)
-     *  - reposicao.valor_unitario → quanto a pizzaria pagou ao comprar (custo)
-     * O relatório usa SUM(reposicao_estoque.valor_total) como "gasto total"
-     * e SUM(pedido_adicional) * adicional.valor como "receita dos adicionais".
-     */
     private void mostrarModalItem(Adicional item) {
         boolean editando = item != null;
 
-        // ── Campo Nome ──────────────────────────────────────────────────────
+        // ── Campo Nome
         TextField campoNome = new TextField(editando ? item.getNome() : "");
         campoNome.setPromptText("Ex: Molho de Tomate");
         campoNome.getStyleClass().add("campo");
         campoNome.setMaxWidth(Double.MAX_VALUE);
 
-        // ── Campo Custo de compra (valor_unitario na tabela reposicao_estoque)
         // No cadastro novo: custo inicial por unidade
         // Na edição: custo desta reposição (pode ter mudado de fornecedor etc.)
         String custoAtual = editando
@@ -204,7 +170,7 @@ public class EstoqueController {
         campoCusto.getStyleClass().add("campo");
         campoCusto.setMaxWidth(Double.MAX_VALUE);
 
-        // ── Label dinâmico: comportamento diferente conforme contexto ───────
+        // ── Label dinâmico: comportamento diferente conforme contexto
         String labelQtd = editando
                 ? "Quantidade a adicionar ao estoque"
                 : "Quantidade inicial em estoque";
@@ -215,7 +181,7 @@ public class EstoqueController {
         campoQtd.getStyleClass().add("campo");
         campoQtd.setMaxWidth(Double.MAX_VALUE);
 
-        // ── Nota informativa (só na edição) ──────────────────────────────
+        // ── Nota informativa
         Label notaReposicao = new Label(
                 "ℹ Esta operação registra a entrada no histórico de reposição\n"
                         + "e atualiza o custo unitário para o relatório de gastos."
@@ -225,7 +191,7 @@ public class EstoqueController {
         notaReposicao.setVisible(editando);
         notaReposicao.setManaged(editando);
 
-        // ── Botões ──────────────────────────────────────────────────────────
+        // ── Botões
         Button btnCancelar = new Button("Cancelar");
         btnCancelar.getStyleClass().add("botao");
         Button btnSalvar   = new Button("Salvar");
@@ -235,7 +201,7 @@ public class EstoqueController {
         rodape.setAlignment(Pos.CENTER);
         VBox.setMargin(rodape, new Insets(10, 0, 0, 0));
 
-        // ── Corpo do modal ───────────────────────────────────────────────────
+        // ── Corpo do modal
         VBox corpo = new VBox(10,
                 new Label("Nome"),            campoNome,
                 new Label("Custo de compra (R$)"), campoCusto,
@@ -267,7 +233,7 @@ public class EstoqueController {
         btnCancelar.setOnAction(e -> fechar.run());
 
         btnSalvar.setOnAction(e -> {
-            // ── Coleta e valida campos comuns ────────────────────────────────
+            // ── Coleta e valida campos comuns
             String nome     = campoNome.getText().trim();
             String qtdTexto = campoQtd.getText().trim();
             String custoTexto = campoCusto.getText().trim().replace(",", ".");
@@ -306,14 +272,12 @@ public class EstoqueController {
                         adicionalService.atualizarAdicional(atualizado, item.getNome());
                     }
                     // 2. Repõe o estoque E registra a reposição com o custo correto
-                    //    (não chama creditarEstoque pois ele registraria com valor errado)
                     adicionalService.creditarEstoqueComCusto(
                             item.getIdAdicional(), quantidade, custoUnitario
                     );
 
                 } else {
                     // Cadastra o novo adicional E já registra a reposição inicial
-                    // tudo dentro do service para garantir atomicidade
                     adicionalService.cadastrarAdicionalComReposicao(
                             nome, custoUnitario, quantidade
                     );
@@ -331,7 +295,7 @@ public class EstoqueController {
         });
     }
 
-    // ── MODAL: CONFIRMAR EXCLUSÃO ──────────────────────────────────────────
+    // ── MODAL: CONFIRMAR EXCLUSÃO
     private void confirmarExclusao(Adicional item) {
         Label pergunta = new Label("Deseja excluir?");
         pergunta.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
@@ -379,7 +343,7 @@ public class EstoqueController {
         });
     }
 
-    // ── HELPERS ────────────────────────────────────────────────────────────
+    // ── HELPERS
     private void mostrarAviso(String msg) {
         Alert a = new Alert(Alert.AlertType.WARNING);
         a.setTitle("Aviso"); a.setHeaderText(null); a.setContentText(msg);

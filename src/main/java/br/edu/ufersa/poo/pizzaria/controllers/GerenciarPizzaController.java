@@ -184,7 +184,7 @@ public class GerenciarPizzaController {
         });
     }
 
-    // ── HELPERS ───────────────────────────────────────────────────────────────
+    // ── HELPERS
     private void abrirModal(String fxmlPath, String titulo) {
         LoginController.abrirModal(fxmlPath, titulo);
     }

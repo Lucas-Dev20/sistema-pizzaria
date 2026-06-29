@@ -25,10 +25,9 @@ public class AdicionalService {
         return adicionalDAO.salvarERetornarId(novoAdicional);
     }
 
-    /**
-     * Cadastra um novo adicional E registra a entrada inicial na reposicao_estoque.
-     * Usa o id retornado pelo INSERT — sem depender do nome para buscar.
-     */
+    /*Cadastra um novo adicional E registra a entrada inicial na reposicao_estoque.
+     Usa o id retornado pelo INSERT — sem depender do nome para buscar. */
+
     public void cadastrarAdicionalComReposicao(String nome, double custoUnitario, int quantidade) {
         int idGerado = cadastrarAdicional(nome, custoUnitario, quantidade);
         if (idGerado > 0) {
@@ -36,12 +35,8 @@ public class AdicionalService {
         }
     }
 
-    /**
-     * Repõe o estoque usando o custo informado pelo usuário — sem duplicar o
-     * registro de reposição (Bug 2 corrigido).
-     * O creditarEstoque original registrava com adicional.getValor() (preço de
-     * venda), depois o controller registrava uma segunda vez com o custo real.
-     */
+    /*Repõe o estoque usando o custo informado pelo usuário*/
+
     public void creditarEstoqueComCusto(int idAdicional, int quantidade, double custoUnitario) {
         if (idAdicional <= 0) throw new IllegalArgumentException("ID do adicional inválido.");
         if (quantidade <= 0) throw new IllegalArgumentException("Quantidade deve ser maior que zero.");
@@ -53,11 +48,11 @@ public class AdicionalService {
         // 1. Sobe a quantidade no banco
         adicionalDAO.reporEstoque(idAdicional, quantidade);
 
-        // 2. Registra UMA reposição com o custo correto (não duas como antes)
+        // 2. Registra uma reposição com o custo correto
         reposicaoDAO.registrarReposicao(idAdicional, quantidade, custoUnitario);
     }
 
-    //regra para mudança na quantidade de estoque -> impossivel vender sem ter a quantidade
+    //regra para mudança na quantidade de estoque
     public void consumirEstoque(int idAdicional, int quantidadeConsumida) {
         if (idAdicional <= 0) {
             throw new IllegalArgumentException("Erro no estoque: ID do adicional inválido.");

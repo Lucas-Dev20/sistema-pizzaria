@@ -9,9 +9,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-/**
- * Controller do modal "Cadastrar Funcionário".
- * Acessível somente pelo ADMIN (verificação feita na UsuarioService).
+/*Controller do modal "Cadastrar Funcionário".Acessível somente pelo ADMIN
  */
 public class CadastrarFuncionarioController {
 

@@ -41,7 +41,7 @@ public class ClienteDAO extends AbstractDAO<Cliente> {
         );
     }
 
-    /** buscarPorId — implementação obrigatória de ICrudDAO - via AbstractDAO */
+    /* buscarPorId — implementação obrigatória de ICrudDAO - via AbstractDAO */
     @Override
     public Cliente buscarPorId(int idBusca) {
         String sql = "SELECT * FROM cliente WHERE id_cliente = ?";
@@ -62,7 +62,7 @@ public class ClienteDAO extends AbstractDAO<Cliente> {
         return null;
     }
 
-    /** Busca clientes pelo nome */
+    /* Busca clientes pelo nome */
     public List<Cliente> buscarPorNome(String nomeBusca) {
         String sql = "SELECT * FROM cliente WHERE nome LIKE ?";
         List<Cliente> lista = new ArrayList<>();
@@ -83,7 +83,7 @@ public class ClienteDAO extends AbstractDAO<Cliente> {
         return lista;
     }
 
-    /** atualizar — implementação obrigatória de ICrudDAO - via AbstractDAO */
+    /* atualizar — implementação obrigatória de ICrudDAO - via AbstractDAO */
     @Override
     public void atualizar(Cliente cliente) {
         String sql = "UPDATE cliente SET nome = ?, endereco = ?, cpf = ?, telefone = ?, bairro = ? WHERE id_cliente = ?";

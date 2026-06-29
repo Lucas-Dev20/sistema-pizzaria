@@ -19,7 +19,7 @@ public class GerenciarPizzasController {
     @FXML private TilePane containerPizzas;
     private final PizzaService pizzaService = new PizzaService();
 
-    // analise do tipo de login para o 'poder' de cadastrar um novo sabor ser permitido ou nao
+    // analisa do tipo de login para cadastrar um novo sabor ser permitido ou nao
     private boolean ehAdministrador = true;
 
     @FXML
@@ -45,8 +45,7 @@ public class GerenciarPizzasController {
         containerPizzas.getChildren().clear();
 
         try {
-            // MENSAGEM EM CAPS LOCK: BUSCANDO A LISTA REAL DE PIZZAS DO BANCO DE DADOS ATRAVÉS DA SERVICE
-            // OBS: AJUSTE O NOME DO MÉTODO ABAIXO CONFORME SEU PIZZASERVICE DEPOIS (EX: listarTodasPizzas() OU SIMILAR)
+
             var listaPizzas = pizzaService.listarTodasPizzas();
 
             if (listaPizzas != null) {
@@ -59,7 +58,7 @@ public class GerenciarPizzasController {
             System.err.println("MENSAGEM EM CAPS LOCK: ERRO AO CARREGAR CATÁLOGO DE SABORES DO BANCO DE DADOS.");
             e.printStackTrace();
 
-            // EXIBE O ALERTA DE ERRO DE FORMA CONTROLADA SEM DERRUBAR O SISTEMA
+            // EXIBE O ALERTA DE ERRO
             Alert erro = new Alert(Alert.AlertType.ERROR);
             erro.setTitle("Erro de Carregamento");
             erro.setHeaderText(null);

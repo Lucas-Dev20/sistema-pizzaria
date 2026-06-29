@@ -18,7 +18,7 @@ public class EditarClienteController {
     private final ClienteService clienteService = new ClienteService();
     private Cliente clienteEmEdicao; // Guarda a entidade original com o ID do banco
 
-    // MÉTODOS QUE NASCE APENAS NA TELA DE EDIÇÃO para receber os dados antigos da tabela
+    // recebe os dados antigos da tabela
     public void preencherCampos(Cliente cliente) {
         this.clienteEmEdicao = cliente;
 

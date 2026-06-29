@@ -107,11 +107,11 @@ public class GerenciarClientesController {
                     "/br/edu/ufersa/pizzaria/views/EditarClienteView.fxml"));
             Parent root = loader.load();
 
-            // passa o cliente para o controller ANTES de exibir o modal
+            // passa o cliente para o controller antess de exibir o modal
             EditarClienteController controllerEdicao = loader.getController();
             controllerEdicao.preencherCampos(cliente);
 
-            // abre como modal (Stage filho) — igual ao CadastrarClienteView
+            // abre como modal (Stage filho)
             javafx.stage.Stage modal = new javafx.stage.Stage();
             modal.setTitle("La Piazza - Editar Cliente");
             modal.setScene(new javafx.scene.Scene(root));

@@ -29,7 +29,6 @@ public class GerenciarFuncionariosController {
         carregarFuncionarios();
 
         // Oculta o botão "Novo Funcionário" para quem não é admin.
-        // A tela pode ser vista por todos; só o cadastro é restrito ao ADMIN.
         boolean ehAdmin = SessaoUsuario.getInstance().usuarioEhAdmin();
         btnNovoFuncionario.setVisible(ehAdmin);
         btnNovoFuncionario.setManaged(ehAdmin);
@@ -58,7 +57,7 @@ public class GerenciarFuncionariosController {
         }
     }
 
-    // ── Cadastrar novo funcionário (somente ADMIN) ────────────────────────────
+    // ── Cadastrar novo funcionário - somente ADMIN
 
     @FXML
     private void handleNovoFuncionario(ActionEvent event) {
@@ -73,7 +72,7 @@ public class GerenciarFuncionariosController {
         }
     }
 
-    // ── Desativar funcionário ─────────────────────────────────────────────────
+    // ── Desativar funcionário
 
     @FXML
     private void handleDesativarFuncionario(ActionEvent event) {

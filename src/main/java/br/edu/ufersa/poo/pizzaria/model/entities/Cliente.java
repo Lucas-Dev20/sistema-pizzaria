@@ -1,6 +1,6 @@
 package br.edu.ufersa.poo.pizzaria.model.entities;
 
-// Cliente herda de Pessoa (requisito de herança e polimorfismo)
+// Cliente herda de Pessoa
 
 public class Cliente extends Pessoa
 {
@@ -10,7 +10,6 @@ public class Cliente extends Pessoa
     private String telefone;
     private String bairro;
 
-    // CONSTRUTOR NOVO que inclui o id
     public Cliente(int id, String nome, String endereco, String cpf, String telefone, String bairro) {
         super(nome);           // passa nome para a classe abstrata Pessoa
         this.idCliente = id;
@@ -29,7 +28,7 @@ public class Cliente extends Pessoa
         setBairro(bairro);
     }
 
-    // ── Polimorfismo: implementa método abstrato de Pessoa ────────────────────
+    // ── Polimorfismo: implementa metodo abstrato de Pessoa
     @Override
     public String getDescricao() {
         return "Cliente: " + getNome() + " | CPF: " + cpf + " | Tel: " + telefone;

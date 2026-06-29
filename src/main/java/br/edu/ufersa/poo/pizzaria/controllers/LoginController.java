@@ -17,18 +17,18 @@ import java.io.IOException;
 
 public class LoginController {
 
-    // ── Componentes da tela
+    // Componentes da tela
     @FXML private TextField     txtEmail;
     @FXML private PasswordField txtSenha;
     @FXML private Label         lblErro;
 
-    // ── Perfil selecionado pelos botões laterais
+    // Perfil selecionado pelos botões laterais
 
     private String perfilSelecionado = null; // "ADMIN" ou "FUNCIONARIO"
 
     private final UsuarioService usuarioService = new UsuarioService();
 
-    // ── Inicialização
+    // Inicialização
     @FXML
     public void initialize() {
         lblErro.setVisible(false);
@@ -40,7 +40,7 @@ public class LoginController {
         }
     }
 
-    // ── Seleção de perfil
+    // Seleção de perfil
 
     @FXML private Button btnAdmin;
     @FXML private Button btnFuncionario;
@@ -59,7 +59,7 @@ public class LoginController {
         btnAdmin.setStyle(""); // reseta o outro
     }
 
-    // ── Login
+    // Login
 
     @FXML
     private void handleEntrar(ActionEvent event) {
@@ -90,7 +90,7 @@ public class LoginController {
                 "Criar Conta");
     }
 
-    // ── Recuperar senha
+    // Recuperar senha
 
     @FXML
     private void handleEsqueceuSenha(ActionEvent event) {

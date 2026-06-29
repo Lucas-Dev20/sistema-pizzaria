@@ -2,7 +2,7 @@ package br.edu.ufersa.poo.pizzaria.DAO;
 
 import java.util.List;
 
-/*Interface genérica de CRUD - utiliza interfaces" */
+/*Interface de CRUD */
 
 public interface ICrudDAO<T> {
 

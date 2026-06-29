@@ -2,16 +2,9 @@ package br.edu.ufersa.poo.pizzaria.session;
 
 import br.edu.ufersa.poo.pizzaria.model.entities.Usuario;
 
-/**
- * PADRÃO SINGLETON — Sessão do usuário logado.
- * Armazena o usuário autenticado e o torna acessível a qualquer
- * controller sem precisar passar parâmetros entre telas.
- * Uso:
-   // Após login:SessaoUsuario.getInstance().iniciar(usuario);
-   // Em qualquer controller:
-    Usuario u = SessaoUsuario.getInstance().getUsuarioLogado();
-    if (u.isAdmin()) { ... }
-  // Ao fazer logout: SessaoUsuario.getInstance().encerrar(); */
+/* Padrão Singleton — Sessão do usuário logado.
+  Armazena o usuário autenticado e o torna acessível a qualquer controller sem precisar passar parâmetros entre telas.
+  */
 
 public class SessaoUsuario {
 
@@ -23,7 +16,7 @@ public class SessaoUsuario {
     // Construtor privado — ninguém pode instanciar de fora
     private SessaoUsuario() {}
 
-    /** Retorna (ou cria) a única instância da sessão. */
+    /* Retorna (ou cria) a única instância da sessão. */
     public static SessaoUsuario getInstance() {
         if (instance == null) {
             instance = new SessaoUsuario();
@@ -37,17 +30,17 @@ public class SessaoUsuario {
         this.usuarioLogado = usuario;
     }
 
-    /** Encerra a sessão (chamado no logout). */
+    /* Encerra a sessão (chamado no logout). */
     public void encerrar() {
         this.usuarioLogado = null;
     }
 
-    /** Retorna o usuário atualmente logado, ou null se não há sessão. */
+    /* Retorna o usuário atualmente logado, ou null se não há sessão. */
     public Usuario getUsuarioLogado() {
         return usuarioLogado;
     }
 
-    /** Atalho: retorna true se há um usuário logado. */
+    /* Atalho: retorna true se há um usuário logado. */
     public boolean estaLogado() {
         return usuarioLogado != null;
     }

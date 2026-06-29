@@ -7,7 +7,7 @@ public class Adicional {
     private double valor;   //valor do adicional
     private int quantidade; //quantidade do adicional
 
-    // CONSTRUTOR NOVO que inclui o ID
+
     public Adicional(int idAdicional, String nome, double valor, int quantidade) {
         setIdAdicional(idAdicional);
         this.nome = nome;

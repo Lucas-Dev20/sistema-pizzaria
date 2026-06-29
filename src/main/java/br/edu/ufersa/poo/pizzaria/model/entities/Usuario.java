@@ -1,21 +1,14 @@
 package br.edu.ufersa.poo.pizzaria.model.entities;
 
-/**
- * Entidade que representa um usuário do sistema (funcionário ou administrador).
- *
- * Herança: Usuario extends Pessoa
- *   → cumpre o requisito de herança do trabalho.
- *   → Pessoa contém nome, cpf, telefone (atributos comuns a Cliente também).
- */
 public class Usuario extends Pessoa {
 
     private int          idUsuario;
     private String       email;
-    private String       senhaHash;   // armazenada com hash; nunca texto puro
+    private String       senhaHash;   // armazenada com hash
     private PerfilUsuario perfil;
     private boolean      ativo;
 
-    // ── Construtor completo (usado ao buscar do banco) ────────────────────────
+    // ── Construtor completo -  buscar do banco
     public Usuario(int idUsuario, String nome, String email,
                    String senhaHash, PerfilUsuario perfil, boolean ativo) {
         super(nome);           // chama construtor de Pessoa
@@ -26,7 +19,7 @@ public class Usuario extends Pessoa {
         this.ativo     = ativo;
     }
 
-    // ── Construtor sem id (usado ao cadastrar novo usuário) ───────────────────
+    // ── Construtor sem id - usado ao cadastrar novo usuário
     public Usuario(String nome, String email, String senhaHash, PerfilUsuario perfil) {
         super(nome);
         this.email     = email;
@@ -35,25 +28,25 @@ public class Usuario extends Pessoa {
         this.ativo     = true;
     }
 
-    // ── Polimorfismo: sobrescreve método abstrato de Pessoa ───────────────────
+    // ── Polimorfismo: sobrescreve metodo abstrato de Pessoa
     @Override
     public String getDescricao() {
         return "Usuário [" + perfil + "]: " + getNome() + " <" + email + ">";
     }
 
-    // ── Helpers de autorização ────────────────────────────────────────────────
+    // ── Helpers de autorização
 
-    /** Retorna true se este usuário é administrador. */
+    /* Retorna true se este usuário é administrador. */
     public boolean isAdmin() {
         return PerfilUsuario.ADMIN.equals(this.perfil);
     }
 
-    /** Retorna true se este usuário é funcionário comum. */
+    /* Retorna true se este usuário é funcionário comum. */
     public boolean isFuncionario() {
         return PerfilUsuario.FUNCIONARIO.equals(this.perfil);
     }
 
-    // ── Getters e Setters ─────────────────────────────────────────────────────
+    // ── Getters e Setters
 
     public int getIdUsuario()             { return idUsuario; }
     public void setIdUsuario(int id)      { this.idUsuario = id; }

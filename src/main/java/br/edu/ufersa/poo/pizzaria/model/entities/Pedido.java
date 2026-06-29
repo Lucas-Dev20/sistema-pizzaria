@@ -155,8 +155,6 @@ public class Pedido {
             return;
         }
 
-        // O banco agora armazena os 3 preços reais por tamanho.
-        // Escolhe o preço real correspondente ao tamanho do pedido.
         double total;
 
         if (tamanho != null) {
