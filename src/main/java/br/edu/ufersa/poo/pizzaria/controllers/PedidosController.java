@@ -76,17 +76,6 @@ public class PedidosController {
         }
     }
 
-    /**
-     * Monta uma linha da tabela com os dados do Pedido.
-     *
-     * Colunas mapeadas para os campos do banco:
-     *  - Cliente    → pedido.getCliente().getNome()        (tabela cliente, col nome)
-     *  - Pizza      → pedido.getPizza().getTipo()          (tabela pizzas,  col tipo)
-     *  - Tamanho    → pedido.getTamanho()                  (tabela pedido,  col tamanho)
-     *  - Adicionais → pedido.getAdicionais().size()        (tabela pedido_adicional)
-     *  - Estado     → pedido.getEstado()                   (tabela pedido,  col estado)
-     *  - Valor      → pedido.getValorTotal()               (tabela pedido,  col valor_total)
-     */
     private HBox criarLinha(Pedido p) {
         HBox linha = new HBox();
         linha.setAlignment(Pos.CENTER_LEFT);
@@ -190,10 +179,8 @@ public class PedidosController {
         mostrarModalPedido(pedido);
     }
 
-    /**
-     * Modal de Novo / Editar Pedido.
-     * Carrega clientes, pizzas e adicionais direto do banco via Service.
-     */
+    /* Modal de Novo / Editar Pedido.*/
+
     private void mostrarModalPedido(Pedido pedido) {
         boolean editando = pedido != null;
 

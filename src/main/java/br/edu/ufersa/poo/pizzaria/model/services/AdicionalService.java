@@ -11,9 +11,7 @@ public class AdicionalService {
     private final AdicionalDAO adicionalDAO = new AdicionalDAO();
     private final ReposicaoEstoqueDAO reposicaoDAO = new ReposicaoEstoqueDAO();
 
-    //regra para cadastro de adicional: tem q haver nome, valor e quantia válidos
-    public void cadastrarAdicional(String nome, double valor, int quantidade) {
-        // 1. Validações de campos obrigatórios e consistência
+    public int cadastrarAdicional(String nome, double valor, int quantidade) {
         if (nome == null || nome.trim().isEmpty()) {
             throw new IllegalArgumentException("Erro no cadastro: O nome do adicional é obrigatório.");
         }
@@ -23,12 +21,40 @@ public class AdicionalService {
         if (quantidade < 0) {
             throw new IllegalArgumentException("Erro no cadastro: A quantidade inicial em estoque não pode ser negativa.");
         }
-
-    // checagem feita, instancia o objeto
         Adicional novoAdicional = new Adicional(nome, valor, quantidade);
+        return adicionalDAO.salvarERetornarId(novoAdicional);
+    }
 
-        //dao recebe e salva no sql
-        adicionalDAO.salvar(novoAdicional);
+    /**
+     * Cadastra um novo adicional E registra a entrada inicial na reposicao_estoque.
+     * Usa o id retornado pelo INSERT — sem depender do nome para buscar.
+     */
+    public void cadastrarAdicionalComReposicao(String nome, double custoUnitario, int quantidade) {
+        int idGerado = cadastrarAdicional(nome, custoUnitario, quantidade);
+        if (idGerado > 0) {
+            reposicaoDAO.registrarReposicao(idGerado, quantidade, custoUnitario);
+        }
+    }
+
+    /**
+     * Repõe o estoque usando o custo informado pelo usuário — sem duplicar o
+     * registro de reposição (Bug 2 corrigido).
+     * O creditarEstoque original registrava com adicional.getValor() (preço de
+     * venda), depois o controller registrava uma segunda vez com o custo real.
+     */
+    public void creditarEstoqueComCusto(int idAdicional, int quantidade, double custoUnitario) {
+        if (idAdicional <= 0) throw new IllegalArgumentException("ID do adicional inválido.");
+        if (quantidade <= 0) throw new IllegalArgumentException("Quantidade deve ser maior que zero.");
+        if (custoUnitario < 0) throw new IllegalArgumentException("Custo não pode ser negativo.");
+
+        Adicional adicional = adicionalDAO.buscarPorId(idAdicional);
+        if (adicional == null) throw new IllegalArgumentException("Adicional não encontrado.");
+
+        // 1. Sobe a quantidade no banco
+        adicionalDAO.reporEstoque(idAdicional, quantidade);
+
+        // 2. Registra UMA reposição com o custo correto (não duas como antes)
+        reposicaoDAO.registrarReposicao(idAdicional, quantidade, custoUnitario);
     }
 
     //regra para mudança na quantidade de estoque -> impossivel vender sem ter a quantidade

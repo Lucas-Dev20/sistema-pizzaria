@@ -26,14 +26,13 @@ import java.io.IOException;
  */
 public class LoginController {
 
-    // ── Componentes da tela ───────────────────────────────────────────────────
+    // ── Componentes da tela
     @FXML private TextField     txtEmail;
     @FXML private PasswordField txtSenha;
     @FXML private Label         lblErro;
 
     // ── Perfil selecionado pelos botões laterais ───────────────────────────────
-    // (os botões "Administrador" e "Funcionário" do design são apenas visuais/dica;
-    //  o perfil real vem do banco conforme o e-mail cadastrado)
+
     private String perfilSelecionado = null; // "ADMIN" ou "FUNCIONARIO"
 
     private final UsuarioService usuarioService = new UsuarioService();
@@ -95,12 +94,6 @@ public class LoginController {
         }
     }
 
-    // ── Criar conta ───────────────────────────────────────────────────────────
-    // Conforme o design, "Criar conta" abre um modal de registro.
-    // Contudo, pelo enunciado, apenas o ADM cadastra funcionários.
-    // Esta ação abre o formulário de auto-cadastro (caso habilitado),
-    // ou pode ser ocultada e substituída pelo fluxo de ADM cadastrar funcionário.
-
     @FXML
     private void handleCriarConta(ActionEvent event) {
         abrirModal("/br/edu/ufersa/pizzaria/views/CriarConta.fxml",
@@ -115,20 +108,7 @@ public class LoginController {
                 "Recuperar Senha");
     }
 
-    // =========================================================================
-    // MÉTODOS ESTÁTICOS UTILITÁRIOS
-    // Reutilizados por TODOS os outros controllers para navegar entre telas.
-    // (Já referenciados no GerenciarAdicionaisController existente)
-    // =========================================================================
 
-    /**
-     * Troca o conteúdo da janela atual por outro FXML.
-     * Mantém a mesma janela (Stage) aberta.
-     *
-     * @param event   Evento JavaFX (para obter o Stage atual)
-     * @param fxmlPath Caminho do FXML de destino (ex: "/views/PedidosView.fxml")
-     * @param titulo  Título da nova janela
-     */
     public static void trocarConteudo(ActionEvent event, String fxmlPath, String titulo) {
         try {
             FXMLLoader loader = new FXMLLoader(LoginController.class.getResource(fxmlPath));
@@ -154,13 +134,6 @@ public class LoginController {
         }
     }
 
-    /**
-     * Abre um FXML em uma nova janela modal (pop-up).
-     * Bloqueia a janela pai até o modal ser fechado.
-     *
-     * @param fxmlPath Caminho do FXML do modal
-     * @param titulo   Título da janela modal
-     */
     public static void abrirModal(String fxmlPath, String titulo) {
         try {
             FXMLLoader loader = new FXMLLoader(

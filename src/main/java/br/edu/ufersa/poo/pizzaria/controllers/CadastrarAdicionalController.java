@@ -35,8 +35,8 @@ public class CadastrarAdicionalController {
             double valor = Double.parseDouble(valorTxt.replace(",", "."));
             int quantidade = Integer.parseInt(qtdTxt);
 
-            // Regras pela service
-            adicionalService.cadastrarAdicional(nome, valor, quantidade);
+            // cadastra E já registra na reposicao_estoque para o relatório contabilizar
+            adicionalService.cadastrarAdicionalComReposicao(nome, valor, quantidade);
 
             mostrarAlerta(Alert.AlertType.INFORMATION, "Sucesso", "Adicional cadastrado com êxito!");
             fecharModal(event);

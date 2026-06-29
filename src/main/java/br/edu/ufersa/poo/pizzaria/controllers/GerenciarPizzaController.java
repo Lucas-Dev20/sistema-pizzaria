@@ -58,17 +58,6 @@ public class GerenciarPizzaController {
         renderizarCards(filtradas);
     }
 
-    /**
-     * Gera um card visual para cada pizza — igual ao design do PDF:
-     *   ┌─────────────────────────────────┐
-     *   │  Margherita              ✏ 🗑   │
-     *   │  Molho de tomate, ...           │
-     *   │ ─────────────────────────────   │
-     *   │  Preços por Tamanho             │
-     *   │  [Pequena  R$35] [Média R$44]   │
-     *   │  [Grande   R$52]                │
-     *   └─────────────────────────────────┘
-     */
     private void renderizarCards(List<Pizza> pizzas) {
         containerPizzas.getChildren().clear();
 
@@ -82,7 +71,7 @@ public class GerenciarPizzaController {
             cabecalho.setStyle("-fx-alignment: CENTER_LEFT;");
 
             // botões visíveis para todos (admin e funcionário)
-            // apenas o botão "+ Novo Sabor" é restrito ao admin (controlado no initialize)
+            // menos o botão "+ Novo Sabor", ele é restrito ao admin
             Button btnEditar = new Button("✏");
             btnEditar.setStyle("-fx-background-color: transparent; -fx-cursor: hand; -fx-font-size: 14px;");
             btnEditar.setOnAction(e -> abrirEdicao(pizza));
@@ -111,7 +100,7 @@ public class GerenciarPizzaController {
             HBox precos = new HBox(8, lblPeq, lblMed, lblGra);
             precos.setStyle("-fx-alignment: CENTER_LEFT;");
 
-            // ── card ──
+
             VBox card = new VBox(8, cabecalho, sep, lblPrecoTitulo, precos);
             card.setStyle("""
                     -fx-background-color: #F2F0EB;

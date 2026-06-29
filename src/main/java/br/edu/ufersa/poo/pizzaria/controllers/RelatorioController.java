@@ -28,30 +28,30 @@ import java.util.stream.Collectors;
 
 public class RelatorioController {
 
-    // ── FXML — filtros ────────────────────────────────────────────────────
+    // ── FXML — filtros
     @FXML private ComboBox<String> filtroPeriodo;
     @FXML private ComboBox<String> filtroEstado;
     @FXML private ComboBox<String> filtroSabor;
     @FXML private ComboBox<String> filtroCliente;
 
-    // ── FXML — métricas ───────────────────────────────────────────────────
+    // ── FXML — métricas
     @FXML private Label labelFaturamento;
     @FXML private Label labelCusto;
     @FXML private Label labelLucro;
     @FXML private Label labelTotalPedidos;
     @FXML private VBox  boxSaboresMaisVendidos;
 
-    // ── FXML — seções inferiores ──────────────────────────────────────────
+    // ── FXML — seções inferiores
     @FXML private HBox boxEstados;
     @FXML private VBox listaVendasCliente;
 
-    // ── Services / DAOs (mesmo padrão de PedidosController) ──────────────
+    // ── Services / DAOs
     private final PedidoService      pedidoService  = new PedidoService();
     private final ClienteService     clienteService = new ClienteService();
     private final PizzaService       pizzaService   = new PizzaService();
     private final ReposicaoEstoqueDAO reposicaoDAO  = new ReposicaoEstoqueDAO();
 
-    // ── Cache local ───────────────────────────────────────────────────────
+    // ── Cache local
     private List<Pedido>  todosPedidos  = new ArrayList<>();
     private List<Cliente> todosClientes = new ArrayList<>();
     private List<Pizza>   todasPizzas   = new ArrayList<>();
@@ -61,7 +61,7 @@ public class RelatorioController {
 
     private static final DateTimeFormatter FMT = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-    // ── INICIALIZAÇÃO ─────────────────────────────────────────────────────
+    // ── INICIALIZAÇÃO
     @FXML
     public void initialize() {
         carregarDadosDoBanco();
@@ -340,15 +340,7 @@ public class RelatorioController {
     }
 
     // ── EXPORTAR CSV ──────────────────────────────────────────────────────
-    /**
-     * Abre FileChooser, gera CSV com:
-     *  1. Filtros aplicados
-     *  2. Resumo financeiro (Faturamento / Custo / Lucro / Total pedidos)
-     *  3. Pedidos por estado
-     *  4. Sabores mais vendidos
-     *  5. Vendas por cliente
-     *  6. Detalhamento linha a linha de cada pedido
-     */
+
     @FXML
     private void exportarRelatorio(ActionEvent event) {
         FileChooser chooser = new FileChooser();

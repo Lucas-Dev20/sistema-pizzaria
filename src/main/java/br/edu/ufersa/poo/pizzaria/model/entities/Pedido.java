@@ -16,7 +16,7 @@ public class Pedido {
     private double valorTotal;
 
 
-    // Construtor completo ( para ler do banco)
+    // Construtor completo
     public Pedido(int idPedido, Cliente cliente, Pizza pizza, List<Adicional> adicionais,
                   String tamanho, String estado, LocalDate data) {
 
@@ -148,28 +148,32 @@ public class Pedido {
 
     public void calcularTotal() {
 
-        double total = 0;
-
-        // valor da pizza
-        if (pizza != null) {
-            total += pizza.getValor();
+        if (pizza == null) {
+            this.valorTotal = 0;
+            return;
         }
 
-        // adicionais
+        // O banco armazena o preço da Média como valor base.
+        // Pequena = 80% | Média = 100% | Grande = 125%
+        double valorBase = pizza.getValor();
+        double fatorTamanho = 1.0;
+
+        if (tamanho != null) {
+            switch (tamanho.trim()) {
+                case "Pequena", "P", "p" -> fatorTamanho = 0.80;
+                case "Média",   "M", "m" -> fatorTamanho = 1.00;
+                case "Grande",  "G", "g" -> fatorTamanho = 1.25;
+            }
+        }
+
+        double total = valorBase * fatorTamanho;
+
+        // soma valor de cada adicional selecionado
         if (adicionais != null) {
             for (Adicional a : adicionais) {
                 if (a != null) {
                     total += a.getValor();
                 }
-            }
-        }
-
-        // ajuste por tamanho
-        if (tamanho != null) {
-            if (tamanho.equalsIgnoreCase("M")) {
-                total += 5;
-            } else if (tamanho.equalsIgnoreCase("G")) {
-                total += 10;
             }
         }
 
@@ -190,4 +194,3 @@ public class Pedido {
                 '}';
     }
 }
-

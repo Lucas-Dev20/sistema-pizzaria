@@ -22,11 +22,8 @@ public class EditarSaborController {
     @FXML
     public void initialize() {}
 
-    /**
-     * Recebe a Pizza selecionada no card e preenche os campos.
-     * O banco tem apenas um valor — distribuímos nos 3 tamanhos
-     * com os mesmos multiplicadores usados na exibição dos cards.
-     */
+
+
     public void preencherCampos(Pizza pizza) {
         this.pizzaEmEdicao = pizza;
         txtSabor.setText(pizza.getTipo());

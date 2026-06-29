@@ -36,15 +36,14 @@ public class GerenciarPizzasController {
         } else {
             lblTipoUsuario.setText("Funcionário");
             btnNovoSabor.setVisible(false);
-            btnNovoSabor.setManaged(false); // tira o espaço morto do botão ocultado, por n ser admin
+            btnNovoSabor.setManaged(false);
         }
     }
 
     private void renderizarCardsPizza() {
-        // MENSAGEM EM CAPS LOCK: LIMPA O CONTAINER VISUAL ANTES DE CARREGAR AS NOVAS PIZZAS
+
         containerPizzas.getChildren().clear();
 
-        // ENVOLVIDO EM TRY/CATCH PARA PROTEGER A INTERFACE CASO EXISTA ALGUM DADO CORROMPIDO NO BANCO
         try {
             // MENSAGEM EM CAPS LOCK: BUSCANDO A LISTA REAL DE PIZZAS DO BANCO DE DADOS ATRAVÉS DA SERVICE
             // OBS: AJUSTE O NOME DO MÉTODO ABAIXO CONFORME SEU PIZZASERVICE DEPOIS (EX: listarTodasPizzas() OU SIMILAR)

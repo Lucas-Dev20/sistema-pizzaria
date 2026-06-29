@@ -59,28 +59,19 @@ public class EditarAdicionalController {
                 throw new IllegalArgumentException("A quantidade não pode ser negativa.");
             }
 
-            // ── CORREÇÃO PRINCIPAL ────────────────────────────────────────
             // Calcula a diferença entre a quantidade nova e a atual
             int diferenca = novaQuantidade - quantidadeAtual;
 
             if (diferenca > 0) {
                 // Quantidade AUMENTOU → é uma reposição de estoque
-                // creditarEstoque() chama reposicaoDAO.registrarReposicao()
-                // que grava em reposicao_estoque (id_adicional, quantidade,
                 // valor_unitario, valor_total) → aparece no custo do relatório
                 adicionalService.creditarEstoque(idAdicionalAtual, diferenca);
 
             } else if (diferenca < 0) {
                 // Quantidade DIMINUIU → é um consumo manual
-                // consumirEstoque() chama adicionalDAO.baixarEstoque()
-                // → UPDATE adicional SET quantidade = quantidade - ?
                 adicionalService.consumirEstoque(idAdicionalAtual, Math.abs(diferenca));
             }
-            // diferenca == 0 → quantidade não mudou, não precisa fazer nada no estoque
 
-            // ── Atualiza nome e valor se mudaram ─────────────────────────
-            // Só chama atualizarAdicional se nome ou valor mudaram,
-            // para não sobrescrever a quantidade que já foi ajustada acima
             Adicional adicionalAlterado = new Adicional(
                     idAdicionalAtual, novoNome, novoValor, novaQuantidade
             );

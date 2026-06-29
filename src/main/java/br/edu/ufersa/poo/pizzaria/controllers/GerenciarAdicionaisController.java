@@ -91,9 +91,7 @@ public class GerenciarAdicionaisController {
     }
 
     // ── ABRIR MODAL DE EDIÇÃO ──────────────────────────────────────────────
-    // Carrega o EditarAdicionalView.fxml que já existe no projeto,
-    // passa o Adicional selecionado para o EditarAdicionalController
-    // via preencherCampos(), e espera o modal fechar para atualizar a tabela.
+
     private void abrirEdicaoAdicional(Adicional adicional) {
         try {
             FXMLLoader loader = new FXMLLoader(

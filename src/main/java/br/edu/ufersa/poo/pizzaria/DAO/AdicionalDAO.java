@@ -14,24 +14,33 @@ public class AdicionalDAO implements ICrudDAO<Adicional> {
 
     //METODO SALVA OS ADICIONAIS APÓS INSERÇÃO DE DADOS
     @Override
+    // void — obrigatório pela ICrudDAO
     public void salvar(Adicional adicional) {
+        salvarERetornarId(adicional);
+    }
+
+    // retorna o id gerado — usado por cadastrarAdicionalComReposicao
+    public int salvarERetornarId(Adicional adicional) {
         String sql = "INSERT INTO adicional (nome, valor, quantidade) VALUES (?, ?, ?)";
 
         try (Connection conn = ConnectionFactory.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+             PreparedStatement stmt = conn.prepareStatement(sql, java.sql.Statement.RETURN_GENERATED_KEYS)) {
 
             stmt.setString(1, adicional.getNome());
             stmt.setDouble(2, adicional.getValor());
             stmt.setInt(3, adicional.getQtd());
-            // substituição das '?' do comando sql
-
             stmt.executeUpdate();
             System.out.println("Adicional salvo com sucesso!");
+
+            try (ResultSet rs = stmt.getGeneratedKeys()) {
+                if (rs.next()) return rs.getInt(1);
+            }
 
         } catch (SQLException e) {
             System.out.println("Erro no INSERT de Adicional:");
             e.printStackTrace();
         }
+        return -1;
     }
 
     // seleciona todos os adicionais para listar (*)
@@ -184,7 +193,7 @@ public class AdicionalDAO implements ICrudDAO<Adicional> {
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setInt(1, idBusca); // substituição das '?' do comando sql
+            stmt.setInt(1, idBusca);
 
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
@@ -200,6 +209,29 @@ public class AdicionalDAO implements ICrudDAO<Adicional> {
             e.printStackTrace();
         }
         return adicionalEncontrado;
+    }
+
+    // busca o adicional mais recente pelo nome — usado após INSERT para pegar o id gerado
+    public Adicional buscarPorNome(String nome) {
+        String sql = "SELECT * FROM adicional WHERE nome = ? ORDER BY id_adicional DESC LIMIT 1";
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, nome);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return new Adicional(
+                            rs.getInt("id_adicional"),
+                            rs.getString("nome"),
+                            rs.getDouble("valor"),
+                            rs.getInt("quantidade")
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Erro ao buscar adicional por nome:");
+            e.printStackTrace();
+        }
+        return null;
     }
 
     // metodo para baixar o estoque do adicional direto no bd

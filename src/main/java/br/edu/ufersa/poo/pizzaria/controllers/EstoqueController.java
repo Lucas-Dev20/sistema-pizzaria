@@ -1,6 +1,5 @@
 package br.edu.ufersa.poo.pizzaria.controllers;
 
-import br.edu.ufersa.poo.pizzaria.DAO.ReposicaoEstoqueDAO;
 import br.edu.ufersa.poo.pizzaria.model.entities.Adicional;
 import br.edu.ufersa.poo.pizzaria.model.services.AdicionalService;
 
@@ -17,14 +16,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Controller da tela de Estoque (EstoqueView.fxml).
- *
- * Exibe os itens de estoque (adicionais) em formato de tabela dinâmica,
- * com busca, filtro de status (Disponível / Esgotado) e modais de
- * Adicionar, Editar e Excluir — seguindo o mesmo padrão visual e
- * estrutural do PedidosController.
- */
+
 public class EstoqueController {
 
     // ── FXML ───────────────────────────────────────────────────────────────
@@ -34,7 +26,6 @@ public class EstoqueController {
 
     // ── SERVICE ────────────────────────────────────────────────────────────
     private final AdicionalService adicionalService = new AdicionalService();
-    private final ReposicaoEstoqueDAO reposicaoDAO = new ReposicaoEstoqueDAO();
 
     // Cache local
     private List<Adicional> todosItens = new ArrayList<>();
@@ -306,7 +297,7 @@ public class EstoqueController {
 
             try {
                 if (editando) {
-                    // 1. Atualiza o nome se mudou (mantém preço de venda original)
+                    // 1. Atualiza o nome se mudou
                     if (!nome.equals(item.getNome())) {
                         Adicional atualizado = new Adicional(
                                 item.getIdAdicional(), nome,
@@ -314,33 +305,18 @@ public class EstoqueController {
                         );
                         adicionalService.atualizarAdicional(atualizado, item.getNome());
                     }
-                    // 2. Registra reposição:
-                    //    → adicionalDAO.reporEstoque() sobe a quantidade no banco
-                    //    → reposicaoDAO.registrarReposicao() grava
-                    //       valor_unitario=custoUnitario e valor_total=qtd*custo
-                    //    Isso alimenta o relatório de gastos (custo de reposição)
-                    adicionalService.creditarEstoque(item.getIdAdicional(), quantidade);
-                    // Sobrescreve o registro com o custo real informado pelo usuário
-                    // (creditarEstoque usa item.getValor() como custo; aqui usamos
-                    //  o custo digitado, que pode diferir do preço de venda)
-                    reposicaoDAO.registrarReposicao(
+                    // 2. Repõe o estoque E registra a reposição com o custo correto
+                    //    (não chama creditarEstoque pois ele registraria com valor errado)
+                    adicionalService.creditarEstoqueComCusto(
                             item.getIdAdicional(), quantidade, custoUnitario
                     );
 
                 } else {
-                    // 1. Cadastra o novo adicional (custo de compra = "valor" inicial)
-                    //    O preço de venda poderá ser ajustado na tela de Adicionais.
-                    adicionalService.cadastrarAdicional(nome, custoUnitario, quantidade);
-
-                    // 2. Busca o id recém-gerado para registrar a entrada inicial
-                    //    no histórico de reposição → o relatório já começa correto.
-                    List<Adicional> lista = adicionalService.listarTodosAdicionais();
-                    lista.stream()
-                            .filter(a -> a.getNome().equalsIgnoreCase(nome))
-                            .findFirst()
-                            .ifPresent(a -> reposicaoDAO.registrarReposicao(
-                                    a.getIdAdicional(), quantidade, custoUnitario
-                            ));
+                    // Cadastra o novo adicional E já registra a reposição inicial
+                    // tudo dentro do service para garantir atomicidade
+                    adicionalService.cadastrarAdicionalComReposicao(
+                            nome, custoUnitario, quantidade
+                    );
                 }
 
                 carregarDados();
