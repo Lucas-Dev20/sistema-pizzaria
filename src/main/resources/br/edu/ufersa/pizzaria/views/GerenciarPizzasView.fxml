@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.lang.String?>
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
@@ -18,54 +17,51 @@
 
     <!-- MENU LATERAL ESQUERDO COM SÍMBOLOS E MÉTODOS DE NAVEGAÇÃO -->
     <left>
-        <VBox prefWidth="200.0" spacing="10" styleClass="sidebar">
-            <ImageView fitWidth="180.0" preserveRatio="true" style="-fx-padding: 0 0 20 0;">
+        <VBox maxWidth="-Infinity" prefHeight="400.0" prefWidth="116.0" spacing="10" styleClass="sidebar">
+            <ImageView fitWidth="150" preserveRatio="true" style="-fx-padding: 0 0 20 0;">
                 <image>
                     <Image url="@../images/logo.png" />
                 </image>
-            <VBox.margin>
-               <Insets top="-40.0" />
-            </VBox.margin>
             </ImageView>
 
-            <Button alignment="CENTER" minHeight="-Infinity" onAction="#irPedidos" text="📋 Pedidos" VBox.vgrow="ALWAYS">
+            <Button alignment="CENTER" maxWidth="1.7976931348623157E308" onAction="#irPedidos" prefHeight="31.0" prefWidth="198.0" text="📋 Pedidos" VBox.vgrow="ALWAYS">
                 <styleClass>
                     <String fx:value="sidebar-btn" />
                     <String fx:value="dashboard-menu-item-border" />
                 </styleClass></Button>
 
-            <Button minHeight="-Infinity" onAction="#irClientes" text="👥 Clientes">
+            <Button onAction="#irClientes" text="👥 Clientes">
                 <styleClass>
                     <String fx:value="sidebar-btn" />
                     <String fx:value="dashboard-menu-item-border" />
                 </styleClass></Button>
 
-            <Button minHeight="-Infinity" onAction="#irTiposPizza" text="🍕 Tipos de Pizza">
+            <Button onAction="#irTiposPizza" text="🍕 Tipos de pizza">
                 <styleClass>
                     <String fx:value="sidebar-btn-active" />
                     <String fx:value="dashboard-menu-item-border" />
                 </styleClass></Button>
 
-            <Button minHeight="-Infinity" onAction="#irAdicionais" text="💼 Adicionais">
+            <Button onAction="#irAdicionais" text="💼 Adicionais">
                 <styleClass>
                     <String fx:value="sidebar-btn" />
                     <String fx:value="dashboard-menu-item-border" />
                 </styleClass></Button>
 
-            <Button minHeight="-Infinity" onAction="#irEstoque" text="📦 Estoque">
+            <Button onAction="#irEstoque" text="📦 Estoque">
                 <styleClass>
                     <String fx:value="sidebar-btn" />
                     <String fx:value="dashboard-menu-item-border" />
                 </styleClass></Button>
 
-            <Button minHeight="-Infinity" onAction="#irRelatorios" text="📊 Relatórios">
+            <Button onAction="#irRelatorios" text="📊Relatórios">
                 <styleClass>
                     <String fx:value="sidebar-btn" />
                     <String fx:value="dashboard-menu-item-border" />
                 </styleClass></Button>
 
 
-            <Button minHeight="-Infinity" onAction="#irFuncionarios" text="👤 Funcionários">
+            <Button onAction="#irFuncionarios" text="👤 Funcionários">
                 <styleClass>
                     <String fx:value="sidebar-btn" />
                     <String fx:value="dashboard-menu-item-border" />
@@ -74,7 +70,7 @@
 
             <Region prefHeight="250.0" prefWidth="170.0" styleClass="dashboard-menu-item-border" stylesheets="@../css/style.css" VBox.vgrow="ALWAYS" />
 
-            <Button minHeight="-Infinity" onAction="#sair" styleClass="sidebar-btn-exit" text="🚪 Sair" />
+            <Button onAction="#sair" styleClass="sidebar-btn-exit" text="🚪 Sair" />
         </VBox>
     </left>
 
@@ -90,7 +86,7 @@
 
                 <HBox alignment="CENTER_LEFT" spacing="20">
                     <TextField fx:id="txtBusca" promptText="Buscar sabor..." styleClass="search-field" HBox.hgrow="ALWAYS" />
-                    <Button fx:id="btnNovoSabor" onAction="#handleNovoSabor" styleClass="btn-success" text="+ Novo Sabor" />
+                    <Button fx:id="btnNovoSabor" onAction="#handleNovoSabor" text="+ Novo Sabor" />
                 </HBox>
 
                 <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-background-insets: 0; -fx-padding: 5;" VBox.vgrow="ALWAYS">

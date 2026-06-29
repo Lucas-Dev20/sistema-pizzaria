@@ -2,10 +2,7 @@ package br.edu.ufersa.poo.pizzaria.DAO;
 
 import java.util.List;
 
-/*Interface genérica de CRUD — PADRÃO DAO/REPOSITORY.
- Cumpre dois requisitos do trabalho que são utilizar interfaces" → todos os DAOs implementam esta interface
-e Padrão de projeto DAO (um dos 3 obrigatórios)
-  @param <T> Tipo da entidade gerenciada (Cliente, Usuario, Pizza, etc.)*/
+/*Interface genérica de CRUD - utiliza interfaces" */
 
 public interface ICrudDAO<T> {
 

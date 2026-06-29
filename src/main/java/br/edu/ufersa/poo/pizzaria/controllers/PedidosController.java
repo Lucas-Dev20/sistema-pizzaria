@@ -31,9 +31,9 @@ public class PedidosController {
     @FXML private VBox listaPedidos;
 
     // ── SERVICES
-    // Observer: EstoqueService recebe notificação ao cadastrar pedido
+    // PADRÃO OBSERVER (GoF, pág. 293) — registro via addObserver()
     private final EstoqueService   estoqueService  = new EstoqueService(new EstoqueDAO());
-    private final PedidoService    pedidoService   = new PedidoService(estoqueService);
+    private final PedidoService    pedidoService   = criarPedidoService();
     private final ClienteService   clienteService  = new ClienteService();
     private final PizzaService     pizzaService    = new PizzaService();
     private final AdicionalService adicionalService = new AdicionalService();
@@ -423,4 +423,10 @@ public class PedidosController {
     @FXML private void irRelatorios(ActionEvent e)   { LoginController.trocarConteudo(e, "/br/edu/ufersa/pizzaria/views/RelatorioView.fxml",           "Relatórios"); }
     @FXML private void irFuncionarios(ActionEvent e) { LoginController.trocarConteudo(e, "/br/edu/ufersa/pizzaria/views/GerenciarFuncionariosView.fxml","La Piazza - Funcionários"); }
     @FXML private void sair(ActionEvent e)           { LoginController.trocarConteudo(e, "/br/edu/ufersa/pizzaria/views/LoginView.fxml",               "La Piazza Pizzaria"); }
+    // Cria o PedidoService e registra o EstoqueService como observer (GoF canônico)
+    private PedidoService criarPedidoService() {
+        PedidoService service = new PedidoService();
+        service.addObserver(estoqueService);
+        return service;
+    }
 }

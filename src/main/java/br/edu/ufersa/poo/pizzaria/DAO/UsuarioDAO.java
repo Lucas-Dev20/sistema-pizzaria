@@ -8,15 +8,10 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * DAO responsável por persistir e recuperar usuários do banco de dados.
- *
- * Implementa ICrudDAO<Usuario> → cumpre o requisito de interface do trabalho.
- * (ICrudDAO é a interface genérica de CRUD definida separadamente.)
- */
+
 public class UsuarioDAO implements ICrudDAO<Usuario> {
 
-    // ── SALVAR ────────────────────────────────────────────────────────────────
+    // ── SALVAR
     @Override
     public void salvar(Usuario usuario) {
         String sql = "INSERT INTO usuario (nome, email, senha, perfil, ativo) VALUES (?, ?, ?, ?, ?)";
@@ -45,7 +40,7 @@ public class UsuarioDAO implements ICrudDAO<Usuario> {
         }
     }
 
-    // ── BUSCAR POR ID ─────────────────────────────────────────────────────────
+    // ── BUSCAR POR ID
     @Override
     public Usuario buscarPorId(int id) {
         String sql = "SELECT * FROM usuario WHERE id_usuario = ?";
@@ -67,11 +62,8 @@ public class UsuarioDAO implements ICrudDAO<Usuario> {
         return null;
     }
 
-    // ── BUSCAR POR EMAIL (usado no login) ─────────────────────────────────────
-    /**
-     * Busca o usuário pelo e-mail — usado pela autenticação de login.
-     * @return Usuario encontrado, ou null se não existir.
-     */
+    // ── Bucsar o usuário pelo e-mail — usado pela autenticação de login.
+
     public Usuario buscarPorEmail(String email) {
         String sql = "SELECT * FROM usuario WHERE email = ? AND ativo = TRUE";
 
@@ -92,7 +84,6 @@ public class UsuarioDAO implements ICrudDAO<Usuario> {
         return null;
     }
 
-    // ── LISTAR TODOS ──────────────────────────────────────────────────────────
     @Override
     public List<Usuario> listarTodos() {
         String sql = "SELECT * FROM usuario ORDER BY nome";
@@ -112,7 +103,7 @@ public class UsuarioDAO implements ICrudDAO<Usuario> {
         return lista;
     }
 
-    // ── LISTAR APENAS FUNCIONÁRIOS ────────────────────────────────────────────
+
     public List<Usuario> listarFuncionarios() {
         String sql = "SELECT * FROM usuario WHERE perfil = 'FUNCIONARIO' ORDER BY nome";
         List<Usuario> lista = new ArrayList<>();
@@ -131,7 +122,6 @@ public class UsuarioDAO implements ICrudDAO<Usuario> {
         return lista;
     }
 
-    // ── ATUALIZAR ─────────────────────────────────────────────────────────────
     @Override
     public void atualizar(Usuario usuario) {
         String sql = "UPDATE usuario SET nome = ?, email = ?, perfil = ?, ativo = ? WHERE id_usuario = ?";
@@ -153,7 +143,6 @@ public class UsuarioDAO implements ICrudDAO<Usuario> {
         }
     }
 
-    // ── ATUALIZAR SENHA ───────────────────────────────────────────────────────
     public void atualizarSenha(int idUsuario, String novaSenhaHash) {
         String sql = "UPDATE usuario SET senha = ? WHERE id_usuario = ?";
 
@@ -186,7 +175,7 @@ public class UsuarioDAO implements ICrudDAO<Usuario> {
         }
     }
 
-    // ── VERIFICAR SE EMAIL JÁ EXISTE ──────────────────────────────────────────
+
     public boolean emailJaExiste(String email) {
         String sql = "SELECT COUNT(*) FROM usuario WHERE email = ?";
 
@@ -207,7 +196,6 @@ public class UsuarioDAO implements ICrudDAO<Usuario> {
         return false;
     }
 
-    // ── MAPEAMENTO ResultSet → Usuario ────────────────────────────────────────
     private Usuario mapearResultSet(ResultSet rs) throws SQLException {
         int    id      = rs.getInt("id_usuario");
         String nome    = rs.getString("nome");

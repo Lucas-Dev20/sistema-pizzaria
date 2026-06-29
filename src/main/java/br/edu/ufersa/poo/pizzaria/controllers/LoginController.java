@@ -15,15 +15,6 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-/**
- * Controller da tela de Login.
- *
- * Responsabilidades:
- *   1. Autenticar o usuário com e-mail + senha.
- *   2. Após login bem-sucedido, redirecionar para o Painel de controle.
- *   3. Métodos estáticos utilitários reutilizados pelos outros controllers
- *      (trocarConteudo, abrirModal) — já referenciados no código existente.
- */
 public class LoginController {
 
     // ── Componentes da tela
@@ -31,13 +22,13 @@ public class LoginController {
     @FXML private PasswordField txtSenha;
     @FXML private Label         lblErro;
 
-    // ── Perfil selecionado pelos botões laterais ───────────────────────────────
+    // ── Perfil selecionado pelos botões laterais
 
     private String perfilSelecionado = null; // "ADMIN" ou "FUNCIONARIO"
 
     private final UsuarioService usuarioService = new UsuarioService();
 
-    // ── Inicialização ─────────────────────────────────────────────────────────
+    // ── Inicialização
     @FXML
     public void initialize() {
         lblErro.setVisible(false);
@@ -45,12 +36,11 @@ public class LoginController {
         try {
             usuarioService.garantirAdminPadrao();
         } catch (Exception e) {
-            // Silencia na tela; log no console
             System.err.println("Aviso: não foi possível garantir admin padrão: " + e.getMessage());
         }
     }
 
-    // ── Seleção de perfil (botões laterais) ───────────────────────────────────
+    // ── Seleção de perfil
 
     @FXML private Button btnAdmin;
     @FXML private Button btnFuncionario;
@@ -69,7 +59,7 @@ public class LoginController {
         btnAdmin.setStyle(""); // reseta o outro
     }
 
-    // ── Login ─────────────────────────────────────────────────────────────────
+    // ── Login
 
     @FXML
     private void handleEntrar(ActionEvent event) {
@@ -100,7 +90,7 @@ public class LoginController {
                 "Criar Conta");
     }
 
-    // ── Recuperar senha ───────────────────────────────────────────────────────
+    // ── Recuperar senha
 
     @FXML
     private void handleEsqueceuSenha(ActionEvent event) {
@@ -154,15 +144,6 @@ public class LoginController {
         }
     }
 
-    /**
-     * Abre um modal e retorna o controller carregado.
-     * Útil quando o controller do modal precisa receber dados (ex: edição).
-     *
-     * @param fxmlPath Caminho do FXML
-     * @param titulo   Título da janela
-     * @param <T>      Tipo do controller esperado
-     * @return O controller do FXML carregado, ou null em caso de erro
-     */
     public static <T> T abrirModalComController(String fxmlPath, String titulo) {
         try {
             FXMLLoader loader = new FXMLLoader(
@@ -184,7 +165,7 @@ public class LoginController {
         }
     }
 
-    // ── Helper de alerta estático ─────────────────────────────────────────────
+    // ── Helper de alerta estático
 
     private static void mostrarAlertaEstatico(Alert.AlertType tipo, String titulo, String msg) {
         Alert alert = new Alert(tipo);

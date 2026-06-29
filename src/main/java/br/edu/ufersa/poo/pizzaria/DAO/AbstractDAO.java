@@ -9,21 +9,19 @@ import java.util.List;
 /* PADRÃO TEMPLATE METHOD */
 public abstract class AbstractDAO<T> implements ICrudDAO<T> {
 
-    // ── Hooks abstratos — cada DAO concreto define o seu ─────────────────────
-
-    /** Retorna o SQL de INSERT desta entidade. */
+    /* Retorna o SQL de INSERT desta entidade. */
     protected abstract String getInsertSQL();
 
-    /** Preenche os parâmetros do PreparedStatement para o INSERT. */
+    /* Preenche os parâmetros do PreparedStatement para o INSERT. */
     protected abstract void preencherInsert(PreparedStatement ps, T obj) throws SQLException;
 
-    /** Retorna o nome da tabela no banco de dados. */
+    /* Retorna o nome da tabela no banco de dados. */
     protected abstract String getTabela();
 
-    /** Converte uma linha do ResultSet no objeto de domínio. */
+    /* Converte uma linha do ResultSet no objeto de domínio. */
     protected abstract T mapear(ResultSet rs) throws SQLException;
 
-    // ── Template: salvar() ────────────────────────────────────────────────────
+    // ── Template: salvar()
     @Override
     public void salvar(T obj) {
         String sql = getInsertSQL();

@@ -7,7 +7,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/* PizzaDAO estende AbstractDAO<Pizza> — padrão Template Method (GoF, pág. 325). */
+/* PizzaDAO estende AbstractDAO<Pizza> — padrão Template Method  */
 
 public class PizzaDAO extends AbstractDAO<Pizza> {
 
@@ -42,8 +42,7 @@ public class PizzaDAO extends AbstractDAO<Pizza> {
         );
     }
 
-    // ── Métodos específicos de Pizza (não cobertos pelo template) ─────────────
-
+    // ── Métodos específicos de Pizza
     // READ - BUSCAR POR ID
     @Override
     public Pizza buscarPorId(int id) {
@@ -68,7 +67,7 @@ public class PizzaDAO extends AbstractDAO<Pizza> {
         return null;
     }
 
-    // READ - BUSCAR POR TIPO
+
     public List<Pizza> buscarPorTipo(String tipo) {
 
         List<Pizza> pizzas = new ArrayList<>();
@@ -93,12 +92,11 @@ public class PizzaDAO extends AbstractDAO<Pizza> {
         return pizzas;
     }
 
-    // READ - LISTAR TODAS (alias mantido para compatibilidade com PizzaService)
     public List<Pizza> listarTodas() {
         return listarTodos();  // delega ao template de AbstractDAO
     }
 
-    // UPDATE
+
     @Override
     public void atualizar(Pizza pizza) {
 
@@ -126,7 +124,7 @@ public class PizzaDAO extends AbstractDAO<Pizza> {
         }
     }
 
-    // DELETE
+
     @Override
     public void remover(int id) {
 

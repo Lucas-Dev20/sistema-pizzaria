@@ -30,9 +30,9 @@ public class GerenciarPizzaController {
     // ── INICIALIZAÇÃO ─────────────────────────────────────────────────────────
     @FXML
     public void initialize() {
-        boolean ehAdmin = SessaoUsuario.getInstance().usuarioEhAdmin();
-        btnNovoSabor.setVisible(ehAdmin);
-        btnNovoSabor.setManaged(ehAdmin);
+        // Botão sempre visível — AcessoNegadoException bloqueia ao clicar se for funcionário
+        btnNovoSabor.setVisible(true);
+        btnNovoSabor.setManaged(true);
 
         // filtra enquanto digita
         txtBusca.textProperty().addListener((obs, antigo, novo) -> filtrarPizzas(novo));
@@ -132,6 +132,7 @@ public class GerenciarPizzaController {
     // ── AÇÕES RESTRITAS AO ADMIN ──────────────────────────────────────────────
     @FXML
     private void handleNovoSabor(ActionEvent event) {
+        System.out.println("[DEBUG] handleNovoSabor chamado — usuário: " + SessaoUsuario.getInstance().getUsuarioLogado().getPerfil());
         try {
             verificarAdmin("cadastrar novo tipo de pizza");
             abrirModal("/br/edu/ufersa/pizzaria/views/CadastrarSaborView.fxml",

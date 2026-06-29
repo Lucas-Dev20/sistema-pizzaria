@@ -7,8 +7,8 @@ public class AcessoNegadoException extends RuntimeException {
     private final String perfilAtual;
 
     /*
-     * @param operacao    Descrição da operação bloqueada ("cadastrar tipo de pizza")
-     * @param perfilAtual Perfil do usuário que tentou a operação ( "FUNCIONARIO")
+      Descrição da operação bloqueada ("cadastrar tipo de pizza")
+      Perfil do usuário que tentou a operação ( "FUNCIONARIO")
      */
     public AcessoNegadoException(String operacao, String perfilAtual) {
         super("Acesso negado: a operação \"" + operacao + "\" é restrita ao Administrador. "

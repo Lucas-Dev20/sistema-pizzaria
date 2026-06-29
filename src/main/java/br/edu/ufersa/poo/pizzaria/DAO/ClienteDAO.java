@@ -7,18 +7,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * PADRÃO TEMPLATE METHOD — ClienteDAO extends AbstractDAO<Cliente>
- *
- * Os métodos salvar() e listarTodos() são herdados de AbstractDAO.
- * Aqui só precisamos implementar os 4 hooks abstratos e manter os métodos
- * específicos desta entidade (buscarPorNome, remover por telefone, cascata).
- */
-public class ClienteDAO extends AbstractDAO<Cliente> {
 
-    // ══════════════════════════════════════════════════════════════════════════
-    //  HOOKS DO TEMPLATE METHOD — implementação obrigatória da AbstractDAO
-    // ══════════════════════════════════════════════════════════════════════════
+public class ClienteDAO extends AbstractDAO<Cliente> {
 
     @Override
     protected String getInsertSQL() {
@@ -51,11 +41,7 @@ public class ClienteDAO extends AbstractDAO<Cliente> {
         );
     }
 
-    // ══════════════════════════════════════════════════════════════════════════
-    //  CRUD ESPECÍFICO — métodos não cobertos pelo template genérico
-    // ══════════════════════════════════════════════════════════════════════════
-
-    /** buscarPorId — implementação obrigatória de ICrudDAO (via AbstractDAO). */
+    /** buscarPorId — implementação obrigatória de ICrudDAO - via AbstractDAO */
     @Override
     public Cliente buscarPorId(int idBusca) {
         String sql = "SELECT * FROM cliente WHERE id_cliente = ?";
@@ -76,7 +62,7 @@ public class ClienteDAO extends AbstractDAO<Cliente> {
         return null;
     }
 
-    /** Busca clientes pelo nome (LIKE). */
+    /** Busca clientes pelo nome */
     public List<Cliente> buscarPorNome(String nomeBusca) {
         String sql = "SELECT * FROM cliente WHERE nome LIKE ?";
         List<Cliente> lista = new ArrayList<>();
@@ -97,7 +83,7 @@ public class ClienteDAO extends AbstractDAO<Cliente> {
         return lista;
     }
 
-    /** atualizar — implementação obrigatória de ICrudDAO (via AbstractDAO). */
+    /** atualizar — implementação obrigatória de ICrudDAO - via AbstractDAO */
     @Override
     public void atualizar(Cliente cliente) {
         String sql = "UPDATE cliente SET nome = ?, endereco = ?, cpf = ?, telefone = ?, bairro = ? WHERE id_cliente = ?";
@@ -125,10 +111,6 @@ public class ClienteDAO extends AbstractDAO<Cliente> {
         }
     }
 
-    /**
-     * remover por ID — faz DELETE em cascata via transação:
-     * pedido_adicional → pedido → cliente
-     */
     @Override
     public void remover(int id) {
         String sqlGetPedidos      = "SELECT id_pedido FROM pedido WHERE id_cliente = ?";
@@ -185,10 +167,6 @@ public class ClienteDAO extends AbstractDAO<Cliente> {
         }
     }
 
-    /**
-     * remover por telefone — mantido para compatibilidade com ClienteService
-     * e GerenciarClientesController que usam telefone como identificador.
-     */
     public void remover(String telefone) {
         String sqlGetId           = "SELECT id_cliente FROM cliente WHERE telefone = ?";
         String sqlGetPedidos      = "SELECT id_pedido FROM pedido WHERE id_cliente = ?";

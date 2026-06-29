@@ -7,19 +7,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * PADRÃO TEMPLATE METHOD — AdicionalDAO extends AbstractDAO<Adicional>
- *
- * Os métodos salvar() e listarTodos() são herdados de AbstractDAO.
- * Aqui só precisamos implementar os 4 hooks abstratos (getInsertSQL,
- * preencherInsert, getTabela, mapear) e manter os métodos específicos
- * desta entidade (baixarEstoque, reporEstoque, buscarPorNome, remover por nome).
- */
 public class AdicionalDAO extends AbstractDAO<Adicional> {
 
-    // ══════════════════════════════════════════════════════════════════════════
-    //  HOOKS DO TEMPLATE METHOD — implementação obrigatória da AbstractDAO
-    // ══════════════════════════════════════════════════════════════════════════
 
     @Override
     protected String getInsertSQL() {
@@ -48,14 +37,6 @@ public class AdicionalDAO extends AbstractDAO<Adicional> {
         );
     }
 
-    // ══════════════════════════════════════════════════════════════════════════
-    //  OVERRIDE: salvar — versão que retorna o ID gerado (mantém compatibilidade)
-    // ══════════════════════════════════════════════════════════════════════════
-
-    /**
-     * Sobrescreve o salvar() do AbstractDAO para retornar o ID gerado.
-     * Necessário porque AdicionalService usa o ID logo após o INSERT.
-     */
     @Override
     public void salvar(Adicional adicional) {
         salvarERetornarId(adicional);
@@ -81,9 +62,6 @@ public class AdicionalDAO extends AbstractDAO<Adicional> {
         return -1;
     }
 
-    // ══════════════════════════════════════════════════════════════════════════
-    //  CRUD ESPECÍFICO — métodos não cobertos pelo template genérico
-    // ══════════════════════════════════════════════════════════════════════════
 
     /** buscarPorId — implementação obrigatória de ICrudDAO (via AbstractDAO). */
     @Override
@@ -132,10 +110,7 @@ public class AdicionalDAO extends AbstractDAO<Adicional> {
         atualizar(adicional, adicional.getNome());
     }
 
-    /**
-     * Versão com nomeAntigo — necessária porque Adicional não tem chave
-     * numérica obrigatória na busca de atualização (pode-se mudar o próprio nome).
-     */
+
     public void atualizar(Adicional adicional, String nomeAntigo) {
         String sql = "UPDATE adicional SET nome = ?, valor = ?, quantidade = ? WHERE nome = ?";
 
@@ -160,7 +135,7 @@ public class AdicionalDAO extends AbstractDAO<Adicional> {
         }
     }
 
-    /** remover por ID — implementação obrigatória de ICrudDAO (via AbstractDAO). */
+    /** remover por ID — implementação obrigatória de ICrudDAO -via AbstractDAO */
     @Override
     public void remover(int id) {
         Adicional a = buscarPorId(id);
@@ -168,8 +143,7 @@ public class AdicionalDAO extends AbstractDAO<Adicional> {
     }
 
     /**
-     * remover por nome — faz DELETE em cascata via transação:
-     * pedido_adicional → reposicao_estoque → adicional
+     * remover por nome
      */
     public void remover(String nomeAdicional) {
         String sqlBuscaId        = "SELECT id_adicional FROM adicional WHERE nome = ?";
