@@ -2,6 +2,7 @@
 
 <?import java.lang.*?>
 <?import javafx.geometry.*?>
+<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
@@ -16,6 +17,15 @@
                     <Image url="@../images/logo.png" />
                 </image>
             </ImageView>
+         <Button mnemonicParsing="false" onAction="#irPainel" text="⚙ Painel de Controle">
+            <cursor>
+               <Cursor fx:constant="HAND" />
+            </cursor>
+            <styleClass>
+               <String fx:value="sidebar-btn" />
+               <String fx:value="dashboard-menu-item-border" />
+            </styleClass>
+         </Button>
 
             <Button onAction="#irPedidos" text="📋 Pedidos">
             <styleClass>

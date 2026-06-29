@@ -181,6 +181,9 @@ public class GerenciarClientesController {
         atualizarTabela();
     }
     //METODOS DE NAVEGAÇÃO
+
+    @FXML private void irPainel(ActionEvent event) {LoginController.trocarConteudo(event, "/br/edu/ufersa/pizzaria/views/PainelDeControle.fxml", "La Piazza - Painel de Controle");}
+
     @FXML
     private void irPedidos(ActionEvent event) {
         LoginController.trocarConteudo(event, "/br/edu/ufersa/pizzaria/views/Pedidos.fxml", "La Piazza - Pedidos");

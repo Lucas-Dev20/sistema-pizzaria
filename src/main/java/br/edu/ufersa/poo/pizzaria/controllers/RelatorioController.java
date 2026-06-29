@@ -479,6 +479,7 @@ public class RelatorioController {
     }
 
     // ── NAVEGAÇÃO (mesmo padrão exato de PedidosController) ──────────────
+    @FXML private void irPainel(ActionEvent event) {LoginController.trocarConteudo(event, "/br/edu/ufersa/pizzaria/views/PainelDeControle.fxml", "La Piazza - Painel de Controle");}
     @FXML private void irPedidos(ActionEvent e)    { LoginController.trocarConteudo(e, "/br/edu/ufersa/pizzaria/views/Pedidos.fxml",                  "Pedidos"); }
     @FXML private void irClientes(ActionEvent e)   { LoginController.trocarConteudo(e, "/br/edu/ufersa/pizzaria/views/GerenciarClientesView.fxml",    "Clientes"); }
     @FXML private void irTiposPizza(ActionEvent e) { LoginController.trocarConteudo(e, "/br/edu/ufersa/pizzaria/views/GerenciarPizzasView.fxml",      "Tipos de pizza"); }
