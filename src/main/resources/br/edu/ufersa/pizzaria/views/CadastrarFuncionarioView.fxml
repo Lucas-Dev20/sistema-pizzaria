@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<!--
+  CadastrarFuncionarioView.fxml
+  Modal para o ADMIN cadastrar novos funcionários.
+  Mesmo estilo visual dos outros modais do sistema (fundo claro, botão Salvar laranja).
+-->
+<VBox xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="br.edu.ufersa.poo.pizzaria.controllers.CadastrarFuncionarioController"
+      spacing="18" prefWidth="440"
+      style="-fx-padding: 36; -fx-background-color: #F5F5F5;">
+
+    <Label text="Cadastrar Funcionário"
+           style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+
+    <!-- Nome -->
+    <VBox spacing="4">
+        <Label text="Nome completo" style="-fx-font-size: 13px;"/>
+        <TextField fx:id="txtNome" promptText="Digite o nome completo"
+                   style="-fx-background-color: #E8E8E8; -fx-background-radius: 8;
+                          -fx-padding: 10 14; -fx-border-width: 0;"/>
+    </VBox>
+
+    <!-- E-mail -->
+    <VBox spacing="4">
+        <Label text="E-mail" style="-fx-font-size: 13px;"/>
+        <TextField fx:id="txtEmail" promptText="email@exemplo.com"
+                   style="-fx-background-color: #E8E8E8; -fx-background-radius: 8;
+                          -fx-padding: 10 14; -fx-border-width: 0;"/>
+    </VBox>
+
+    <!-- Senha -->
+    <VBox spacing="4">
+        <Label text="Senha" style="-fx-font-size: 13px;"/>
+        <PasswordField fx:id="txtSenha" promptText="Mínimo 4 caracteres"
+                       style="-fx-background-color: #E8E8E8; -fx-background-radius: 8;
+                              -fx-padding: 10 14; -fx-border-width: 0;"/>
+    </VBox>
+
+    <!-- Confirmar senha -->
+    <VBox spacing="4">
+        <Label text="Confirmar senha" style="-fx-font-size: 13px;"/>
+        <PasswordField fx:id="txtConfirmarSenha" promptText="Repita a senha"
+                       style="-fx-background-color: #E8E8E8; -fx-background-radius: 8;
+                              -fx-padding: 10 14; -fx-border-width: 0;"/>
+    </VBox>
+
+    <!-- Botões -->
+    <HBox spacing="16" alignment="CENTER" style="-fx-padding: 10 0 0 0;">
+        <Button text="Cancelar"
+                onAction="#handleCancelar"
+                prefWidth="160"
+                style="-fx-background-color: white; -fx-background-radius: 30;
+                       -fx-border-color: #CCCCCC; -fx-border-radius: 30;
+                       -fx-padding: 10 0; -fx-cursor: hand;"/>
+        <Button text="Salvar"
+                onAction="#handleSalvar"
+                prefWidth="160"
+                style="-fx-background-color: #C0392B; -fx-text-fill: white;
+                       -fx-background-radius: 30; -fx-padding: 10 0;
+                       -fx-font-weight: bold; -fx-cursor: hand;"/>
+    </HBox>
+</VBox>

@@ -6,7 +6,7 @@ import java.util.List;
 
 public class Pedido {
 
-
+    private int idPedido;
     private Cliente cliente;
     private Pizza pizza;
     private List<Adicional> adicionais;
@@ -14,7 +14,22 @@ public class Pedido {
     private String estado;
     private LocalDate data;
     private double valorTotal;
+    private String formaPagamento;
 
+    // Construtor completo
+    public Pedido(int idPedido, Cliente cliente, Pizza pizza, List<Adicional> adicionais,
+                  String tamanho, String estado, LocalDate data) {
+
+        setIdPedido(idPedido);
+        setCliente(cliente);
+        setPizza(pizza);
+        setAdicionais(adicionais);
+        setTamanho(tamanho);
+        setEstado(estado);
+        setData(data);
+
+        calcularTotal();
+    }
 
     // Construtor
     public Pedido(Cliente cliente, Pizza pizza, List<Adicional> adicionais,
@@ -34,6 +49,9 @@ public class Pedido {
 
 
     // Getters
+
+
+    public int getIdPedido() {return idPedido;}
 
 
     public Cliente getCliente() {
@@ -70,9 +88,16 @@ public class Pedido {
         return valorTotal;
     }
 
+    public String getFormaPagamento() { return formaPagamento; }
 
     // Setters
 
+    public void setIdPedido(int idPedido) {
+
+        if (idPedido > 0) {
+            this.idPedido = idPedido;
+        }
+    }
 
     public void setCliente(Cliente cliente) {
         if (cliente != null) {
@@ -118,23 +143,31 @@ public class Pedido {
         }
     }
 
+    public void setFormaPagamento(String formaPagamento) { this.formaPagamento = formaPagamento; }
 
     // Para calcular
 
 
     public void calcularTotal() {
 
-
-        double total = 0;
-
-
-        // valor da pizza
-        if (pizza != null) {
-            total += pizza.getValor();
+        if (pizza == null) {
+            this.valorTotal = 0;
+            return;
         }
 
+        double total;
 
-        // adicionais
+        if (tamanho != null) {
+            total = switch (tamanho.trim()) {
+                case "Pequena", "P", "p" -> pizza.getValorPequena();
+                case "Grande",  "G", "g" -> pizza.getValorGrande();
+                default -> pizza.getValorMedia();
+            };
+        } else {
+            total = pizza.getValorMedia();
+        }
+
+        // soma valor de cada adicional selecionado
         if (adicionais != null) {
             for (Adicional a : adicionais) {
                 if (a != null) {
@@ -143,18 +176,20 @@ public class Pedido {
             }
         }
 
-
-        // ajuste por tamanho
-        if (tamanho != null) {
-            if (tamanho.equalsIgnoreCase("M")) {
-                total += 5;
-            } else if (tamanho.equalsIgnoreCase("G")) {
-                total += 10;
-            }
-        }
-
-
         this.valorTotal = total;
     }
-}
 
+    @Override
+    public String toString() {
+        return "Pedido{" +
+                "idPedido=" + idPedido +
+                ", cliente=" + (cliente != null ? cliente.getNome() : "null") +
+                ", pizza=" + (pizza != null ? pizza.getTipo() : "null") +
+                ", adicionais=" + (adicionais != null ? adicionais.size() : 0) +
+                ", tamanho='" + tamanho + '\'' +
+                ", estado='" + estado + '\'' +
+                ", data=" + data +
+                ", valorTotal=" + valorTotal +
+                '}';
+    }
+}

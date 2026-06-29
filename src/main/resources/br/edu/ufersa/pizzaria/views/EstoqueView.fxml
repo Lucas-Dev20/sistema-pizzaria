@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane prefHeight="700.0" prefWidth="900.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.edu.ufersa.poo.pizzaria.controllers.EstoqueController">
+
+    <!-- ══════════════════════════════════════════════════
+         SIDEBAR
+    ══════════════════════════════════════════════════ -->
+    <left>
+        <VBox prefWidth="200" spacing="10" styleClass="sidebar">
+            <ImageView fitWidth="180.0" preserveRatio="true">
+                <Image url="@../images/logo.png" />
+                <VBox.margin>
+                    <Insets top="-40.0" />
+                </VBox.margin>
+            </ImageView>
+         <Button mnemonicParsing="false" onAction="#irPainel" text="⚙ Painel de Controle">
+            <cursor>
+               <Cursor fx:constant="HAND" />
+            </cursor>
+            <styleClass>
+               <String fx:value="sidebar-btn" />
+               <String fx:value="dashboard-menu-item-border" />
+            </styleClass>
+         </Button>
+
+            <Button onAction="#irPedidos" text="📋 Pedidos">
+            <styleClass>
+               <String fx:value="sidebar-btn" />
+               <String fx:value="dashboard-menu-item-border" />
+            </styleClass></Button>
+            <Button onAction="#irClientes" text="👥 Clientes">
+            <styleClass>
+               <String fx:value="sidebar-btn" />
+               <String fx:value="dashboard-menu-item-border" />
+            </styleClass></Button>
+            <Button onAction="#irTiposPizza" text="🍕 Tipos de Pizza">
+            <styleClass>
+               <String fx:value="sidebar-btn" />
+               <String fx:value="dashboard-menu-item-border" />
+            </styleClass></Button>
+            <Button onAction="#irAdicionais" text="💼 Adicionais">
+            <styleClass>
+               <String fx:value="sidebar-btn" />
+               <String fx:value="dashboard-menu-item-border" />
+            </styleClass></Button>
+            <Button onAction="#irEstoque" text="📦 Estoque">
+            <styleClass>
+               <String fx:value="sidebar-btn-active" />
+               <String fx:value="dashboard-menu-item-border" />
+            </styleClass></Button>
+            <Button onAction="#irRelatorios" text="📊 Relatórios">
+            <styleClass>
+               <String fx:value="sidebar-btn" />
+               <String fx:value="dashboard-menu-item-border" />
+            </styleClass></Button>
+
+            <Button onAction="#irFuncionarios" text="👤 Funcionários">
+                <styleClass>
+                    <String fx:value="sidebar-btn" />
+                    <String fx:value="dashboard-menu-item-border" />
+                </styleClass>
+            </Button>
+
+
+            <Region styleClass="dashboard-menu-item-border" VBox.vgrow="ALWAYS" />
+
+            <Button onAction="#sair" styleClass="sidebar-btn-exit" text="🚪 Sair" />
+        </VBox>
+    </left>
+
+    <!-- ══════════════════════════════════════════════════
+         CONTEÚDO PRINCIPAL
+    ══════════════════════════════════════════════════ -->
+    <center>
+        <VBox spacing="20" style="-fx-padding: 30; -fx-background-color: #F4F4F4;">
+
+            <!-- HEADER VERDE -->
+            <VBox maxWidth="1.7976931348623157E308" style="-fx-background-color: #7CB375; -fx-padding: 20;" styleClass="header-banner">
+                <HBox alignment="CENTER_LEFT">
+                    <Label style="-fx-text-fill: white; -fx-font-size: 28; -fx-font-weight: bold;" text="Estoque">
+                        <HBox.margin><Insets top="10.0" /></HBox.margin>
+                    </Label>
+                    <Region HBox.hgrow="ALWAYS" />
+                    <Button onAction="#abrirNovoItem" styleClass="btn-success" text="+ Novo Item" />
+                </HBox>
+                <VBox.margin><Insets /></VBox.margin>
+            </VBox>
+
+            <!-- CARD PRINCIPAL (tabela) -->
+            <VBox spacing="15" style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 20;" VBox.vgrow="ALWAYS">
+
+                <!-- Barra de busca -->
+                <HBox alignment="CENTER_LEFT" spacing="20">
+                    <TextField fx:id="campoBusca" onKeyReleased="#filtrar" promptText="Buscar" styleClass="search-field" HBox.hgrow="ALWAYS" />
+                    <!-- Filtro de status -->
+                    <ComboBox fx:id="filtroStatus" onAction="#filtrar" prefWidth="180" promptText="Todos os status" />
+                </HBox>
+
+                <!-- Cabeçalho das colunas -->
+                <HBox spacing="0" style="-fx-padding: 8 0 8 20;">
+                    <Label prefWidth="220" style="-fx-font-weight: bold;" styleClass="col-header" text="Nome" />
+                    <Label prefWidth="140" style="-fx-font-weight: bold;" styleClass="col-header" text="Quantidade" />
+                    <Label prefWidth="140" style="-fx-font-weight: bold;" styleClass="col-header" text="Status" />
+                    <Label prefWidth="160" style="-fx-font-weight: bold;" styleClass="col-header" text="Última atualização" />
+                </HBox>
+
+                <Separator />
+
+                <!-- Lista dinâmica gerada pelo Controller -->
+                <ScrollPane fitToWidth="true" style="-fx-background-color: transparent;" VBox.vgrow="ALWAYS">
+                    <VBox fx:id="listaEstoque" spacing="0" />
+                </ScrollPane>
+
+            </VBox>
+        </VBox>
+    </center>
+
+</BorderPane>

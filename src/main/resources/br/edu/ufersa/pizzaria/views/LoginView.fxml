@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #8B2318;" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.edu.ufersa.poo.pizzaria.controllers.LoginController">
+
+    <!-- Card central -->
+    <VBox alignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+
+        <VBox maxWidth="430" spacing="14" style="-fx-background-color: #EFEFEF;                      -fx-background-radius: 16;                      -fx-padding: 30 36 30 36;                      -fx-effect: dropshadow(gaussian,rgba(0,0,0,0.35),20,0,0,5);">
+
+            <!-- Logo -->
+            <HBox alignment="CENTER">
+                <ImageView fitHeight="160" fitWidth="260" preserveRatio="true">
+                    <Image url="@../images/logo.png" />
+                </ImageView>
+            </HBox>
+
+            <!-- Botões de perfil DENTRO do card, lado a lado -->
+            <HBox alignment="CENTER" spacing="20">
+                <Button fx:id="btnAdmin" onAction="#selecionarAdmin" prefWidth="160" styleClass="btn-perfil" text="Administrador" />
+                <Button fx:id="btnFuncionario" onAction="#selecionarFuncionario" prefWidth="160" styleClass="btn-perfil" text="Funcionário" />
+            </HBox>
+
+            <!-- Título -->
+            <Label styleClass="titulo" text="Faça login" />
+
+            <!-- Usuário -->
+            <Label style="-fx-font-size: 13px; -fx-text-fill: #1A1A1A;" text="Usuário" />
+            <TextField fx:id="txtEmail" promptText="joaosilva@email.com" styleClass="campo" />
+
+            <!-- Senha -->
+            <Label style="-fx-font-size: 13px; -fx-text-fill: #1A1A1A;" text="Senha" />
+            <PasswordField fx:id="txtSenha" promptText="Digite a senha" styleClass="campo" />
+
+            <!-- Erro -->
+            <Label fx:id="lblErro" style="-fx-text-fill: #C0392B; -fx-font-size: 12px;" text="" visible="false" />
+
+            <!-- Entrar -->
+            <HBox alignment="CENTER">
+                <Button onAction="#handleEntrar" prefWidth="160" styleClass="botao" text="Entrar" />
+            </HBox>
+
+            <!-- Esqueceu a senha -->
+            <HBox alignment="CENTER_LEFT">
+                <Hyperlink onAction="#handleEsqueceuSenha" styleClass="link" text="Esqueceu a senha?" />
+            </HBox>
+
+        </VBox>
+    </VBox>
+
+</AnchorPane>

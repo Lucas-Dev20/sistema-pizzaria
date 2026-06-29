@@ -1,95 +1,70 @@
 package br.edu.ufersa.poo.pizzaria.model.entities;
 
-public class Usuario 
-{
-   
-    private String login;
-    private String senha;
-    private String cargo;
+public class Usuario extends Pessoa {
 
-    public Usuario(String login, String senha, String cargo) //construtor
-    {
-        setLogin(login);
-        setSenha(senha);
-        setCargo(cargo);
-    }
-//gets e sets para restrições 
+    private int          idUsuario;
+    private String       email;
+    private String       senhaHash;   // armazenada com hash
+    private PerfilUsuario perfil;
+    private boolean      ativo;
 
-    public String getLogin()
-    {
-        return login;
-    }
-
-    public void setLogin(String login) 
-    {
-        if (login != null && login.trim().length() >= 3) // login deve ter minimo 3 caracteres
-        {
-            this.login = login;
-        } 
-        else 
-        {
-            throw new IllegalArgumentException("O login deve ter no mínimo 3 caracteres."); // aviso de erro 
-        }
+    // ── Construtor completo -  buscar do banco
+    public Usuario(int idUsuario, String nome, String email,
+                   String senhaHash, PerfilUsuario perfil, boolean ativo) {
+        super(nome);           // chama construtor de Pessoa
+        this.idUsuario = idUsuario;
+        this.email     = email;
+        this.senhaHash = senhaHash;
+        this.perfil    = perfil;
+        this.ativo     = ativo;
     }
 
-    public String getSenha() 
-    {
-        return senha;
+    // ── Construtor sem id - usado ao cadastrar novo usuário
+    public Usuario(String nome, String email, String senhaHash, PerfilUsuario perfil) {
+        super(nome);
+        this.email     = email;
+        this.senhaHash = senhaHash;
+        this.perfil    = perfil;
+        this.ativo     = true;
     }
 
-    public void setSenha(String senha)
-    {
-        if (senha != null && senha.length() >= 6) // senha deve ter minimo 6 caracteres
-        {
-            this.senha = senha;
-        } 
-        else
-        {
-            throw new IllegalArgumentException("A senha deve ter no mínimo 6 caracteres."); // aviso de erro 
-        }
+    // ── Polimorfismo: sobrescreve metodo abstrato de Pessoa
+    @Override
+    public String getDescricao() {
+        return "Usuário [" + perfil + "]: " + getNome() + " <" + email + ">";
     }
 
-    public String getCargo() 
-    {
-        return cargo;
+    // ── Helpers de autorização
+
+    /* Retorna true se este usuário é administrador. */
+    public boolean isAdmin() {
+        return PerfilUsuario.ADMIN.equals(this.perfil);
     }
 
-    public void setCargo(String cargo) 
-    {
-        if (cargo != null && !cargo.trim().isEmpty()) // o cargo não pode ser string vazia
-        {
-            this.cargo = cargo;
-        }
-        else 
-        {
-            throw new IllegalArgumentException("O cargo não pode estar vazio.");
-        }
-    }
-    
-    public boolean autenticar(String loginInformado, String senhaInformada) 
-    {
-        if (this.login.equals(loginInformado) && this.senha.equals(senhaInformada)) //compara as strings para ver se o login tá correto
-        {
-            System.out.println("Login bem sucedido ");
-            return true;
-        }
-        else 
-        {
-        System.out.println("ERRO -> Login ou senha incorretos.");
-        return false;
-        }
+    /* Retorna true se este usuário é funcionário comum. */
+    public boolean isFuncionario() {
+        return PerfilUsuario.FUNCIONARIO.equals(this.perfil);
     }
 
-    public void esqueciASenha(String loginInformado) 
-    {
-        if (this.login.equals(loginInformado))
-        {
-            System.out.println("Um link de recuperação será enviado para o email do usuário "); // login do usuario existe, então é enviado para ele a recuperação
-        } 
-        else 
-        {
-            System.out.println("Erro -> Usuário não existe");
-        }
-    }
+    // ── Getters e Setters
 
+    public int getIdUsuario()             { return idUsuario; }
+    public void setIdUsuario(int id)      { this.idUsuario = id; }
+
+    public String getEmail()              { return email; }
+    public void setEmail(String email)    { this.email = email; }
+
+    public String getSenhaHash()          { return senhaHash; }
+    public void setSenhaHash(String h)    { this.senhaHash = h; }
+
+    public PerfilUsuario getPerfil()                  { return perfil; }
+    public void setPerfil(PerfilUsuario perfil)       { this.perfil = perfil; }
+
+    public boolean isAtivo()              { return ativo; }
+    public void setAtivo(boolean ativo)   { this.ativo = ativo; }
+
+    @Override
+    public String toString() {
+        return getNome() + " (" + perfil + ")";
+    }
 }

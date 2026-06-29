@@ -1,8 +1,8 @@
-package br.edu.ufersa.poo.pizzaria.model.services;
+package br.edu.ufersa.poo.pizzaria.services;
 
 import java.util.ArrayList;
 import java.util.List;
-import br.edu.ufersa.pizzaria.model.*;
+import br.edu.ufersa.poo.pizzaria.model.entities.*;
 
 
 public class ServicoPedidos {
@@ -78,29 +78,29 @@ public class ServicoPedidos {
         }
         return resultado;
     }
-
-
-    // Finalizae um pedido e atualizar o estoque
+    // Finaliza pedido e atualiza estoque
     public void finalizarPedido(Pedido pedido) {
-        if (pedido != null) {
-            pedido.setEstado("Finalizado");
 
+        if (pedido != null) {
+
+            pedido.setEstado("Finalizado");
 
             if (pedido.getAdicionais() != null) {
 
-
                 for (Adicional a : pedido.getAdicionais()) {
-
 
                     for (Estoque e : estoques) {
 
-
-                        e.retirarDoEstoque(a.getNome(), 1);
-
+                        e.diminuirDoEstoque(
+                                a.getNome(),
+                                1
+                        );
 
                     }
                 }
             }
         }
-    }}
+    }
+}
+
 
