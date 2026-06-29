@@ -2,35 +2,73 @@ package br.edu.ufersa.poo.pizzaria.DAO;
 
 import br.edu.ufersa.poo.pizzaria.model.entities.Adicional;
 import br.edu.ufersa.poo.pizzaria.util.ConnectionFactory;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-// crud de adicional...
-public class AdicionalDAO implements ICrudDAO<Adicional> {
+/**
+ * PADRÃO TEMPLATE METHOD — AdicionalDAO extends AbstractDAO<Adicional>
+ *
+ * Os métodos salvar() e listarTodos() são herdados de AbstractDAO.
+ * Aqui só precisamos implementar os 4 hooks abstratos (getInsertSQL,
+ * preencherInsert, getTabela, mapear) e manter os métodos específicos
+ * desta entidade (baixarEstoque, reporEstoque, buscarPorNome, remover por nome).
+ */
+public class AdicionalDAO extends AbstractDAO<Adicional> {
 
-    //METODO SALVA OS ADICIONAIS APÓS INSERÇÃO DE DADOS
+    // ══════════════════════════════════════════════════════════════════════════
+    //  HOOKS DO TEMPLATE METHOD — implementação obrigatória da AbstractDAO
+    // ══════════════════════════════════════════════════════════════════════════
+
     @Override
-    // void — obrigatório pela ICrudDAO
+    protected String getInsertSQL() {
+        return "INSERT INTO adicional (nome, valor, quantidade) VALUES (?, ?, ?)";
+    }
+
+    @Override
+    protected void preencherInsert(PreparedStatement ps, Adicional adicional) throws SQLException {
+        ps.setString(1, adicional.getNome());
+        ps.setDouble(2, adicional.getValor());
+        ps.setInt(3, adicional.getQtd());
+    }
+
+    @Override
+    protected String getTabela() {
+        return "adicional";
+    }
+
+    @Override
+    protected Adicional mapear(ResultSet rs) throws SQLException {
+        return new Adicional(
+                rs.getInt("id_adicional"),
+                rs.getString("nome"),
+                rs.getDouble("valor"),
+                rs.getInt("quantidade")
+        );
+    }
+
+    // ══════════════════════════════════════════════════════════════════════════
+    //  OVERRIDE: salvar — versão que retorna o ID gerado (mantém compatibilidade)
+    // ══════════════════════════════════════════════════════════════════════════
+
+    /**
+     * Sobrescreve o salvar() do AbstractDAO para retornar o ID gerado.
+     * Necessário porque AdicionalService usa o ID logo após o INSERT.
+     */
+    @Override
     public void salvar(Adicional adicional) {
         salvarERetornarId(adicional);
     }
 
-    // retorna o id gerado — usado por cadastrarAdicionalComReposicao
+    /** Versão com retorno de ID — usada por AdicionalService.cadastrarAdicional(). */
     public int salvarERetornarId(Adicional adicional) {
-        String sql = "INSERT INTO adicional (nome, valor, quantidade) VALUES (?, ?, ?)";
-
         try (Connection conn = ConnectionFactory.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql, java.sql.Statement.RETURN_GENERATED_KEYS)) {
+             PreparedStatement stmt = conn.prepareStatement(getInsertSQL(), Statement.RETURN_GENERATED_KEYS)) {
 
-            stmt.setString(1, adicional.getNome());
-            stmt.setDouble(2, adicional.getValor());
-            stmt.setInt(3, adicional.getQtd());
+            preencherInsert(stmt, adicional);
             stmt.executeUpdate();
-            System.out.println("Adicional salvo com sucesso!");
+            System.out.println("[adicional] Registro salvo com sucesso.");
 
             try (ResultSet rs = stmt.getGeneratedKeys()) {
                 if (rs.next()) return rs.getInt(1);
@@ -43,100 +81,112 @@ public class AdicionalDAO implements ICrudDAO<Adicional> {
         return -1;
     }
 
-    // seleciona todos os adicionais para listar (*)
+    // ══════════════════════════════════════════════════════════════════════════
+    //  CRUD ESPECÍFICO — métodos não cobertos pelo template genérico
+    // ══════════════════════════════════════════════════════════════════════════
+
+    /** buscarPorId — implementação obrigatória de ICrudDAO (via AbstractDAO). */
     @Override
-    public List<Adicional> listarTodos() {
-        String sql = "SELECT * FROM adicional";
-        List<Adicional> lista = new ArrayList<>();
+    public Adicional buscarPorId(int idBusca) {
+        String sql = "SELECT * FROM adicional WHERE id_adicional = ?";
 
         try (Connection conn = ConnectionFactory.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            while (rs.next()) {
-                int id = rs.getInt("id_adicional");
-                String nome = rs.getString("nome");
-                double valor = rs.getDouble("valor");
-                int quantidade = rs.getInt("quantidade");
+            stmt.setInt(1, idBusca);
 
-                Adicional a = new Adicional(id, nome, valor, quantidade); // instancia o objeto com dados da linha atual e depois add a lista
-                lista.add(a);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) return mapear(rs);
             }
+
         } catch (SQLException e) {
-            System.out.println("Erro ao listar adicionais:");
+            System.out.println("Erro ao buscar adicional por ID:");
             e.printStackTrace();
         }
-        return lista;
+        return null;
     }
 
-    //atualiza os dados de um adicional ja existente
-    // Implementação ICrudDAO — delega para o método com nomeAntigo
+    /** Busca pelo nome — usado após INSERT para obter o ID gerado. */
+    public Adicional buscarPorNome(String nome) {
+        String sql = "SELECT * FROM adicional WHERE nome = ? ORDER BY id_adicional DESC LIMIT 1";
+
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, nome);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) return mapear(rs);
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Erro ao buscar adicional por nome:");
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /** atualizar — implementação obrigatória de ICrudDAO (via AbstractDAO). */
     @Override
     public void atualizar(Adicional adicional) {
         atualizar(adicional, adicional.getNome());
     }
 
+    /**
+     * Versão com nomeAntigo — necessária porque Adicional não tem chave
+     * numérica obrigatória na busca de atualização (pode-se mudar o próprio nome).
+     */
     public void atualizar(Adicional adicional, String nomeAntigo) {
         String sql = "UPDATE adicional SET nome = ?, valor = ?, quantidade = ? WHERE nome = ?";
-// recebe o nome antigo para o sql achar a devida linha do adicional
+
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, adicional.getNome());
             stmt.setDouble(2, adicional.getValor());
             stmt.setInt(3, adicional.getQtd());
-            stmt.setString(4, nomeAntigo); // identifica o registro pelo nome original antes da mudança
-// substituição das '?' do comando sql
+            stmt.setString(4, nomeAntigo);
 
-            int linhasAfetadas = stmt.executeUpdate();
-            if (linhasAfetadas > 0) {
+            int linhas = stmt.executeUpdate();
+            if (linhas > 0) {
                 System.out.println("Adicional atualizado com sucesso!");
             } else {
                 System.out.println("Nenhum adicional encontrado com o nome informado.");
             }
 
         } catch (SQLException e) {
-            System.out.println("Erro no UPDATE desse Adicional:");
+            System.out.println("Erro no UPDATE de Adicional:");
             e.printStackTrace();
         }
     }
 
-    //metodo para remover um adicional do bd a partir do nome
-    // Implementação ICrudDAO — remove por id
+    /** remover por ID — implementação obrigatória de ICrudDAO (via AbstractDAO). */
     @Override
     public void remover(int id) {
         Adicional a = buscarPorId(id);
         if (a != null) remover(a.getNome());
     }
 
+    /**
+     * remover por nome — faz DELETE em cascata via transação:
+     * pedido_adicional → reposicao_estoque → adicional
+     */
     public void remover(String nomeAdicional) {
-
-        // Primeiro busca o id pelo nome — precisamos do id para limpar as tabelas filhas
-        String sqlBuscaId = "SELECT id_adicional FROM adicional WHERE nome = ?";
-
-        // Deleta referências em pedido_adicional (pedidos que usaram este adicional)
+        String sqlBuscaId        = "SELECT id_adicional FROM adicional WHERE nome = ?";
         String sqlPedidoAdicional = "DELETE FROM pedido_adicional WHERE id_adicional = ?";
-
-        // Deleta o histórico de reposição de estoque deste adicional
-        String sqlReposicao = "DELETE FROM reposicao_estoque WHERE id_adicional = ?";
-
-        // Por fim deleta o próprio adicional
-        String sqlAdicional = "DELETE FROM adicional WHERE id_adicional = ?";
+        String sqlReposicao      = "DELETE FROM reposicao_estoque WHERE id_adicional = ?";
+        String sqlAdicional      = "DELETE FROM adicional WHERE id_adicional = ?";
 
         try (Connection conn = ConnectionFactory.getConnection()) {
-
-            // Desativa autocommit para fazer tudo em uma transação só
             conn.setAutoCommit(false);
 
             try {
-                // 1. Busca o id
+                // 1. Busca o ID pelo nome
                 int idAdicional = -1;
                 try (PreparedStatement stmt = conn.prepareStatement(sqlBuscaId)) {
                     stmt.setString(1, nomeAdicional);
                     try (ResultSet rs = stmt.executeQuery()) {
-                        if (rs.next()) {
-                            idAdicional = rs.getInt("id_adicional");
-                        }
+                        if (rs.next()) idAdicional = rs.getInt("id_adicional");
                     }
                 }
 
@@ -146,13 +196,13 @@ public class AdicionalDAO implements ICrudDAO<Adicional> {
                     return;
                 }
 
-                // 2. Remove de pedido_adicional
+                // 2. Remove referências em pedido_adicional
                 try (PreparedStatement stmt = conn.prepareStatement(sqlPedidoAdicional)) {
                     stmt.setInt(1, idAdicional);
                     stmt.executeUpdate();
                 }
 
-                // 3. Remove de reposicao_estoque
+                // 3. Remove histórico de reposição
                 try (PreparedStatement stmt = conn.prepareStatement(sqlReposicao)) {
                     stmt.setInt(1, idAdicional);
                     stmt.executeUpdate();
@@ -161,10 +211,8 @@ public class AdicionalDAO implements ICrudDAO<Adicional> {
                 // 4. Remove o adicional
                 try (PreparedStatement stmt = conn.prepareStatement(sqlAdicional)) {
                     stmt.setInt(1, idAdicional);
-                    int linhasAfetadas = stmt.executeUpdate();
-                    if (linhasAfetadas > 0) {
-                        System.out.println("Adicional '" + nomeAdicional + "' removido com sucesso!");
-                    }
+                    int linhas = stmt.executeUpdate();
+                    if (linhas > 0) System.out.println("Adicional '" + nomeAdicional + "' removido com sucesso!");
                 }
 
                 conn.commit();
@@ -173,7 +221,7 @@ public class AdicionalDAO implements ICrudDAO<Adicional> {
                 conn.rollback();
                 System.out.println("Erro no DELETE de Adicional — rollback executado:");
                 e.printStackTrace();
-                throw e; // repassa para o controller mostrar o erro na tela
+                throw e;
             } finally {
                 conn.setAutoCommit(true);
             }
@@ -184,57 +232,11 @@ public class AdicionalDAO implements ICrudDAO<Adicional> {
         }
     }
 
-    // busca o adicional por id
-    @Override
-    public Adicional buscarPorId(int idBusca) {
-        String sql = "SELECT * FROM adicional WHERE id_adicional = ?";
-        Adicional adicionalEncontrado = null;
+    // ══════════════════════════════════════════════════════════════════════════
+    //  MÉTODOS DE ESTOQUE — específicos de Adicional
+    // ══════════════════════════════════════════════════════════════════════════
 
-        try (Connection conn = ConnectionFactory.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setInt(1, idBusca);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    String nome = rs.getString("nome");
-                    double valor = rs.getDouble("valor");
-                    int quantidade = rs.getInt("quantidade");
-
-                    adicionalEncontrado = new Adicional(idBusca, nome, valor, quantidade);
-                }
-            }
-        } catch (SQLException e) {
-            System.out.println("Erro ao buscar adicional por ID:");
-            e.printStackTrace();
-        }
-        return adicionalEncontrado;
-    }
-
-    // busca o adicional mais recente pelo nome — usado após INSERT para pegar o id gerado
-    public Adicional buscarPorNome(String nome) {
-        String sql = "SELECT * FROM adicional WHERE nome = ? ORDER BY id_adicional DESC LIMIT 1";
-        try (Connection conn = ConnectionFactory.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, nome);
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return new Adicional(
-                            rs.getInt("id_adicional"),
-                            rs.getString("nome"),
-                            rs.getDouble("valor"),
-                            rs.getInt("quantidade")
-                    );
-                }
-            }
-        } catch (SQLException e) {
-            System.out.println("Erro ao buscar adicional por nome:");
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    // metodo para baixar o estoque do adicional direto no bd
+    /** Desconta quantidade do estoque do adicional no banco. */
     public void baixarEstoque(int idAdicional, int quantidade) {
         String sql = "UPDATE adicional SET quantidade = quantidade - ? WHERE id_adicional = ?";
 
@@ -242,10 +244,10 @@ public class AdicionalDAO implements ICrudDAO<Adicional> {
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, quantidade);
-            stmt.setInt(2, idAdicional); // substituição das '?' do comando sql
+            stmt.setInt(2, idAdicional);
 
-            int linhasAfetadas = stmt.executeUpdate();
-            if (linhasAfetadas > 0) {
+            int linhas = stmt.executeUpdate();
+            if (linhas > 0) {
                 System.out.println("Estoque do adicional (ID: " + idAdicional + ") reduzido em " + quantidade);
             } else {
                 System.out.println("Nenhum adicional encontrado com o ID: " + idAdicional);
@@ -257,7 +259,7 @@ public class AdicionalDAO implements ICrudDAO<Adicional> {
         }
     }
 
-    // metodo para repor o estoque do adicional direto no bd
+    /** Repõe quantidade no estoque do adicional no banco. */
     public void reporEstoque(int idAdicional, int quantidade) {
         String sql = "UPDATE adicional SET quantidade = quantidade + ? WHERE id_adicional = ?";
 
@@ -265,10 +267,10 @@ public class AdicionalDAO implements ICrudDAO<Adicional> {
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, quantidade);
-            stmt.setInt(2, idAdicional); // substituição das '?' do comando sql
+            stmt.setInt(2, idAdicional);
 
-            int linhasAfetadas = stmt.executeUpdate();
-            if (linhasAfetadas > 0) {
+            int linhas = stmt.executeUpdate();
+            if (linhas > 0) {
                 System.out.println("Estoque do adicional (ID: " + idAdicional + ") reposto em " + quantidade);
             } else {
                 System.out.println("Nenhum adicional encontrado com o ID: " + idAdicional);
