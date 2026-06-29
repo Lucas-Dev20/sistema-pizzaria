@@ -7,7 +7,6 @@ import java.sql.SQLException;
 
 public class EstoqueDAO {
 
-    // Método que você fez, agora isolado no DAO de estoque
     public void baixarEstoque(int idAdicional, int quantidade) {
         String sql = "UPDATE adicional SET quantidade = quantidade - ? WHERE id_adicional = ?";
 
@@ -30,7 +29,7 @@ public class EstoqueDAO {
         }
     }
 
-    // Método de reposição também migrado para cá
+    // Metodo de reposição também migrado para cá
     public void reporEstoque(int idAdicional, int quantidade) {
         String sql = "UPDATE adicional SET quantidade = quantidade + ? WHERE id_adicional = ?";
 

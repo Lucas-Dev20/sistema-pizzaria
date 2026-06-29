@@ -1,8 +1,7 @@
 package br.edu.ufersa.poo.pizzaria.model.entities;
 
 /*
- 1. Classe abstrata (com método abstrato getDescricao)
- 2. Herança: Cliente e Usuario estendem Pessoa → polimorfismo
+ Classe abstrata - metodo abstrato getDescricao e Herança: Cliente e Usuario estendem Pessoa → polimorfismo
  */
 public abstract class Pessoa {
 

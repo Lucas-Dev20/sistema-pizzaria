@@ -42,7 +42,7 @@ public class AdicionalDAO extends AbstractDAO<Adicional> {
         salvarERetornarId(adicional);
     }
 
-    /** Versão com retorno de ID — usada por AdicionalService.cadastrarAdicional(). */
+
     public int salvarERetornarId(Adicional adicional) {
         try (Connection conn = ConnectionFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(getInsertSQL(), Statement.RETURN_GENERATED_KEYS)) {
@@ -63,7 +63,7 @@ public class AdicionalDAO extends AbstractDAO<Adicional> {
     }
 
 
-    /** buscarPorId — implementação obrigatória de ICrudDAO (via AbstractDAO). */
+    /* buscarPorId — implementação obrigatória de ICrudDAO - AbstractDAO */
     @Override
     public Adicional buscarPorId(int idBusca) {
         String sql = "SELECT * FROM adicional WHERE id_adicional = ?";
@@ -84,7 +84,7 @@ public class AdicionalDAO extends AbstractDAO<Adicional> {
         return null;
     }
 
-    /** Busca pelo nome — usado após INSERT para obter o ID gerado. */
+    /*Busca pelo nome — usado após INSERT para obter o ID gerado. */
     public Adicional buscarPorNome(String nome) {
         String sql = "SELECT * FROM adicional WHERE nome = ? ORDER BY id_adicional DESC LIMIT 1";
 
@@ -104,7 +104,7 @@ public class AdicionalDAO extends AbstractDAO<Adicional> {
         return null;
     }
 
-    /** atualizar — implementação obrigatória de ICrudDAO (via AbstractDAO). */
+    /* atualizar — implementação de ICrudDAO - via AbstractDAO*/
     @Override
     public void atualizar(Adicional adicional) {
         atualizar(adicional, adicional.getNome());
@@ -135,16 +135,15 @@ public class AdicionalDAO extends AbstractDAO<Adicional> {
         }
     }
 
-    /** remover por ID — implementação obrigatória de ICrudDAO -via AbstractDAO */
+    /* remover por ID — implementação obrigatória de ICrudDAO -via AbstractDAO */
     @Override
     public void remover(int id) {
         Adicional a = buscarPorId(id);
         if (a != null) remover(a.getNome());
     }
 
-    /**
-     * remover por nome
-     */
+    /*remover por nome */
+
     public void remover(String nomeAdicional) {
         String sqlBuscaId        = "SELECT id_adicional FROM adicional WHERE nome = ?";
         String sqlPedidoAdicional = "DELETE FROM pedido_adicional WHERE id_adicional = ?";
@@ -206,11 +205,7 @@ public class AdicionalDAO extends AbstractDAO<Adicional> {
         }
     }
 
-    // ══════════════════════════════════════════════════════════════════════════
-    //  MÉTODOS DE ESTOQUE — específicos de Adicional
-    // ══════════════════════════════════════════════════════════════════════════
-
-    /** Desconta quantidade do estoque do adicional no banco. */
+    /* Desconta quantidade do estoque do adicional no banco. */
     public void baixarEstoque(int idAdicional, int quantidade) {
         String sql = "UPDATE adicional SET quantidade = quantidade - ? WHERE id_adicional = ?";
 
@@ -233,7 +228,7 @@ public class AdicionalDAO extends AbstractDAO<Adicional> {
         }
     }
 
-    /** Repõe quantidade no estoque do adicional no banco. */
+    /* Repõe quantidade no estoque do adicional no banco. */
     public void reporEstoque(int idAdicional, int quantidade) {
         String sql = "UPDATE adicional SET quantidade = quantidade + ? WHERE id_adicional = ?";
 

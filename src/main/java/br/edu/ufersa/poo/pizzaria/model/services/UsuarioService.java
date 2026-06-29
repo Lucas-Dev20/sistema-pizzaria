@@ -10,28 +10,12 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
-/**
- * Regras de negócio relacionadas a usuários:
- *   - Autenticação (login)
- *   - Cadastro de funcionários (somente pelo ADMIN)
- *   - Gerenciamento de conta
- *
- * NOTA SOBRE HASH: usamos SHA-256 para não precisar de dependência externa.
- * Em produção real, use BCrypt (biblioteca jBCrypt ou Spring Security).
- */
 public class UsuarioService {
 
     private final UsuarioDAO usuarioDAO = new UsuarioDAO();
 
-    // ── AUTENTICAÇÃO ──────────────────────────────────────────────────────────
+    // ── AUTENTICAÇÃO
 
-    /**
-     * Autentica o usuário com e-mail e senha.
-     * Se válido, inicia a sessão (SessaoUsuario) e retorna o Usuario.
-     *
-     * @throws IllegalArgumentException se e-mail ou senha estiverem em branco.
-     * @throws RuntimeException         se credenciais forem inválidas.
-     */
     public Usuario autenticar(String email, String senha) {
         if (email == null || email.trim().isEmpty()) {
             throw new IllegalArgumentException("E-mail é obrigatório.");
@@ -57,22 +41,12 @@ public class UsuarioService {
         return usuario;
     }
 
-    /**
-     * Encerra a sessão do usuário atual (logout).
-     */
     public void logout() {
         SessaoUsuario.getInstance().encerrar();
     }
 
-    // ── CADASTRO DE FUNCIONÁRIOS (somente ADMIN) ──────────────────────────────
+    // ── CADASTRO DE FUNCIONÁRIOS (somente ADMIN)
 
-    /**
-     * Cadastra um novo funcionário no sistema.
-     * SOMENTE o administrador pode executar esta operação.
-     *
-     * @throws AcessoNegadoException    se o usuário logado não for ADMIN.
-     * @throws IllegalArgumentException se os dados forem inválidos.
-     */
     public void cadastrarFuncionario(String nome, String email, String senha) {
         // Verificação de permissão
         verificarPermissaoAdmin("cadastrar funcionário");
@@ -93,10 +67,7 @@ public class UsuarioService {
         usuarioDAO.salvar(novoFuncionario);
     }
 
-    /**
-     * Desativa um funcionário (soft delete).
-     * SOMENTE o administrador pode executar esta operação.
-     */
+    /*Desativa um funcionário (soft delete) */
     public void desativarFuncionario(int idUsuario) {
         verificarPermissaoAdmin("desativar funcionário");
 
@@ -107,24 +78,15 @@ public class UsuarioService {
         usuarioDAO.remover(idUsuario);
     }
 
-    /**
-     * Lista todos os funcionários (perfil FUNCIONARIO).
-     * SOMENTE o administrador pode executar esta operação.
+    /*Lista todos os funcionários (perfil FUNCIONARIO)
      */
     public List<Usuario> listarFuncionarios() {
         verificarPermissaoAdmin("listar funcionários");
         return usuarioDAO.listarFuncionarios();
     }
 
-    // ── ALTERAÇÃO DE SENHA ────────────────────────────────────────────────────
+    // ── ALTERAÇÃO DE SENHA
 
-    /**
-     * Permite que um usuário altere sua própria senha.
-     *
-     * @param idUsuario   ID do usuário que quer mudar a senha
-     * @param senhaAtual  Senha atual (para confirmar identidade)
-     * @param novaSenha   Nova senha desejada
-     */
     public void alterarSenha(int idUsuario, String senhaAtual, String novaSenha) {
         Usuario usuario = usuarioDAO.buscarPorId(idUsuario);
 
@@ -143,14 +105,8 @@ public class UsuarioService {
         usuarioDAO.atualizarSenha(idUsuario, hashSenha(novaSenha));
     }
 
-    // ── VERIFICAÇÃO DE PERMISSÃO (reutilizável) ───────────────────────────────
+    // ── VERIFICAÇÃO DE PERMISSÃO
 
-    /**
-     * Lança AcessoNegadoException se o usuário logado não for ADMIN.
-     * Chamado antes de qualquer operação restrita.
-     *
-     * @param operacao Descrição da operação (para a mensagem de erro)
-     */
     public void verificarPermissaoAdmin(String operacao) {
         SessaoUsuario sessao = SessaoUsuario.getInstance();
 
@@ -164,14 +120,7 @@ public class UsuarioService {
         }
     }
 
-    // ── INICIALIZAÇÃO DO ADMIN PADRÃO ─────────────────────────────────────────
-
-    /**
-     * Cria o administrador padrão se não existir no banco.
-     * Deve ser chamado uma vez na inicialização da aplicação (Main.java).
-     *
-     * Admin padrão: admin@lapiazza.com / admin123
-     */
+    // ── INICIALIZAÇÃO DO ADMIN PADRÃO
     public void garantirAdminPadrao() {
         String emailAdmin = "admin@lapiazza.com";
 
@@ -187,12 +136,7 @@ public class UsuarioService {
         }
     }
 
-    // ── HASH DE SENHA (SHA-256) ───────────────────────────────────────────────
 
-    /**
-     * Gera hash SHA-256 da senha para armazenamento seguro.
-     * Nunca armazenar senha em texto puro.
-     */
     public static String hashSenha(String senha) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
@@ -207,7 +151,7 @@ public class UsuarioService {
         }
     }
 
-    // ── VALIDAÇÕES PRIVADAS ───────────────────────────────────────────────────
+    // ── VALIDAÇÕES PRIVADAS
 
     private void validarDadosUsuario(String nome, String email, String senha) {
         if (nome == null || nome.trim().isEmpty()) {

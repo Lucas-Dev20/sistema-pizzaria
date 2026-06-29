@@ -6,7 +6,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/* PADRÃO TEMPLATE METHOD */
+/* Padrão de projeot - template method */
 public abstract class AbstractDAO<T> implements ICrudDAO<T> {
 
     /* Retorna o SQL de INSERT desta entidade. */
@@ -37,7 +37,7 @@ public abstract class AbstractDAO<T> implements ICrudDAO<T> {
         }
     }
 
-    // ── Template: listarTodos() ───────────────────────────────────────────────
+    // ── Template: listarTodos()
     @Override
     public List<T> listarTodos() {
         List<T> lista = new ArrayList<>();
@@ -56,6 +56,4 @@ public abstract class AbstractDAO<T> implements ICrudDAO<T> {
         return lista;
     }
 
-    // buscarPorId(), atualizar() e remover() são específicos demais
-    // para virar template genérico — cada DAO os implementa diretamente.
 }

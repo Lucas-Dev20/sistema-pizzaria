@@ -8,23 +8,14 @@ import java.util.List;
 
 public class PedidoService {
 
-    /*
-     * PADRÃO OBSERVER (GoF, Cap. 5, pág. 293) — implementação canônica.
-     *
-     * Antes: um único campo "ObserverVenda observadorEstoque"
-     *        → só um observer possível, não é GoF de verdade.
-     *
-     * Agora: lista de observers + addObserver() / removeObserver()
-     *        → qualquer número de observers pode ser registrado,
-     *          o Subject (PedidoService) não sabe quem são os concretos.
-     */
+    /* Padrão Observe */
     private final List<ObserverVenda> observers = new ArrayList<>();
     private final PedidoDAO pedidoDAO = new PedidoDAO();
 
     // ── Construtor padrão (observers registrados via addObserver)
     public PedidoService() {}
 
-    // ── Registro de observers (GoF: attach / detach) ──────────────────────────
+    // ── Registro de observers ( attach / detach)
     public void addObserver(ObserverVenda observer) {
         if (observer != null && !observers.contains(observer)) {
             observers.add(observer);
@@ -35,14 +26,14 @@ public class PedidoService {
         observers.remove(observer);
     }
 
-    // ── Notificação (GoF: notify) ─────────────────────────────────────────────
+    // ── Notificação (GoF: notify)
     private void notificarObservers(Pedido pedido) {
         for (ObserverVenda observer : observers) {
             observer.notificarVendaFinalizada(pedido);
         }
     }
 
-    // ── CADASTRAR ─────────────────────────────────────────────────────────────
+    // ── CADASTRAR
     public void cadastrarPedido(Pedido pedido) {
 
         if (pedido == null)
@@ -67,7 +58,7 @@ public class PedidoService {
         notificarObservers(pedido);
     }
 
-    // ── ATUALIZAR ─────────────────────────────────────────────────────────────
+    // ── ATUALIZAR
     public void atualizarPedido(Pedido pedido) {
 
         if (pedido == null)
@@ -81,47 +72,47 @@ public class PedidoService {
         pedidoDAO.atualizar(pedido);
     }
 
-    // ── REMOVER ───────────────────────────────────────────────────────────────
+    // ── REMOVER
     public void removerPedido(int idPedido) {
         if (idPedido <= 0)
             throw new IllegalArgumentException("ID inválido.");
         pedidoDAO.remover(idPedido);
     }
 
-    // ── BUSCAR POR ID ─────────────────────────────────────────────────────────
+    // ── BUSCAR POR ID
     public Pedido buscarPedidoPorId(int idPedido) {
         if (idPedido <= 0)
             throw new IllegalArgumentException("ID inválido.");
         return pedidoDAO.buscarPorId(idPedido);
     }
 
-    // ── BUSCAR POR CLIENTE ────────────────────────────────────────────────────
+    // ── BUSCAR POR CLIENTE
     public List<Pedido> buscarPedidosPorCliente(int idCliente) {
         if (idCliente <= 0)
             throw new IllegalArgumentException("ID do cliente inválido.");
         return pedidoDAO.buscarPorCliente(idCliente);
     }
 
-    // ── BUSCAR POR PIZZA ──────────────────────────────────────────────────────
+    // ── BUSCAR POR PIZZA
     public List<Pedido> buscarPedidosPorPizza(int idPizza) {
         if (idPizza <= 0)
             throw new IllegalArgumentException("ID da pizza inválido.");
         return pedidoDAO.buscarPorPizza(idPizza);
     }
 
-    // ── BUSCAR POR ESTADO ─────────────────────────────────────────────────────
+    // ── BUSCAR POR ESTADO
     public List<Pedido> buscarPedidosPorEstado(String estado) {
         if (estado == null || estado.trim().isEmpty())
             throw new IllegalArgumentException("Estado inválido.");
         return pedidoDAO.buscarPorEstado(estado);
     }
 
-    // ── LISTAR TODOS ──────────────────────────────────────────────────────────
+    // ── LISTAR TODOS
     public List<Pedido> listarTodosPedidos() {
         return pedidoDAO.listarTodos();
     }
 
-    // ── ALTERAR ESTADO ────────────────────────────────────────────────────────
+    // ── ALTERAR ESTADO
     public void atualizarEstado(int idPedido, String novoEstado) {
         if (idPedido <= 0)
             throw new IllegalArgumentException("ID inválido.");
@@ -130,7 +121,7 @@ public class PedidoService {
         pedidoDAO.atualizarEstado(idPedido, novoEstado);
     }
 
-    // ── FINALIZAR ─────────────────────────────────────────────────────────────
+    // ── FINALIZAR
     public void finalizarPedido(Pedido pedido) {
         if (pedido.getIdPedido() <= 0)
             throw new IllegalArgumentException("ID inválido.");
