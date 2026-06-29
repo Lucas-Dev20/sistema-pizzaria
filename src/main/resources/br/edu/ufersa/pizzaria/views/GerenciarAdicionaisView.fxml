@@ -1,24 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.String?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Region?>
-<?import javafx.scene.layout.VBox?>
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
 
-<BorderPane prefHeight="700.0" prefWidth="950.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.edu.ufersa.poo.pizzaria.controllers.GerenciarAdicionaisController">
+<BorderPane prefHeight="700.0" prefWidth="950.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.edu.ufersa.poo.pizzaria.controllers.GerenciarAdicionaisController">
 
     <!-- MENU LATERAL ESQUERDO COM SÍMBOLS E METODOS DE NAVEGAÇÃO -->
     <left>
         <VBox prefWidth="200" spacing="10" styleClass="sidebar">
-            <ImageView fitWidth="150" preserveRatio="true" style="-fx-padding: 0 0 20 0;">
+            <ImageView fitWidth="180.0" preserveRatio="true" style="-fx-padding: 0 0 20 0;">
                 <image>
                     <Image url="@../images/logo.png" />
                 </image>
@@ -36,7 +29,7 @@
                <String fx:value="dashboard-menu-item-border" />
             </styleClass></Button>
 
-            <Button onAction="#irTiposPizza" text="🍕 Tipos de pizza">
+            <Button onAction="#irTiposPizza" text="🍕 Tipos de Pizza">
             <styleClass>
                <String fx:value="sidebar-btn" />
                <String fx:value="dashboard-menu-item-border" />
@@ -61,16 +54,19 @@
             </styleClass></Button>
 
             <Button onAction="#irFuncionarios" text="👤 Funcionários">
-                <styleClass>
-                    <String fx:value="sidebar-btn-active" />
-                    <String fx:value="dashboard-menu-item-border" />
-                </styleClass>
+            <styleClass>
+               <String fx:value="dashboard-menu-item-border" />
+               <String fx:value="sidebar-btn" />
+            </styleClass>
             </Button>
 
 
             <Region styleClass="dashboard-menu-item-border" VBox.vgrow="ALWAYS" />
 
             <Button onAction="#sair" styleClass="sidebar-btn-exit" text="🚪 Sair" />
+         <BorderPane.margin>
+            <Insets top="-40.0" />
+         </BorderPane.margin>
         </VBox>
     </left>
 

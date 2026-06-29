@@ -28,7 +28,7 @@
                     <String fx:value="sidebar-btn" />
                     <String fx:value="dashboard-menu-item-border" />
                 </styleClass></Button>
-            <Button onAction="#irTiposPizza" text="🍕 Tipos de pizza">
+            <Button onAction="#irTiposPizza" text="🍕 Tipos de Pizza">
                 <styleClass>
                     <String fx:value="sidebar-btn" />
                     <String fx:value="dashboard-menu-item-border" />
@@ -49,16 +49,16 @@
                     <String fx:value="dashboard-menu-item-border" />
                 </styleClass></Button>
             <Button onAction="#irFuncionarios" text="👤 Funcionários">
-                <styleClass>
-                    <String fx:value="sidebar-btn-active" />
-                    <String fx:value="dashboard-menu-item-border" />
-                </styleClass>
+            <styleClass>
+               <String fx:value="dashboard-menu-item-border" />
+               <String fx:value="sidebar-btn" />
+            </styleClass>
             </Button>
 
 
             <Region styleClass="dashboard-menu-item-border" VBox.vgrow="ALWAYS" />
 
-            <Button onAction="#sair" styleClass="sidebar-btn-exit" text="Sair" />
+            <Button onAction="#sair" styleClass="sidebar-btn-exit" text="🚪 Sair" />
         </VBox>
     </left>
 
