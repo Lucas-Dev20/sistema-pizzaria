@@ -15,13 +15,15 @@ public class PizzaDAO extends AbstractDAO<Pizza> {
 
     @Override
     protected String getInsertSQL() {
-        return "INSERT INTO pizzas(tipo, valor) VALUES (?, ?)";
+        return "INSERT INTO pizzas(tipo, valor_pequena, valor_media, valor_grande) VALUES (?, ?, ?, ?)";
     }
 
     @Override
     protected void preencherInsert(PreparedStatement ps, Pizza pizza) throws SQLException {
         ps.setString(1, pizza.getTipo());
-        ps.setDouble(2, pizza.getValor());
+        ps.setDouble(2, pizza.getValorPequena());
+        ps.setDouble(3, pizza.getValorMedia());
+        ps.setDouble(4, pizza.getValorGrande());
     }
 
     @Override
@@ -34,7 +36,9 @@ public class PizzaDAO extends AbstractDAO<Pizza> {
         return new Pizza(
                 rs.getInt("id_pizza"),
                 rs.getString("tipo"),
-                rs.getDouble("valor")
+                rs.getDouble("valor_pequena"),
+                rs.getDouble("valor_media"),
+                rs.getDouble("valor_grande")
         );
     }
 
@@ -98,14 +102,16 @@ public class PizzaDAO extends AbstractDAO<Pizza> {
     @Override
     public void atualizar(Pizza pizza) {
 
-        String sql = "UPDATE pizzas SET tipo = ?, valor = ? WHERE id_pizza = ?";
+        String sql = "UPDATE pizzas SET tipo = ?, valor_pequena = ?, valor_media = ?, valor_grande = ? WHERE id_pizza = ?";
 
         try (Connection con = ConnectionFactory.getConnection();
              PreparedStatement stmt = con.prepareStatement(sql)) {
 
             stmt.setString(1, pizza.getTipo());
-            stmt.setDouble(2, pizza.getValor());
-            stmt.setInt(3, pizza.getIdPizza());
+            stmt.setDouble(2, pizza.getValorPequena());
+            stmt.setDouble(3, pizza.getValorMedia());
+            stmt.setDouble(4, pizza.getValorGrande());
+            stmt.setInt(5, pizza.getIdPizza());
 
             int linhas = stmt.executeUpdate();
 

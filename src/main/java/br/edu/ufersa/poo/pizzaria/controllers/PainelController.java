@@ -62,7 +62,9 @@ public class PainelController implements Initializable {
         List<OrderViewModel> modelList = new ArrayList<>();
 
         // SQL com INNER JOIN para pegar o nome do cliente e o tipo da pizza
-        String sql = "SELECT p.id_pedido, c.nome AS nome_cliente, piz.tipo AS descricao_pizza, piz.valor " +
+        // Usa p.valor_total (já calculado no pedido, considerando tamanho e adicionais),
+        // pois a tabela pizzas não guarda mais um valor único — agora são 3 preços por tamanho.
+        String sql = "SELECT p.id_pedido, c.nome AS nome_cliente, piz.tipo AS descricao_pizza, p.valor_total " +
                 "FROM pedido p " +
                 "INNER JOIN cliente c ON p.id_cliente = c.id_cliente " +
                 "INNER JOIN pizzas piz ON p.id_pizza = piz.id_pizza " +
@@ -79,7 +81,7 @@ public class PainelController implements Initializable {
                 model.setIdCliente(rs.getInt("id_pedido")); // Exibe o número do pedido na coluna de ID
                 model.setNomeCliente(rs.getString("nome_cliente"));
                 model.setDescricao(rs.getString("descricao_pizza"));
-                model.setValor(rs.getDouble("valor"));
+                model.setValor(rs.getDouble("valor_total"));
 
                 modelList.add(model);
             }
@@ -105,8 +107,9 @@ public class PainelController implements Initializable {
         String sqlPendentes = "SELECT COUNT(*) FROM pedido WHERE estado = 'EM_ANDAMENTO'";
         String sqlClientes = "SELECT COUNT(*) FROM cliente";
 
-        // Soma o valor de todas as pizzas que foram pedidas no sistema
-        String sqlFaturamento = "SELECT SUM(piz.valor) FROM pedido p " +
+        // Soma o valor de todos os pedidos feitos no sistema
+        // (valor_total já é o preço real cobrado, considerando tamanho e adicionais)
+        String sqlFaturamento = "SELECT SUM(p.valor_total) FROM pedido p " +
                 "INNER JOIN pizzas piz ON p.id_pizza = piz.id_pizza";
 
         try (Connection conn = ConnectionFactory.getConnection()) {

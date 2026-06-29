@@ -153,20 +153,19 @@ public class Pedido {
             return;
         }
 
-        // O banco armazena o preço da Média como valor base.
-        // Pequena = 80% | Média = 100% | Grande = 125%
-        double valorBase = pizza.getValor();
-        double fatorTamanho = 1.0;
+        // O banco agora armazena os 3 preços reais por tamanho.
+        // Escolhe o preço real correspondente ao tamanho do pedido.
+        double total;
 
         if (tamanho != null) {
-            switch (tamanho.trim()) {
-                case "Pequena", "P", "p" -> fatorTamanho = 0.80;
-                case "Média",   "M", "m" -> fatorTamanho = 1.00;
-                case "Grande",  "G", "g" -> fatorTamanho = 1.25;
-            }
+            total = switch (tamanho.trim()) {
+                case "Pequena", "P", "p" -> pizza.getValorPequena();
+                case "Grande",  "G", "g" -> pizza.getValorGrande();
+                default -> pizza.getValorMedia();
+            };
+        } else {
+            total = pizza.getValorMedia();
         }
-
-        double total = valorBase * fatorTamanho;
 
         // soma valor de cada adicional selecionado
         if (adicionais != null) {

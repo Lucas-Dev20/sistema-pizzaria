@@ -28,9 +28,9 @@ public class EditarSaborController {
         this.pizzaEmEdicao = pizza;
         txtSabor.setText(pizza.getTipo());
         txtIngredientes.setText("");  // banco não tem coluna ingredientes ainda
-        txtPrecoPequena.setText(String.format("%.2f", pizza.getValor() * 0.75));
-        txtPrecoMedia.setText(String.format("%.2f", pizza.getValor()));
-        txtPrecoGrande.setText(String.format("%.2f", pizza.getValor() * 1.25));
+        txtPrecoPequena.setText(String.format("%.2f", pizza.getValorPequena()));
+        txtPrecoMedia.setText(String.format("%.2f", pizza.getValorMedia()));
+        txtPrecoGrande.setText(String.format("%.2f", pizza.getValorGrande()));
     }
 
     @FXML
@@ -41,15 +41,25 @@ public class EditarSaborController {
                 throw new IllegalArgumentException("O nome do sabor não pode ficar vazio.");
             }
 
+            double precoPequena = Double.parseDouble(
+                    txtPrecoPequena.getText().replace(",", "."));
             double precoMedia = Double.parseDouble(
                     txtPrecoMedia.getText().replace(",", "."));
-            if (precoMedia <= 0) {
-                throw new IllegalArgumentException("O preço deve ser maior que zero.");
+            double precoGrande = Double.parseDouble(
+                    txtPrecoGrande.getText().replace(",", "."));
+
+            if (precoPequena <= 0 || precoMedia <= 0 || precoGrande <= 0) {
+                throw new IllegalArgumentException("Os preços devem ser maiores que zero.");
+            }
+            if (precoPequena >= precoMedia || precoMedia >= precoGrande) {
+                throw new IllegalArgumentException("Os preços devem ser: Pequena < Média < Grande.");
             }
 
-            // Atualiza usando o preço médio como valor base no banco
+            // Atualiza os 3 preços reais (Pequena, Média, Grande)
             pizzaEmEdicao.setTipo(sabor);
-            pizzaEmEdicao.setValor(precoMedia);
+            pizzaEmEdicao.setValorPequena(precoPequena);
+            pizzaEmEdicao.setValorMedia(precoMedia);
+            pizzaEmEdicao.setValorGrande(precoGrande);
             pizzaService.atualizarPizza(pizzaEmEdicao);
 
             mostrarMensagem(Alert.AlertType.INFORMATION, "Sucesso", "Sabor atualizado com sucesso!");

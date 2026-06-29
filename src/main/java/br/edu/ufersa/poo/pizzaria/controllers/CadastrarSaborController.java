@@ -56,9 +56,8 @@ public class CadastrarSaborController {
                 throw new IllegalArgumentException("Os preços devem ser: Pequena < Média < Grande.");
             }
 
-            // Salva UM único registro com o preço da Média como valor base.
-            // Na tela de listagem, os outros tamanhos são calculados proporcionalmente.
-            pizzaService.cadastrarPizza(sabor, precoMedia, usuarioOperador);
+            // Salva os 3 preços reais (Pequena, Média, Grande) informados pelo usuário.
+            pizzaService.cadastrarPizza(sabor, precoPequena, precoMedia, precoGrande, usuarioOperador);
 
             mostrarMensagem(Alert.AlertType.INFORMATION, "Sucesso", "Novo sabor cadastrado com êxito!");
 

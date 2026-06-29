@@ -13,7 +13,9 @@ public class PizzaService {
 
     // Apenas administrador pode cadastrar pizzas
     public void cadastrarPizza(String tipo,
-                               double valor,
+                               double precoPequena,
+                               double precoMedia,
+                               double precoGrande,
                                Usuario usuario) {
 
         if (usuario == null) {
@@ -33,13 +35,19 @@ public class PizzaService {
             );
         }
 
-        if (valor <= 0) {
+        if (precoPequena <= 0 || precoMedia <= 0 || precoGrande <= 0) {
             throw new IllegalArgumentException(
-                    "Valor da pizza deve ser maior que zero."
+                    "Os preços devem ser maiores que zero."
             );
         }
 
-        Pizza pizza = new Pizza(tipo, valor);
+        if (precoPequena >= precoMedia || precoMedia >= precoGrande) {
+            throw new IllegalArgumentException(
+                    "Os preços devem ser: Pequena < Média < Grande."
+            );
+        }
+
+        Pizza pizza = new Pizza(tipo, precoPequena, precoMedia, precoGrande);
 
         pizzaDAO.salvar(pizza);
     }
@@ -49,6 +57,12 @@ public class PizzaService {
         if (pizza == null) {
             throw new IllegalArgumentException(
                     "Pizza inválida."
+            );
+        }
+
+        if (pizza.getValorPequena() >= pizza.getValorMedia() || pizza.getValorMedia() >= pizza.getValorGrande()) {
+            throw new IllegalArgumentException(
+                    "Os preços devem ser: Pequena < Média < Grande."
             );
         }
 
